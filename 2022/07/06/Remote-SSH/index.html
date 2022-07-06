@@ -13,26 +13,26 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="高铁上的 szy">
+  <meta name="author" content="ssh了一个小时的 沈之洋">
   <meta name="keywords" content="">
   
-    <meta name="description" content="如题">
+    <meta name="description" content="SSH连接时显示port 22：Connection timed out的解决方案">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于北京的记忆">
-<meta property="og:url" content="http://example.com/2022/05/29/exodus2/index.html">
+<meta property="og:title" content="关于SSH连接服务器失败的记录">
+<meta property="og:url" content="http://example.com/2022/07/06/Remote-SSH/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="如题">
+<meta property="og:description" content="SSH连接时显示port 22：Connection timed out的解决方案">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/img/banner/3.bmp">
-<meta property="article:published_time" content="2022-05-29T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-29T03:08:41.162Z">
+<meta property="og:image" content="http://example.com/img/banner/default.png">
+<meta property="article:published_time" content="2022-07-06T13:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-06T23:12:47.312Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="日常">
+<meta property="article:tag" content="技术">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/img/banner/3.bmp">
+<meta name="twitter:image" content="http://example.com/img/banner/default.png">
   
   
-  <title>关于北京的记忆 - Hexo</title>
+  <title>关于SSH连接服务器失败的记录 - Hexo</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -185,12 +185,12 @@
 </nav>
 
     <div class="banner" id="banner" parallax=true
-         style="background: url('/img/banner/3.bmp') no-repeat center center;
+         style="background: url('/img/default.png') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="关于北京的记忆">
+            <span class="h2" id="subtitle" title="关于SSH连接服务器失败的记录">
               
             </span>
 
@@ -199,14 +199,14 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-author" aria-hidden="true"></i>
-      高铁上的 szy
+      ssh了一个小时的 沈之洋
     </span>
   
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-05-29 10:00" pubdate>
-        2022年5月29日 上午
+      <time datetime="2022-07-06 21:00" pubdate>
+        2022年7月6日 晚上
       </time>
     </span>
   
@@ -216,7 +216,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.9k 字
+      2.1k 字
     </span>
   
 
@@ -247,34 +247,80 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">关于北京的记忆</h1>
+            <h1 style="display: none">关于SSH连接服务器失败的记录</h1>
             
             <div class="markdown-body">
-              <blockquote>
-<p>在回家的高铁途中，想写一篇文章来记录一下我的感想，或许日后也要靠此文怀缅了。</p>
-</blockquote>
-<blockquote>
-<p>现在的文风，和一年前有很大的不同——尽量少用辞藻，多讲一些平常的大白话。对我来说也是一种尝试。</p>
-</blockquote>
-<p>这篇文章是关于往返北京的几次经历，似乎这一趟趟旅程也代表了人生的种种阶段和境遇，自觉有趣，是以想要记录在此。</p>
-<h2 id="初见"><a href="#初见" class="headerlink" title="初见"></a>初见</h2><p>印象里第一次来北京是很小的时候了，当时没有复兴号这么快的车，乘坐的只是卧铺，但一晚上没睡着，只能玩爸爸的老式HTC手机里的小游戏以打发时间，还打扰到了同住一间的陌生人，在此说一声抱歉。所剩无几的记忆里，可能去了长城、天安门、鸟巢、故宫等地方，以及去现场看了奥运会的田径。似乎那次之后刘翔就被骂得很惨，但对当时的我来说，比赛本身也没有什么吸引力（笑），只记得我一直在不耐烦地踢前面的椅背，结果被坐在前面的大爷一顿臭骂hhh。</p>
-<p>不知道为什么，记忆里最鲜活的永远是这些糗事…</p>
-<h2 id="再见"><a href="#再见" class="headerlink" title="再见"></a>再见</h2><p>不太确定小时候是来过一次还是两次，但长大之后的印象还算是详尽，不至于忘却得太多。第二次进京是在初三暑假，和刚认识没多久的高中同学们一起来“玩”——实际上是被关在酒店里做一些令人迷惑的小组展示。去了故宫，还去了北大，但好像是因为没有预约上的原因，没去清华。值得一提的是，当初的这些小伙伴们现在都各有光明的未来，他们直到现在也和我保持着联系。祝他们前途顺遂。</p>
-<p>之后在高三的暑假里，来北京三次。</p>
-<h2 id="三见"><a href="#三见" class="headerlink" title="三见"></a>三见</h2><p>第一回是去强基培训，同我一道的小伙伴们也有许多是三年前的那帮人。培训的内容还记得一些，尤其是模拟面试的过程，对我产生了不小的影响。感谢它。要不是这次培训，或许我也没法通过强基考试，或者至少没法选到现在的专业了。印象最深刻的是，培训结束后回家的那天刚好是6月23日，也就是高考放榜日。我是在高铁上知道成绩的，原本还信心满满，但没想到一门都没考好，全省排名400+，和状元差了整整45分。彼时已在崩溃边缘，但好在旁边的小伙伴帮我平复了心情，感谢她。</p>
-<p>当时知道清北无望，强基可能也悬，而如果去复交，也不能选到心仪的专业了，所以一心想着去南大学数学（笑），这样就能确保和npy一起在南京了。然而此想法被长辈和老师们否决，他们认为我还是应该冲一冲强基，机会还是很大的。于是说服了npy填报北京的学校，自己也定下心来准备强基考试，这是后话了。特别感谢npy一直对我的信任和支持，希望我们的爱情可以长长久久。</p>
-<h2 id="四见"><a href="#四见" class="headerlink" title="四见"></a>四见</h2><p>第二回就是强基面试。此前的笔试环节，我原本以为有评定就能直接算满分的，所以几乎没准备。但考前那晚被告知“考多少算多少”，我也将信将疑。好在这个消息，让我第二天考场上没有过度摸鱼，而是认认真真地完成了，成绩似乎也还行。感谢这个告诉我消息的小伙伴，祝他在北大一切顺利！</p>
-<p>回到主题，进京面试的过程多少有些忐忑。在校门口看到了做志愿的学长，他的出现给了我一定的心理安慰。学长即将直博，祝他科研上平步青云！进校门之后，坐校车从艺博到六教，那是我对华子的第一印象。面试的具体过程不必多谈，反正问题回答得一般般，当时也依然不确定能不能被录取。那次回程坐的是跨夜的卧铺，和小时候那回一样，一晚上没睡好觉。但很幸运地认识了省锡中的小伙伴，他目前在国科大读物理，朋友圈里发的物理题目我啥也看不懂（苦笑），同样祝他在果壳学业有成。</p>
-<h2 id="五见"><a href="#五见" class="headerlink" title="五见"></a>五见</h2><p>第三回来北京就是新生报道了，为了送npy上学，早来了一天，然后独自一人出去转了转。当时特别痴迷赵雷（现在也是），所以把他歌里唱的鼓楼、什刹海、南锣鼓巷都跑了个遍。这些地方后来和npy又一起去了一次，但经过北海公园的时候从来没有进去，大概是我素来不喜欢人多的地方吧。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>转眼间在北京呆了接近一年了，回忆起以前的这些事，还是觉得可亲、可爱。时常感慨自己命里有许多“贵人相助”，在此允许我再次向他们表示感谢，尤其是我的npy。如果没有他们，我或许是不可能走到今天这一步的。</p>
-<p>昨天在紫一吃早餐的时候，回忆起这些往事，竟不觉时间的流逝，真切地体会到了“烂柯”典故之意境。当时唏嘘不已，因为一学期以来都不知道在忙些什么，以至于很久都没有这么悠闲地吃过早餐了。然而，生命的意义其实反倒在于此而不在于彼吧，所以此刻这种糟糕的生活状态，还是需要remake的。</p>
-<p>仔细想想，自己一年来真的学会了什么吗？似乎一直在为了作业和绩点疲于奔命，学习上也过于逐利，没有坚持自己想做的事情。接下来的几年，希望自己能够多一些这方面的考量吧。看到这里的朋友们也要各自加油，祝大家顺利。</p>
-<p>又忽然想起木心的文章《明天不散步了》，结尾写道：</p>
+              <h1 id="关于SSH连接服务器失败的记录"><a href="#关于SSH连接服务器失败的记录" class="headerlink" title="关于SSH连接服务器失败的记录"></a>关于SSH连接服务器失败的记录</h1><h2 id="一、起因"><a href="#一、起因" class="headerlink" title="一、起因"></a>一、起因</h2><p>事情是这样的：SRT课题远程协作采用的形式是Remote SSH连接到实验室的服务器。今天维恺学长给我们创建了账号，并问我：</p>
 <div class="note note-info">
-            <p>生活是什么呢，生活是这样的，有些事情还没有做，一定要做的……另有些事做了，没有做好。</p>
+            <p>你知道怎么登陆，以及用vscode查看代码吗？</p>
           </div>
 
-<p>这可能是我最喜欢的作品之一了，似乎也很贴合这篇文章的主题。以此作结。</p>
+<p>我想到这学期“<strong>计算机系统概论</strong>”课上似乎也<del>白嫖</del>过陈文光老师的服务器，并在那时尝试使用VS code的Remote SSH插件进行服务器连接（Linux指令？拿来吧你！我只会<code>cd</code>，<code>ls</code>等最简单的东西呜呜呜）。趁我还没有手抖卸载掉Remote SSH(<del>bushi</del>)，我迅速打开了Code并敲下了已经生疏的指令：</p>
+<figure class="highlight python-repl"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs python-repl"><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">ssh username@ip</span><br></code></pre></td></tr></table></figure>
+
+<p>按下回车，结果显示</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">ssh: <span class="hljs-keyword">connect</span> <span class="hljs-keyword">to</span> host ***.***.**.** port <span class="hljs-number">22</span>: <span class="hljs-keyword">Connection</span> timed <span class="hljs-keyword">out</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="二、自己瞎捣鼓"><a href="#二、自己瞎捣鼓" class="headerlink" title="二、自己瞎捣鼓"></a>二、自己瞎捣鼓</h2><p>嘶~出了一点bug。但此时的我并不慌张，在反复检查过用户名和服务器IP都正确之后，我开始分析原因：</p>
+<ul>
+<li>是不是VS code的Remote SSH插件坏了？</li>
+<li>是不是Code默认我还在用陈老师课上的那个服务器、没有改IP地址？</li>
+<li>是不是某天给git搞上ssh-rsa之后，干扰到了这里的公钥/私钥？</li>
+</ul>
+<p>带着这些疑问，我开始“善用”搜索引擎。</p>
+<p>很可惜，搜索引擎并没有解决我的问题（早就习惯了好吧，配环境的时候各种Google几乎就没有得到过正确答案，百度下面一大堆CSDN就更不可信了）。</p>
+<blockquote>
+<p>但是，我认为配环境等等遇到困难的过程中的确还是应该先善用搜索的，就算不能解决问题，你也能学习到很多技术，算是长见识了。比如，我这次就知道了22号端口是默认端口。</p>
+</blockquote>
+<h2 id="三、请求支援"><a href="#三、请求支援" class="headerlink" title="三、请求支援"></a>三、请求支援</h2><p>既然自己已经解决不了问题，那就把困难交给维恺大哥！（这个称呼是子瀚学长告诉我的）</p>
+<p>学长先问我：</p>
+<div class="note note-info">
+            <p>能ping通吗？</p>
+          </div>
+
+<p>要是在今天之前，我必然不知道什么是<code>ping</code>；但巧的是，刚才使用搜索引擎的过程中，某一个帖子就告诉我：先看看自己的网络和服务器网络有没有问题，也就是分别<code>ping</code>一下这两个IP地址。（再次论证善用搜索的重要性）</p>
+<p>服务器的IP已经知道了，所以只需要</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">&gt;&gt;&gt; ping <span class="hljs-strong">***.**</span><span class="hljs-strong">*.*</span><span class="hljs-strong">*.*</span>*<br></code></pre></td></tr></table></figure>
+
+<p>至于我自己的IP地址，需要先获得它。Windows系统中可以输入</p>
+<figure class="highlight python-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python-repl"><span class="hljs-meta prompt_">&gt;&gt;&gt;</span> <span class="language-python">ipconfig</span><br></code></pre></td></tr></table></figure>
+
+<p>这条指令会显示本地连接、WLAN、蓝牙、手机网络等信息，我们从中截获IPV4 Address，然后同样<code>ping</code>一下就好。如果能显示<code>Reply from ***.***.**.**: bytes=32 time=30ms TTL=48</code>等信息，就代表ping通了。</p>
+<hr>
+<p>这样似乎初步排除了网络连不上的问题，那么下一个可疑点就是SSH了。学长指示：</p>
+<div class="note note-info">
+            <p>ssh -vvv name@ip看看</p>
+          </div>
+
+<p>我虽然不懂这个指令是什么意思，但既然也是SSH指令，输入进去就完事了。结果显示了一堆debug信息：</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs avrasm">OpenSSH_for_Windows_8<span class="hljs-number">.1</span>p1, LibreSSL <span class="hljs-number">3.0</span><span class="hljs-number">.2</span><br><span class="hljs-symbol">debug1:</span> ...<br><span class="hljs-symbol">debug1:</span> ...<br><span class="hljs-symbol">debug3:</span> ...<br>...<br><span class="hljs-symbol">debug1:</span> connect to address ***.***.**.** port <span class="hljs-number">22</span>: Connection timed <span class="hljs-keyword">out</span><br></code></pre></td></tr></table></figure>
+
+<p>看来<code>-vvv</code>是输出调试信息的意思啊。不过同样连接超时了，端口也同样是默认的22. 我不懂这些debug信息在说什么，就把图片截给了维恺大哥。他看了之后沉吟片刻，随后再次做出重要指示：</p>
+<div class="note note-info">
+            <p>你挂一下学校的vpn试试吧</p>
+          </div>
+
+<p>什么？学校的VPN？根据我的认知，我只会在校外上INFO前使用Web VPN登录一下，至于VPN到底是什么、怎么使用，我的概念是很浅薄的。然而Web VPN不行；同样地，在网页版登录SSL VPN也失败了。懊恼之余，我询问学长：会不会可能是我开的梯子的原因？</p>
+<p>学长缓缓打出了一个“额”，随后说</p>
+<div class="note note-info">
+            <p>关了，梯子别开全局呀</p>
+          </div>
+
+<p>这属实又把我整不会了。赶紧搜索一下全局代理和局部代理的区别，依然不明觉厉。但根据以往的种种经验，挂梯子时总会遇到各种问题——例如pip install连网超时、conda连网超时等。然而，我明明已经把梯子关了呀——难不成是这个台湾人的梯子暗地里阴我，在我的电脑里翻江倒海？</p>
+<p>正当我迷惑之际，学长说：</p>
+<div class="note note-info">
+            <p>挂sslvpn</p><p>已经确定是网络问题了 我拿外网ssh也是connection refused</p>
+          </div>
+
+<p>Wow! 维恺大哥yyds！我还完全蒙在鼓里，而大哥已然洞悉一切！果然啊，抱紧大腿就是好啊！</p>
+<p>但此时我开始怀疑我是否正确使用了SSL VPN，截图给学长看之后，他说：</p>
+<div class="note note-info">
+            <p>额</p><p>下客户端</p>
+          </div>
+
+<p>经典的“额”。看来我的无知再一次惊到了大哥。果然，网页版的SSL VPN不靠谱。于是我开始下载客户端。</p>
+<p>此处又倒腾了我好久好久，因为主下载链接会下载一个<code>msi</code>文件，也就是古早版本的windows installer支持的安装方式。但这在我的Windows10上似乎<strong>根本装不动</strong>。后来才发现Windows 10及以上系统的安装链接被藏在另外一个很不起眼的地方，难免让人吐槽哇！</p>
+<p>下载好之后，挂上VPN，果然成功连上服务器了！原来学校的服务器竟是需要在校园网环境下连接的，长知识了！此外也要再次感谢维恺学长不辞辛劳地花费一个多小时帮我解决这个问题！</p>
 
             </div>
             <hr>
@@ -285,7 +331,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/%E6%97%A5%E5%B8%B8/">日常</a>
+                      <a class="hover-with-bg" href="/tags/%E6%8A%80%E6%9C%AF/">技术</a>
                     
                   </div>
                 
@@ -296,18 +342,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/07/06/Remote-SSH/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">关于SSH连接服务器失败的记录</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/05/28/exodus/">
-                        <span class="hidden-mobile">Exodus-逃离北京记</span>
+                      <a href="/2022/05/29/exodus2/">
+                        <span class="hidden-mobile">关于北京的记忆</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
