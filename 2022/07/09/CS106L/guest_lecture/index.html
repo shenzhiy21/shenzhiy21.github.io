@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.png">
+  <link rel="icon" href="/img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="酣畅淋漓的 沈之洋">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="关于template, meta-function以及constexpr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Template Metaprogramming">
+<meta property="og:url" content="http://example.com/2022/07/09/CS106L/guest_lecture/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="关于template, meta-function以及constexpr">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-09T01:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-09T01:23:21.331Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="模板元编程">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Template Metaprogramming - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Zhiyang Shen&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Template Metaprogramming">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      酣畅淋漓的 沈之洋
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-07-09 09:00" pubdate>
+        2022年7月9日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.3k 字
+    </span>
+  
+
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Template Metaprogramming</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Template-Metaprogramming"><a href="#Template-Metaprogramming" class="headerlink" title="Template Metaprogramming"></a>Template Metaprogramming</h1><h2 id="Preface"><a href="#Preface" class="headerlink" title="Preface"></a>Preface</h2><p>这个专栏将记录CS106L的Lecture Notes。上这门课之前，我花了一些时间学了学UCB的两门课CS61A和CS70，但61A教的是Python，我对这门语言的掌握程度太浅，不是特别适应作业难度。而CS70讲的是离散数学和概率论，Prof. 授课非常illustrating，然而课程未免太过面面俱到了，感觉什么都cover到了，但什么都没讲得很深入，所以也暂时搁置下来了。碰巧看到这门CS106L讲的是Standord C++，学时也比较短（貌似是Stanford的Lab课），就萌生了看一看的念头。这学期上了OOP，对Modern C++有了一些粗浅的认识，但由于对很多特性和语法的理解程度严重不足，所以在阅读SRT项目早先的代码时磕磕绊绊，或许这门课教授的知识能对我理解代码框架带来一定的启发。正是基于这些原因，我才开始学习106L。</p>
+<p>第一节课是Fall 2020的Guest Lecture，主讲人是Avery Wang，应该是华裔。他的讲课语速飞快，撸代码的速度也令人肃然起敬。这节课是关于<strong>模板元编程</strong>的。</p>
+<h2 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h2><p>我们想要实现一个函数<code>my_distance</code>，用于计算两个迭代器之间的距离：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> It&gt;		<span class="hljs-comment">// iterator</span><br><span class="hljs-function"><span class="hljs-type">size_t</span> <span class="hljs-title">my_distance</span><span class="hljs-params">(It first, It last)</span></span>&#123;<br>    <span class="hljs-keyword">return</span> last - first;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然而，这样的语法只能对Random Access Iterator适用，至于Bidirectional或者Forward的Iterator，则无法定义两个迭代器之间的减法。不妨花几分钟总结一下迭代器相关知识：</p>
+<p>各种STL容器的迭代器属性如下：</p>
+<ul>
+<li>Random Access: vector, queue, array*</li>
+<li>Bidirectional: map, set, list</li>
+<li>Forward: unordered_map, unordered_set, forward_list</li>
+</ul>
+<p>Random Access Iterator是最厉害的，可以理解为：计算任意两个迭代器之间的距离只需要用到$O(1)$的时间——例如，对vector这种call by rank的容器，只需计算两个元素的索引之差即可。但另外两种迭代器是类似“链表”的串接形式，想要计算距离，只能顺着链表节点慢慢地爬，时间是$O(n)$的。</p>
+<p>其中，map和set是双向的（意思是支持自增++和自减–），是因为它们的实现方式是<strong>红黑树</strong>，支持节点向前、向后索引；而unordered_map/set只支持自增，不支持自减，因为它们的实现方式是<strong>哈希表</strong>。</p>
+<p>在掌握了这些前置知识的基础上，我们再次看一看<code>my_distance</code>函数。当然有一种对任何迭代器适用的实现方式：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> It&gt;<br><span class="hljs-function"><span class="hljs-type">size_t</span> <span class="hljs-title">my_distance</span><span class="hljs-params">(It first, It last)</span></span>&#123;<br>	<span class="hljs-type">size_t</span> result = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">while</span> (first != last)&#123;<br>        ++first;<br>        ++result;<br>    &#125;<br>    <span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>只是，对于本应该高效处理的Random Access Iterator，这样同样需要$O(n)$的时间，太不划算了。如果能预先判断这里的迭代器是不是Random Access，那么就可以用if-else语句来讨论了——我们的需求似乎是一个函数，它接受的参数是某种类型的迭代器，返回值是<code>size_t</code>。然而，以前学过的<strong>函数的形参只能是变量、不能是类型</strong>啊！</p>
+<p>这就是模板元编程的动机。</p>
+<h2 id="Meta-function"><a href="#Meta-function" class="headerlink" title="Meta-function"></a>Meta-function</h2><p><u>Definition</u>: A meta-function is a “function” that operates on some <strong>types/values</strong> (“parameters”) and outputs some <strong>types/values</strong> (“return values”).</p>
+<p>More: A meta-functin is a <strong>struct</strong> that has <strong>public member types/fields</strong> which depend on what the <strong>template types/values</strong> are instantiated with.</p>
+<p>也就是说，我们实现<code>my_distance</code>这种类似函数的语句的方法是：定义一个结构体。</p>
+<h2 id="Example1-identity-function"><a href="#Example1-identity-function" class="headerlink" title="Example1: identity function"></a>Example1: identity function</h2><p>首先我们实现一个meta-function，它接收一个<strong>type</strong>，再原原本本地返回它。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">identity</span>&#123;<br>    <span class="hljs-keyword">using</span> type = T;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">// ...</span><br>    <span class="hljs-keyword">using</span> K = identity&lt;<span class="hljs-type">int</span>&gt;::type;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>分析：按照上面定义所说，我们定义一个结构体<code>identity</code>，注意到它需要接收一个类型（例如<code>&lt;int&gt;</code>），然后利用<code>using</code>关键字（类比<code>int A = 1</code>），定义了一个成员类型<code>using type = T</code>，于是，对于我们输入的类型<code>int</code>，<code>identity::type</code>也就被定义为<code>int</code>类型了。在之后需要用到它的地方，再次写<code>using K = ...</code>就能使得<code>K</code>等于<code>int</code>这个类型了。</p>
+<p>类似地，我们也可以写另一个<code>identity</code>元函数，它接收一个<strong>value</strong>，然后原原本本地返回这个value：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-type">int</span> V&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">identity</span>&#123;<br>    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">int</span> value = V;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-comment">// ...</span><br>    <span class="hljs-type">int</span> val = identity&lt;<span class="hljs-number">3</span>&gt;::value;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>以前我一直以为template模板后面只能连接<code>typename</code>，但没想到也可以直接写<code>int</code>！非常的神奇啊。</p>
+<h2 id="Example2-is-same"><a href="#Example2-is-same" class="headerlink" title="Example2: is_same"></a>Example2: is_same</h2><p>我们想要实现这样的功能：用一个元函数，接收两个typename，然后返回一个boolean值，代表它们是否相同。</p>
+<p>如果这里需求的不是typename，而是value，那我们是很容易实现的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-type">int</span> V, <span class="hljs-type">int</span> W&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">is_same</span>&#123;<br>    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">bool</span> value = (V == W);<br>&#125;<br><br><span class="hljs-type">bool</span> diff = is_same&lt;<span class="hljs-number">3</span>, <span class="hljs-number">4</span>&gt;::value;	<span class="hljs-comment">// diff == false</span><br><span class="hljs-type">bool</span> same = is_same&lt;<span class="hljs-number">4</span>, <span class="hljs-number">4</span>&gt;::value;	<span class="hljs-comment">// same == true</span><br></code></pre></td></tr></table></figure>
+
+<p>问题是，怎么比较两个类型是否相同呢？</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> W&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">is_same</span>&#123;<br>    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">bool</span> value = ????;<br>&#125;<br><br><span class="hljs-type">bool</span> diff = is_same&lt;<span class="hljs-type">int</span>, <span class="hljs-type">double</span>&gt;::value;<br><span class="hljs-type">bool</span> same = is_same&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt;::value;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="Template-Specialization"><a href="#Template-Specialization" class="headerlink" title="Template Specialization"></a>Template Specialization</h3><p>Templates can be specialized. Moreover, they can be <strong>partially</strong> specialized.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> K, <span class="hljs-keyword">typename</span> V&gt;			<span class="hljs-comment">// generic</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">HashMap</span> &#123; <span class="hljs-comment">/* stuff */</span> &#125;;<br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> K, <span class="hljs-keyword">template</span> V&gt;			<span class="hljs-comment">// partially specialized</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">HashMap</span>&lt;K*, V&gt; &#123; <span class="hljs-comment">/* stuff */</span>&#125;;		<span class="hljs-comment">// first type is a pointer</span><br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> V&gt;						<span class="hljs-comment">// partially specialized</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">HashMap</span>&lt;<span class="hljs-type">int</span>, V&gt; &#123; <span class="hljs-comment">/* stuff */</span>&#125;;		<span class="hljs-comment">// first type is int</span><br><br><span class="hljs-keyword">template</span> &lt;&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">HashMap</span>&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt; &#123; <span class="hljs-comment">/* stuff */</span>&#125;;	<span class="hljs-comment">// fully specialized</span><br></code></pre></td></tr></table></figure>
+
+<p>以上四个哈希函数（仅仅是作为例子，实际上几乎不可能写这样的哈希函数），它们依次实现了不同程度上的specialization。对于编译器而言，它会把我们写的所有“重载”，按照<strong>specialize程度的高低对它们排序</strong>，然后顺次匹配，直到找到能匹配上的模板。如果一个都匹配不上，就Error。</p>
+<p>在此基础上，我们就可以写完<code>is_same</code>函数了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// first</span><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T, <span class="hljs-keyword">typename</span> U&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">is_same</span>&#123;<br>    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">bool</span> value = <span class="hljs-literal">false</span>;<br>&#125;<br><br><span class="hljs-comment">// second</span><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">is_same</span>&lt;T, T&gt;&#123;<br>    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">bool</span> value = <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-type">bool</span> diff = is_same&lt;<span class="hljs-type">int</span>, <span class="hljs-type">double</span>&gt;::value;		<span class="hljs-comment">// false</span><br><span class="hljs-type">bool</span> same = is_same&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int</span>&gt;::value; 			<span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+
+<p>就这个例子而言，编译器会先尝试第二个meta-function是否能匹配成功（因为它的specialize程度更高）。如果输入的是<code>&lt;int, int&gt;</code>，可以匹配成功，所以<code>value = true</code>；而如果输入的是<code>&lt;int, double&gt;</code>，则匹配失败，进而继续尝试第一个function，匹配成功，于是<code>value = false</code>。</p>
+<h2 id="Example3-remove-const"><a href="#Example3-remove-const" class="headerlink" title="Example3: remove_const"></a>Example3: remove_const</h2><p>下面实现一个meta-function，以达到去除const的作用——例如，对const int类型，经处理后会变成int。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">remove_const</span>&#123;<br>    <span class="hljs-keyword">using</span> type = T;<br>&#125;<br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> T&gt;<br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">remove_const</span>&lt;<span class="hljs-type">const</span> T&gt;&#123;<br>    <span class="hljs-keyword">using</span> type = T;<br>&#125;<br><br><span class="hljs-keyword">using</span> K = remove_const&lt;<span class="hljs-type">int</span>&gt;::type;		<span class="hljs-comment">// K = int</span><br><span class="hljs-keyword">using</span> M = remove_const&lt;<span class="hljs-type">const</span> <span class="hljs-type">int</span>&gt;::type	<span class="hljs-comment">// M = int</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="Example4-distance"><a href="#Example4-distance" class="headerlink" title="Example4: distance"></a>Example4: distance</h2><p>在以上讨论的基础上，我们尝试实现一开始说的<code>my_distance</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;vector&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;deque&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;set&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iterator&gt;</span></span><br><br><span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">typename</span> It&gt;<br><span class="hljs-function"><span class="hljs-type">size_t</span> <span class="hljs-title">my_distance</span><span class="hljs-params">(It first, It last)</span> </span>&#123;<br>    <span class="hljs-keyword">using</span> category = <span class="hljs-keyword">typename</span> std::iterator_traits&lt;It&gt;::iterator_category;<br>    <span class="hljs-keyword">if</span> (std::is_same&lt;category, std::random_access_iterator_tag&gt;::value) &#123;<br>        <span class="hljs-keyword">return</span> last - first;<br>    &#125;<br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-type">size_t</span> result = <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">while</span> (first != last) &#123;<br>            ++first;<br>            ++result;<br>        &#125;<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    std::set&lt;std::string&gt; name1 &#123;<span class="hljs-string">&quot;Anna&quot;</span>, <span class="hljs-string">&quot;Ethan&quot;</span>, <span class="hljs-string">&quot;Nikhil&quot;</span>, <span class="hljs-string">&quot;Avery&quot;</span>&#125;;<br>    <span class="hljs-comment">// std::deque&lt;std::string&gt; name2 &#123;&quot;Anna&quot;, &quot;Ethan&quot;, &quot;Nikhil&quot;, &quot;Avery&quot;&#125;;</span><br>    <span class="hljs-comment">// std::vector&lt;std::string&gt; name3 &#123;&quot;Anna&quot;, &quot;Ethan&quot;, &quot;Nikhil&quot;, &quot;Avery&quot;&#125;;</span><br>    <span class="hljs-keyword">auto</span> anna_iter = std::<span class="hljs-built_in">find</span>(name1.<span class="hljs-built_in">begin</span>(), name1.<span class="hljs-built_in">end</span>(), <span class="hljs-string">&quot;Anna&quot;</span>);<br>    <span class="hljs-keyword">auto</span> avary_iter = std::<span class="hljs-built_in">find</span>(name1.<span class="hljs-built_in">begin</span>(), name1.<span class="hljs-built_in">end</span>(), <span class="hljs-string">&quot;Avery&quot;</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">my_distance</span>(anna_iter, avary_iter);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>我们的预期是：</strong></p>
+<p>因为<code>set</code>的迭代器并不是random access iterator，所以是$O(n)$的复杂度，也就是采用了else分支。最后程序会返回1，因为在<code>set</code>（红黑树）中，默认按照字典序排列，所以Avery是紧跟在Anna后面的词条，所以距离是1. 如果把<code>set</code>改成注释掉的<code>deque</code>或<code>vector</code>，那么就会返回3。</p>
+<p><strong>然而实际上：</strong></p>
+<p>如果是<code>set</code>下的iterator，程序会报错！但如果是<code>deque</code>或<code>vector</code>，程序并不会报错。原因是：如果采用<code>set</code>，那么虽然我们知道它不是random access iterator，但编译器不知道这一点，它会把所有的语句都编译完成——其中就包括那个<code>if</code>分支。但是很不巧的是，正因为不是random access iterator，所以根本无法执行<code>last - first</code>语句，这就导致了错误。</p>
+<p>如何修改这个缺陷呢？</p>
+<h2 id="constexpr"><a href="#constexpr" class="headerlink" title="constexpr"></a>constexpr</h2><p>C++17新增了特性：<strong>if constexpr</strong>。You can calculate the boolean at <strong>compile-time</strong>. Replace the entire if/else with the code that will actually be run. （注意：一定要C++17！）意思是：编译器并不会预先就把两个分支都编译了，而是会先计算<code>if</code>后面的条件判断值，如果它是false，就不执行<code>if</code>分支了。</p>
+<p>代入例子中看一看。把<code>constexpr</code>关键字加到<code>if</code>后面，也就是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-keyword">if</span> <span class="hljs-title">constexpr</span> <span class="hljs-params">(std::is_same&lt; ... &gt;::value)</span> ...</span><br></code></pre></td></tr></table></figure>
+
+<p>那么，如果我们需要的是<code>set</code>的迭代器，<code>if constexpr</code>语句就会直接跳过<code>if</code>分支、用<code>else</code>分支直接替换整个语句，也就是说，<code>last - first</code>语句根本没有被编译！这样，我们就达成了目的，没有报错。</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>一节课的Lecture Note竟然就有2k多词，实在是知识点很多哇！希望后面的课也能有这么大的知识量，能让人收获满满。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%A8%A1%E6%9D%BF%E5%85%83%E7%BC%96%E7%A8%8B/">模板元编程</a>
+                    
+                  </div>
+                
+              </div>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/06/Remote-SSH/">
+                        <span class="hidden-mobile">关于SSH连接服务器失败的记录</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
