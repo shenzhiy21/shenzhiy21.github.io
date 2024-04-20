@@ -1,0 +1,53 @@
+baseURL: https://shenzhiy21.github.io
+languageCode: en-us
+title: Zhiyang Shen's Blog
+copyright: "@ 2024 Zhiyang Shen"
+theme: "PaperMod"
+enableInlineShortcodes: true
+taxonomies:
+  category: categories
+  tag: tags
+  series: series
+menu:
+  main:
+    # - identifier: archive
+    #   name: Archive
+    #   url: archives
+    #   weight: 5
+    - identifier: categories
+      name: Categories
+      url: /categories/
+      weight: 10
+    - identifier: tags
+      name: Tags
+      url: /tags/
+      weight: 20
+    - identifier: github
+      name: Github
+      url: "https://github.com/shenzhiy21"
+      weight: 30
+params:
+  author: Zhiyang Shen
+  ShowShareButtons: true
+  ShowReadingTime: true
+  ShowCodeCopyButtons: true
+  ShowAllPagesInArchive: true
+  ShowPageNums: true
+  ShowToc: true
+  homeInfoParams:
+    Title: "Hi There! 👋"
+    Content: >
+      Welcome to my personal website!
+  socialIcons:
+    - name: github
+      title: View My Github Profile
+      url: "https://github.com/shenzhiy21"
+    - name: email
+      title: Send Me An Email
+      url: "mailto:chiyangshen@outlook.com"
+    - name: steam
+      title: View My Steam Profile
+      url: "https://steamcommunity.com/profiles/76561199266114458/"
+    - name: bilibili
+      title: View My Bilibili Profile
+      url: "https://space.bilibili.com/513060462"
