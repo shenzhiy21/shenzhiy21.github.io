@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Categories on Zhiyang Shen&#39;s Blog</title>
-    <link>https://shenzhiy21.github.io/categories/</link>
+    <link>http://localhost:1313/categories/</link>
     <description>Recent content in Categories on Zhiyang Shen&#39;s Blog</description>
     <generator>Hugo -- 0.125.1</generator>
     <language>en-us</language>
     <copyright>@ 2024 Zhiyang Shen</copyright>
     <lastBuildDate>Sat, 20 Apr 2024 10:46:52 +0800</lastBuildDate>
-    <atom:link href="https://shenzhiy21.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Code</title>
-      <link>https://shenzhiy21.github.io/categories/code/</link>
+      <link>http://localhost:1313/categories/code/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://shenzhiy21.github.io/categories/code/</guid>
+      <guid>http://localhost:1313/categories/code/</guid>
       <description></description>
     </item>
   </channel>
