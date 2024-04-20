@@ -43,7 +43,7 @@ params:
       title: View My Github Profile
       url: "https://github.com/shenzhiy21"
     - name: email
-      title: Send Me An Email
+      title: Send Me An Email!
       url: "mailto:chiyangshen@outlook.com"
     - name: steam
       title: View My Steam Profile
