@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>FFT On the Road | Zhiyang Shen&#39;s Blog</title>
+<meta name="keywords" content="code, fft, parallel">
+<meta name="description" content="Guide to implement FFT in C&#43;&#43; with parallelism">
+<meta name="author" content="Zhiyang Shen">
+<link rel="canonical" href="https://shenzhiy21.github.io/posts/fft/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4599eadb9eb2ad3d0a8d6827b41a8fda8f2f4af226b63466c09c5fddbc8706b7.css" integrity="sha256-RZnq256yrT0KjWgntBqP2o8vSvImtjRmwJxf3byHBrc=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://shenzhiy21.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://shenzhiy21.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://shenzhiy21.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://shenzhiy21.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://shenzhiy21.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://shenzhiy21.github.io/posts/fft/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css" integrity="sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.js" integrity="sha384-Qsn9KnoKISj6dI8g7p1HBlNpVx0I8p1SvlwOldgi3IorMle61nQy4zEahWYtljaz" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          
+          
+          delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+          ],
+          
+          throwOnError : false
+        });
+    });
+</script>
+
+
+
+  
+
+<meta property="og:title" content="FFT On the Road" />
+<meta property="og:description" content="Guide to implement FFT in C&#43;&#43; with parallelism" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shenzhiy21.github.io/posts/fft/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-04-20T10:46:52+08:00" />
+<meta property="article:modified_time" content="2024-04-20T10:46:52+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="FFT On the Road"/>
+<meta name="twitter:description" content="Guide to implement FFT in C&#43;&#43; with parallelism"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://shenzhiy21.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "FFT On the Road",
+      "item": "https://shenzhiy21.github.io/posts/fft/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "FFT On the Road",
+  "name": "FFT On the Road",
+  "description": "Guide to implement FFT in C++ with parallelism",
+  "keywords": [
+    "code", "fft", "parallel"
+  ],
+  "articleBody": "Introduction Discrete Fourier Transform (DFT) 是一种重要的信号处理方法。目前流行的许多 ML 框架（例如语音、图像模型）都会用到卷积 (convolution) 的计算，而通过 Fourier Transform 实现卷积 (FFT-conv) 的理论复杂度较低，特别是当卷积核 (kernel) 较大时，相比其它方法（例如 Winograd convolution）具有明显的速度优势。因此，如何高效地实现 DFT, 即 Fast Fourier Transform (FFT), 就显得尤为重要。PyTorch, numpy 等工具中都具有相当全面且高效的 FFT 实现，也包括其它变种（例如 FFT 的逆变换 ifft, 高维版本 fftn, 作用于实数（而非一般复数）的 rfft, 作用于实数的高维版本 rfftn, 作用于实数的高维版本的逆变换 irfftn … …）。当然，我们不能只满足于当一个“调包侠”，所以本文旨在详细剖析 FFT 的数学原理，并探讨如何使用 C++ 高效实现 FFT, 例如并行化处理。\nBackground Linear Algebra 首先，到底什么是 FFT? 参考 Wikipedia 上的定义：\nLet $x_0,\\cdots,x_{n-1}$ be complex numbers. The DFT is defined by the formula: $$ X_k=\\sum_{m=0}^{n-1}x_m e^{-\\mathrm i2\\pi km/n},k=0,\\cdots,n-1 $$\n这里 $e^{\\mathrm i2\\pi/n}$ 是 $n$ 次单位根 (primitive $n$-th root of unity).\n我们可以给出一个 trivial 的 C++ 实现，时间复杂度为 $O(n^2)$.\nstd::vector\u003cstd::complex\u003cfloat\u003e\u003e fft_naive(const std::vector\u003cstd::complex\u003cfloat\u003e\u003e\u0026 x) { size_t len = x.size(); std::vector\u003cstd::complex\u003cfloat\u003e\u003e y(len); for (size_t i = 0; i \u003c len; ++i) { std::complex\u003cfloat\u003e sum(0.0, 0.0); for (size_t j = 0; j \u003c len; ++j) { float angle = 2 * M_PI * i * j / len; std::complex\u003cfloat\u003e w(cos(angle), sin(-angle)); sum += x[j] * w; } y[i] = sum; } return y; } 从线性代数的角度来看，$\\{X_k\\}$ 是 Fourier matrix 作用于 $\\{x_k\\}$ 得到的。Fourier matrix 形式很优美，举个 4 阶的例子： $$ F_4=\\left(\\begin{array}{ccc} 1 \u0026 1 \u0026 1 \u0026 1 \\\\ 1 \u0026 \\omega^{1} \u0026 \\omega^{2} \u0026 \\omega^3 \\\\ 1 \u0026 \\omega^2 \u0026 \\omega^4 \u0026 \\omega^6 \\\\ 1 \u0026 \\omega^3 \u0026 \\omega^6 \u0026 \\omega^9 \\end{array}\\right) $$ 这里的 $\\omega=e^{-\\mathrm i2\\pi/n}$. 显然，$F_n$ 是一个对称矩阵 $F_n^T=F_n$. 更神奇的是，$F_n$ 是某个酉矩阵 (unitary matrix) 的倍数： $$ \\frac{1}{n}\\overline{F_n}=F_n^{-1} $$ 这里扯到线性代数其实在逻辑上没那么 straightforward, 但是它能让我们从另一个角度看到 FFT 的原理。有如下的定理（参考了杨一龙老师的线性代数教材）：\nWe have the following decomposition, where $D_n=\\text{diag}(1,\\omega,\\cdots,\\omega^{n-1})$, and $P$ is a matrix permuting all odd columns to the left and all even columns to the right. $$ F_{2n}=\\begin{pmatrix}I_n\u0026D_n\\\\I_n\u0026-D_n\\end{pmatrix}\\begin{pmatrix}F_n\u00260\\\\0\u0026F_n\\end{pmatrix}P $$\n也就是说，假设求出了 $F_n$, 我们就能快速地计算出 $F_{2n}$. 类似地，也可以推广到 $F_{3n}$.\n如果考虑求 $F_n$ 的时间复杂度，那么上述线性变换的递推式为 $$ T_{2n}=2T_n+\\Theta(n) $$ 根据主定理 (Master Theorem) 有 $$ T_n=\\Theta(n\\log n) $$ 这就是 FFT in pure mathematics.\nPolygon Interpolation 线性代数的解释难免让人感到难以接近，所以自然想问：有没有更直观的算法原理？实际上，考虑一个多项式 $f(x)=\\displaystyle\\sum_{k=0}^n a_k x^k$, Fourier 变换做的事情就是求 $f$ 作用在 $n$ 次单位根上的值。举个例子，假设 $$ \\begin{aligned} f(x)\u0026=a_0+a_1x+\\cdots+a_6x^6+a_7x^7\\\\ \u0026=(a_0+a_2x^2+a_4x^4+a_6x^6)+x(a_1+a_3x^2+a_5x^4+a_7x^6)\\\\ \u0026=G(x^2)+x\\cdot H(x^2) \\end{aligned} $$ 其中 $G$ 和 $H$ 是分别取奇数次幂和偶数次幂的系数得到的多项式。因此有 $$ \\begin{aligned} f(\\omega_n^k)\u0026=G((\\omega_n^k)^2)+\\omega_n^k\\cdot H((\\omega_n^k)^2)\\\\ \u0026=G(\\omega_n^{2k})+\\omega_n^k\\cdot H(\\omega_n^{2k})\\\\ \u0026=G(\\omega_{n/2}^k)+\\omega_n^k\\cdot H(\\omega_{n/2}^k) \\end{aligned} $$ 类似地有 $$ f(\\omega_{n}^{k+n/2})=G(\\omega_{n/2}^k)-\\omega_n^k\\cdot H(\\omega_{n/2}^k) $$ 因此，求出 $G(\\omega_{n/2}^k)$ 和 $H(\\omega_{n/2}^k)$ 后就能同时求出 $f(\\omega_{n}^k)$ 和 $f(\\omega_n^{k+n/2})$. 可以递归求解。复杂度是 $O(n\\log n)$.\nOptimization 我们不喜欢递归的函数，所以希望转换成非递归的实现。此外，递归实现需要占用大量的额外内存，更好的解决方案是就地进行运算。\n关于就地的问题，我们模拟上述数组的拆分过程： $$ \\begin{aligned} \u0026\\{a_0,a_1,a_2,a_3,a_4,a_5,a_6,a_7 \\}\\\\ \\Rightarrow \u0026\\{a_0,a_2,a_4,a_6 \\},\\{a_1,a_3,a_5,a_7 \\}\\\\ \\Rightarrow \u0026\\{a_0,a_4 \\},\\{a_2,a_6\\},\\{a_1,a_5\\},\\{a_3,a_7\\}\\\\ \\Rightarrow \u0026\\{a_0\\},\\{a_4\\},\\{a_2\\},\\{a_6\\},\\{a_1\\},\\{a_5\\},\\{a_3\\},\\{a_7\\} \\end{aligned} $$ 不难发现这个变换的规律：把原先 index 的二进制表示进行翻转，即可得到最终的 index. 例如：$a_3$ 的二进制是 $011$, 翻转后为 $110$, 所以 index 为 $6$. 这个过程可以在 $O(n)$ 的时间内递归实现：\nvoid change(std::vector\u003cstd::complex\u003cfloat\u003e\u003e\u0026 x) { size_t len = x.size(); std::vector\u003cint\u003e rev(len); for (size_t i = 0; i \u003c len; ++i) { rev[i] = rev[i \u003e\u003e 1] \u003e\u003e 1; if (i \u0026 1) { rev[i] |= len \u003e\u003e 1; } } for (size_t i = 0; i \u003c len; ++i) { if (i \u003c rev[i]) { std::swap(x[i], x[rev[i]]); } } } 在这一操作之后，按照公式 $$ \\begin{aligned} f(\\omega_n^k)\u0026=G(\\omega_{n/2}^k)+\\omega_n^k\\cdot H(\\omega_{n/2}^k)\\\\ f(\\omega_{n}^{k+n/2})\u0026=G(\\omega_{n/2}^k)-\\omega_n^k\\cdot H(\\omega_{n/2}^k) \\end{aligned} $$ 假设 $G(\\omega_{n/2}^k)$ 和 $H(\\omega_{n/2}^k)$ 分别在数组下标为 $k$ 和 $k+n/2$ 的位置，则可以把 $f(\\omega_n^k)$ 和 $f(\\omega_n^{k+n/2})$ 覆写到这两个位置，从而实现 in-place 的目标。这一方法被称为 Radix-2 蝶形运算。下面是非递归的实现：\nvoid fft(std::vector\u003cstd::complex\u003cfloat\u003e\u003e\u0026 x) { change(x); int n = x.size(); for (int h = 2; h \u003c= n; h \u003c\u003c= 1) { std::complex\u003cfloat\u003e wn = std::complex\u003cfloat\u003e(cos(2*M_PI/h), sin(-2*M_PI/h)); for (int j = 0; j \u003c n; j += h) { std::complex\u003cfloat\u003e w = std::complex\u003cfloat\u003e(1.0, 0.0); for (int k = j; k \u003c j + h / 2; k++) { std::complex\u003cfloat\u003e u = x[k]; std::complex\u003cfloat\u003e t = w * x[k + h / 2]; x[k] = u + t; x[k + h / 2] = u - t; w = w * wn; } } } } 事实上，如果这个方法用线性代数的方式表出，就是上面的矩阵表达式 $$ F_{2n}=\\begin{pmatrix}I_n\u0026D_n\\\\I_n\u0026-D_n\\end{pmatrix}\\begin{pmatrix}F_n\u00260\\\\0\u0026F_n\\end{pmatrix}P $$\nParallelism \u0026 Optimization 以上是一个足够好的串行 FFT 了。然而，在实际场景中，并行化是不可避免的。这里涉及的并行化有：\n对一个高维的 tensor, 我们只需要在某个维度上做 FFT, 所以其它维度自然可以高效并行； 上面的串行 FFT 实现当然可以并行地实现，但并不能充分并行。 我们重点关注第二个问题。剖析一下上面的代码（及其原理），它涉及了三重 for 循环。外层（自变量是 h）循环显然没法并行（Divide-and-Conquer 的计算方式是有先后依赖关系的）。中层（自变量是 j）划分了若干个组，而内层循环（自变量是 k）代表每个组内部的就地更新，所以各个组之间是可以并行的。\n但是，随着 h 的变化，组的数量也会变化（数量为 n // h）。由于 h 以指数级增大，所以并行度会显著降低，当 $h=n/2$ 时只有两个组了，不能充分利用多个线程。\n美中不足的是，各个组的内部是不能并行计算的，因为代码中涉及到对 w（也就是 $\\omega_n^k$）的更新。这不难解决：只要事先为所有的 $\\omega_n^k$ 打表，即可通过查表的方式得到 w, 从而内层循环也可以并行了。\n不过，这还不够。随着 h 增大，中层循环的并行度越来越小，内层循环的并行度越来越大，但它们的乘积始终是 n. 所以，或许可以把它们合并成一个长度为 n 的单层循环？这并不难实现。\n此外，我们需要对每个 $h$ 和每个 $k\\in\\{0,\\cdots,h/2-1\\}$ 打表，假设 n 的最大值是 $2048$, 那么需要一个 $$ 1+2+4+8+\\cdots+1024=2047 $$ 长度的表。然而，注意到 $\\omega_{2h}^{2k}=\\omega_h^k$, 所以这个表可以压缩至长度为 $1024$, 换句话说，只要对 $h=1024$ 的情形打表即可。下面是完整代码：\n#define MAX_LEN 2048 std::vector\u003cstd::complex\u003cfloat\u003e\u003e roots(MAX_LEN / 2); for (int i = 0; i \u003c MAX_LEN / 2; ++i) { roots[i] = std::complex\u003cfloat\u003e( cos(2 * M_PI * i / MAX_LEN), sin(-2 * M_PI * i / MAX_LEN) ); } void fft_precompute(std::vector\u003cstd::complex\u003cfloat\u003e\u003e\u0026 x) { // roots have already been precomputed. change(x); int n = x.size(); for (int h = 2; h \u003c= n; h \u003c\u003c= 1) { // parallelism here for (int i = 0; i \u003c n / 2; i++) { int j = i / (h / 2) * h; int k = i % (h / 2) + j; int idx = (k - j) * (MAX_LEN / h); std::complex\u003cfloat\u003e u = x[k]; std::complex\u003cfloat\u003e t = roots[idx] * x[k + h / 2]; x[k] = u + t; x[k + h / 2] = u - t; } } } 最后，在 change 函数中计算出的 rev[] 数组其实是 [0..n] 上的一个双射，这一步同样可以通过打表的方式预处理，以避免后续每一个调用 FFT 时都重新计算（因为我们可能会遍历其它维度，或遍历多个 tensor）。使用 cuda 重写上述代码，加入 64 个线程的并行化之后，效率已经基本和 torch.fft.fft 相差不多了。\n至于 FFT 的逆变换 ifft, 只需稍稍改变 root 数组，并在最后归一化处理一下即可，本质上是一样的。\nDiscussion 不过，我们也不知道 PyTorch 对 FFT 做了哪些其它的优化，例如针对输入为实数的 torch.fft.rfft, PyTorch 的实现比 general 的 torch.fft.fft 快很多（简单的 intuition: 当输入为实数时，FFT 作用后的数组的前一半和后一半其实是共轭的关系，所以可以只维护前一半）。此外，PyTorch 也能高效处理数组长度不是 2 的幂的 FFT, 但我们的 radix-2 算法是做不到这一点的，需要实现其它算法（可参考 stack exchange: non-power-of-2-ffts）。不过，如果我们实现 FFT 的目的是将其接入 conv, 那么长度不是 2 的幂次也没问题：只需 padding 到 2 的幂次，计算完之后切片 (slice) 即可。\n然而这样的 padding 方法很可能在内存上带来一定的开销：考虑 2D conv 的情形，假设 image size $256\\times 256$, kernel size $3\\times 3$, Stable Diffusion 等架构中常见的一个操作是，将 image padding 到 $258\\times 258$, 这样经过卷积的输出图像大小仍然是 $256\\times 256$. 然而，由于我们的方法只支持 2 的幂次，所以需要把 $258\\times 258$ 进一步 padding 到 $512\\times 512$, 同时将 $3\\times 3$ 的 kernel 同样 padding 到 $512\\times 512$, 几乎占用了 $8$ 倍的内存。\n目前的解决方案是：把 image 切割成若干个大小为 $2$ 的幂次的 chunk, 对每个 chunk 分别做 conv. 这样就可以规避内存的问题了。但是各个 chunk 之间不是独立的，所以在计算时需要处理 overlap, 这会增大计算时间（不过理论时间复杂度不变）。\n值得注意的是，PyTorch 中对卷积的实现（例如 torch.nn.functional.conv2d）使用的不是 FFT-conv, 在 kernel size 较小时比我们的方法快，但 kernel size 较大（例如和 image size 规模相当）时就不如我们的方法了。然而，FFT-based method 的误差会大于直接计算卷积。\nConclusion 本文讨论了 FFT 的原理、并行化实现，以及如何在工程上优化内存开销、接入 conv 算子。回过头来看，最终版本的 FFT 代码已经和 naive implementation 面貌全非了，这启示我们，从基本的数学原理、到优美的代码实现、再到完整的工程应用，有很长的一段距离啊 (a long way to go!).\nReference fft-conv-pytorch torch.fft OI wiki for FFT Wikipedia for FFT Linear Algebra lecture notes, by Prof. Yilong Yang ",
+  "wordCount" : "920",
+  "inLanguage": "en",
+  "datePublished": "2024-04-20T10:46:52+08:00",
+  "dateModified": "2024-04-20T10:46:52+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Zhiyang Shen"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://shenzhiy21.github.io/posts/fft/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Zhiyang Shen's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://shenzhiy21.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://shenzhiy21.github.io/" accesskey="h" title="Zhiyang Shen&#39;s Blog (Alt + H)">Zhiyang Shen&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://shenzhiy21.github.io/categories/" title="Categories">
+                    <span>Categories</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://shenzhiy21.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://github.com/shenzhiy21" title="Github">
+                    <span>Github</span>&nbsp;
+                    <svg fill="none" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round"
+                        stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24" height="12" width="12">
+                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                        <path d="M15 3h6v6"></path>
+                        <path d="M10 14L21 3"></path>
+                    </svg>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      FFT On the Road
+    </h1>
+    <div class="post-meta"><span title='2024-04-20 10:46:52 +0800 CST'>April 20, 2024</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;Zhiyang Shen
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#introduction" aria-label="Introduction">Introduction</a></li>
+                <li>
+                    <a href="#background" aria-label="Background">Background</a><ul>
+                        
+                <li>
+                    <a href="#linear-algebra" aria-label="Linear Algebra">Linear Algebra</a></li>
+                <li>
+                    <a href="#polygon-interpolation" aria-label="Polygon Interpolation">Polygon Interpolation</a></li></ul>
+                </li>
+                <li>
+                    <a href="#optimization" aria-label="Optimization">Optimization</a></li>
+                <li>
+                    <a href="#parallelism--optimization" aria-label="Parallelism &amp; Optimization">Parallelism &amp; Optimization</a></li>
+                <li>
+                    <a href="#discussion" aria-label="Discussion">Discussion</a></li>
+                <li>
+                    <a href="#conclusion" aria-label="Conclusion">Conclusion</a></li>
+                <li>
+                    <a href="#reference" aria-label="Reference">Reference</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h2>
+<p>Discrete Fourier Transform (DFT) 是一种重要的信号处理方法。目前流行的许多 ML 框架（例如语音、图像模型）都会用到卷积 (convolution) 的计算，而通过 Fourier Transform 实现卷积 (FFT-conv) 的理论复杂度较低，特别是当卷积核 (kernel) 较大时，相比其它方法（例如 Winograd convolution）具有明显的速度优势。因此，如何高效地实现 DFT, 即 Fast Fourier Transform (FFT), 就显得尤为重要。<code>PyTorch</code>, <code>numpy</code> 等工具中都具有相当全面且高效的 FFT 实现，也包括其它变种（例如 FFT 的逆变换 <code>ifft</code>, 高维版本 <code>fftn</code>, 作用于实数（而非一般复数）的 <code>rfft</code>, 作用于实数的高维版本 <code>rfftn</code>, 作用于实数的高维版本的逆变换 <code>irfftn</code> &hellip; &hellip;）。当然，我们不能只满足于当一个“调包侠”，所以本文旨在详细剖析 FFT 的数学原理，并探讨如何使用 C++ 高效实现 FFT, 例如并行化处理。</p>
+<h2 id="background">Background<a hidden class="anchor" aria-hidden="true" href="#background">#</a></h2>
+<h3 id="linear-algebra">Linear Algebra<a hidden class="anchor" aria-hidden="true" href="#linear-algebra">#</a></h3>
+<p>首先，到底什么是 FFT? 参考 Wikipedia 上的定义：</p>
+<blockquote>
+<p>Let $x_0,\cdots,x_{n-1}$ be complex numbers. The DFT is defined by the formula:
+$$
+X_k=\sum_{m=0}^{n-1}x_m e^{-\mathrm i2\pi km/n},k=0,\cdots,n-1
+$$</p>
+</blockquote>
+<p>这里 $e^{\mathrm i2\pi/n}$ 是 $n$ 次单位根 (primitive $n$-th root of unity).</p>
+<p>我们可以给出一个 trivial 的 C++ 实现，时间复杂度为 $O(n^2)$.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;&gt;</span> fft_naive(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;&gt;&amp;</span> x) {
+</span></span><span style="display:flex;"><span>    size_t len <span style="color:#f92672">=</span> x.size();
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;&gt;</span> y(len);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (size_t i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span> sum(<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">0.0</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (size_t j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> len; <span style="color:#f92672">++</span>j) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">float</span> angle <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> M_PI <span style="color:#f92672">*</span> i <span style="color:#f92672">*</span> j <span style="color:#f92672">/</span> len;
+</span></span><span style="display:flex;"><span>            std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span> w(cos(angle), sin(<span style="color:#f92672">-</span>angle));
+</span></span><span style="display:flex;"><span>            sum <span style="color:#f92672">+=</span> x[j] <span style="color:#f92672">*</span> w;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        y[i] <span style="color:#f92672">=</span> sum;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> y;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>从线性代数的角度来看，$\{X_k\}$ 是 Fourier matrix 作用于 $\{x_k\}$ 得到的。Fourier matrix 形式很优美，举个 4 阶的例子：
+$$
+F_4=\left(\begin{array}{ccc}
+1 &amp; 1 &amp; 1 &amp; 1 \\
+1 &amp; \omega^{1} &amp; \omega^{2} &amp; \omega^3 \\
+1 &amp; \omega^2 &amp; \omega^4 &amp; \omega^6 \\
+1 &amp; \omega^3 &amp; \omega^6 &amp; \omega^9
+\end{array}\right)
+$$
+这里的 $\omega=e^{-\mathrm i2\pi/n}$. 显然，$F_n$ 是一个对称矩阵 $F_n^T=F_n$. 更神奇的是，$F_n$ 是某个酉矩阵 (unitary matrix) 的倍数：
+$$
+\frac{1}{n}\overline{F_n}=F_n^{-1}
+$$
+这里扯到线性代数其实在逻辑上没那么 straightforward, 但是它能让我们从另一个角度看到 FFT 的原理。有如下的定理（参考了杨一龙老师的线性代数教材）：</p>
+<blockquote>
+<p>We have the following decomposition, where $D_n=\text{diag}(1,\omega,\cdots,\omega^{n-1})$, and $P$ is a matrix permuting all odd columns to the left and all even columns to the right.
+$$
+F_{2n}=\begin{pmatrix}I_n&amp;D_n\\I_n&amp;-D_n\end{pmatrix}\begin{pmatrix}F_n&amp;0\\0&amp;F_n\end{pmatrix}P
+$$</p>
+</blockquote>
+<p>也就是说，假设求出了 $F_n$, 我们就能快速地计算出 $F_{2n}$. 类似地，也可以推广到 $F_{3n}$.</p>
+<p>如果考虑求 $F_n$ 的时间复杂度，那么上述线性变换的递推式为
+$$
+T_{2n}=2T_n+\Theta(n)
+$$
+根据主定理 (Master Theorem) 有
+$$
+T_n=\Theta(n\log n)
+$$
+这就是 FFT in pure mathematics.</p>
+<h3 id="polygon-interpolation">Polygon Interpolation<a hidden class="anchor" aria-hidden="true" href="#polygon-interpolation">#</a></h3>
+<p>线性代数的解释难免让人感到难以接近，所以自然想问：有没有更直观的算法原理？实际上，考虑一个多项式 $f(x)=\displaystyle\sum_{k=0}^n a_k x^k$, Fourier 变换做的事情就是求 $f$ 作用在 $n$ 次单位根上的值。举个例子，假设
+$$
+\begin{aligned}
+f(x)&amp;=a_0+a_1x+\cdots+a_6x^6+a_7x^7\\
+&amp;=(a_0+a_2x^2+a_4x^4+a_6x^6)+x(a_1+a_3x^2+a_5x^4+a_7x^6)\\
+&amp;=G(x^2)+x\cdot H(x^2)
+\end{aligned}
+$$
+其中 $G$ 和 $H$ 是分别取奇数次幂和偶数次幂的系数得到的多项式。因此有
+$$
+\begin{aligned}
+f(\omega_n^k)&amp;=G((\omega_n^k)^2)+\omega_n^k\cdot H((\omega_n^k)^2)\\
+&amp;=G(\omega_n^{2k})+\omega_n^k\cdot H(\omega_n^{2k})\\
+&amp;=G(\omega_{n/2}^k)+\omega_n^k\cdot H(\omega_{n/2}^k)
+\end{aligned}
+$$
+类似地有
+$$
+f(\omega_{n}^{k+n/2})=G(\omega_{n/2}^k)-\omega_n^k\cdot H(\omega_{n/2}^k)
+$$
+因此，求出 $G(\omega_{n/2}^k)$ 和 $H(\omega_{n/2}^k)$ 后就能同时求出 $f(\omega_{n}^k)$ 和 $f(\omega_n^{k+n/2})$. 可以递归求解。复杂度是 $O(n\log n)$.</p>
+<h2 id="optimization">Optimization<a hidden class="anchor" aria-hidden="true" href="#optimization">#</a></h2>
+<p>我们不喜欢递归的函数，所以希望转换成非递归的实现。此外，递归实现需要占用大量的额外内存，更好的解决方案是<strong>就地</strong>进行运算。</p>
+<p>关于就地的问题，我们模拟上述数组的拆分过程：
+$$
+\begin{aligned}
+&amp;\{a_0,a_1,a_2,a_3,a_4,a_5,a_6,a_7 \}\\
+\Rightarrow &amp;\{a_0,a_2,a_4,a_6 \},\{a_1,a_3,a_5,a_7 \}\\
+\Rightarrow &amp;\{a_0,a_4 \},\{a_2,a_6\},\{a_1,a_5\},\{a_3,a_7\}\\
+\Rightarrow &amp;\{a_0\},\{a_4\},\{a_2\},\{a_6\},\{a_1\},\{a_5\},\{a_3\},\{a_7\}
+\end{aligned}
+$$
+不难发现这个变换的规律：把原先 index 的二进制表示进行翻转，即可得到最终的 index. 例如：$a_3$ 的二进制是 $011$, 翻转后为 $110$, 所以 index 为 $6$. 这个过程可以在 $O(n)$ 的时间内递归实现：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">change</span>(std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;&gt;&amp;</span> x) {
+</span></span><span style="display:flex;"><span>	size_t len <span style="color:#f92672">=</span> x.size();
+</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> rev(len);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (size_t i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>        rev[i] <span style="color:#f92672">=</span> rev[i <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>            rev[i] <span style="color:#f92672">|=</span> len <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (size_t i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> len; <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">&lt;</span> rev[i]) {
+</span></span><span style="display:flex;"><span>            std<span style="color:#f92672">::</span>swap(x[i], x[rev[i]]);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>在这一操作之后，按照公式
+$$
+\begin{aligned}
+f(\omega_n^k)&amp;=G(\omega_{n/2}^k)+\omega_n^k\cdot H(\omega_{n/2}^k)\\
+f(\omega_{n}^{k+n/2})&amp;=G(\omega_{n/2}^k)-\omega_n^k\cdot H(\omega_{n/2}^k)
+\end{aligned}
+$$
+假设 $G(\omega_{n/2}^k)$ 和 $H(\omega_{n/2}^k)$ 分别在数组下标为 $k$ 和 $k+n/2$ 的位置，则可以把 $f(\omega_n^k)$ 和 $f(\omega_n^{k+n/2})$ 覆写到这两个位置，从而实现 in-place 的目标。这一方法被称为 Radix-2 蝶形运算。下面是非递归的实现：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fft</span>(std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;&gt;&amp;</span> x) {
+</span></span><span style="display:flex;"><span>    change(x);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> x.size();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>; h <span style="color:#f92672">&lt;=</span> n; h <span style="color:#f92672">&lt;&lt;=</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span> wn <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span>(cos(<span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>M_PI<span style="color:#f92672">/</span>h), sin(<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span><span style="color:#f92672">*</span>M_PI<span style="color:#f92672">/</span>h));
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> n; j <span style="color:#f92672">+=</span> h) {
+</span></span><span style="display:flex;"><span>            std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span> w <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span>(<span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">0.0</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> j; k <span style="color:#f92672">&lt;</span> j <span style="color:#f92672">+</span> h <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>; k<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span> u <span style="color:#f92672">=</span> x[k];
+</span></span><span style="display:flex;"><span>                std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span> t <span style="color:#f92672">=</span> w <span style="color:#f92672">*</span> x[k <span style="color:#f92672">+</span> h <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>];
+</span></span><span style="display:flex;"><span>                x[k] <span style="color:#f92672">=</span> u <span style="color:#f92672">+</span> t;
+</span></span><span style="display:flex;"><span>                x[k <span style="color:#f92672">+</span> h <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> u <span style="color:#f92672">-</span> t;
+</span></span><span style="display:flex;"><span>                w <span style="color:#f92672">=</span> w <span style="color:#f92672">*</span> wn;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>事实上，如果这个方法用线性代数的方式表出，就是上面的矩阵表达式
+$$
+F_{2n}=\begin{pmatrix}I_n&amp;D_n\\I_n&amp;-D_n\end{pmatrix}\begin{pmatrix}F_n&amp;0\\0&amp;F_n\end{pmatrix}P
+$$</p>
+<h2 id="parallelism--optimization">Parallelism &amp; Optimization<a hidden class="anchor" aria-hidden="true" href="#parallelism--optimization">#</a></h2>
+<p>以上是一个足够好的串行 FFT 了。然而，在实际场景中，并行化是不可避免的。这里涉及的并行化有：</p>
+<ol>
+<li>对一个高维的 tensor, 我们只需要在某个维度上做 FFT, 所以其它维度自然可以高效并行；</li>
+<li>上面的串行 FFT 实现当然可以并行地实现，但并不能<strong>充分</strong>并行。</li>
+</ol>
+<p>我们重点关注第二个问题。剖析一下上面的代码（及其原理），它涉及了三重 <code>for</code> 循环。外层（自变量是 <code>h</code>）循环显然没法并行（Divide-and-Conquer 的计算方式是有先后依赖关系的）。中层（自变量是 <code>j</code>）划分了若干个组，而内层循环（自变量是 <code>k</code>）代表每个组内部的就地更新，所以各个组之间是可以并行的。</p>
+<p>但是，随着 <code>h</code> 的变化，组的数量也会变化（数量为 <code>n // h</code>）。由于 <code>h</code> 以指数级增大，所以并行度会显著降低，当 $h=n/2$ 时只有两个组了，不能充分利用多个线程。</p>
+<p>美中不足的是，各个组的内部是不能并行计算的，因为代码中涉及到对 <code>w</code>（也就是 $\omega_n^k$）的更新。这不难解决：只要事先为所有的 $\omega_n^k$ 打表，即可通过查表的方式得到 <code>w</code>, 从而内层循环也可以并行了。</p>
+<p>不过，这还不够。随着 <code>h</code> 增大，中层循环的并行度越来越小，内层循环的并行度越来越大，但它们的乘积始终是 <code>n</code>. 所以，或许可以把它们合并成一个长度为 <code>n</code> 的单层循环？这并不难实现。</p>
+<p>此外，我们需要对每个 $h$ 和每个 $k\in\{0,\cdots,h/2-1\}$ 打表，假设 <code>n</code> 的最大值是 $2048$, 那么需要一个
+$$
+1+2+4+8+\cdots+1024=2047
+$$
+长度的表。然而，注意到 $\omega_{2h}^{2k}=\omega_h^k$, 所以这个表可以压缩至长度为 $1024$, 换句话说，只要对 $h=1024$ 的情形打表即可。下面是完整代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#define MAX_LEN 2048
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;&gt;</span> roots(MAX_LEN <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> MAX_LEN <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>; <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>    roots[i] <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span>(
+</span></span><span style="display:flex;"><span>        cos(<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> M_PI <span style="color:#f92672">*</span> i <span style="color:#f92672">/</span> MAX_LEN),
+</span></span><span style="display:flex;"><span>        sin(<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> M_PI <span style="color:#f92672">*</span> i <span style="color:#f92672">/</span> MAX_LEN)
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fft_precompute</span>(std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;&gt;&amp;</span> x) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// roots have already been precomputed.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    change(x);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> x.size();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>; h <span style="color:#f92672">&lt;=</span> n; h <span style="color:#f92672">&lt;&lt;=</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// parallelism here
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">/</span> (h <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">*</span> h;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> i <span style="color:#f92672">%</span> (h <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">+</span> j;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> idx <span style="color:#f92672">=</span> (k <span style="color:#f92672">-</span> j) <span style="color:#f92672">*</span> (MAX_LEN <span style="color:#f92672">/</span> h);
+</span></span><span style="display:flex;"><span>            std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span> u <span style="color:#f92672">=</span> x[k];
+</span></span><span style="display:flex;"><span>            std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;</span> t <span style="color:#f92672">=</span> roots[idx] <span style="color:#f92672">*</span> x[k <span style="color:#f92672">+</span> h <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>];
+</span></span><span style="display:flex;"><span>            x[k] <span style="color:#f92672">=</span> u <span style="color:#f92672">+</span> t;
+</span></span><span style="display:flex;"><span>            x[k <span style="color:#f92672">+</span> h <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>] <span style="color:#f92672">=</span> u <span style="color:#f92672">-</span> t;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最后，在 <code>change</code> 函数中计算出的 <code>rev[]</code> 数组其实是 <code>[0..n]</code> 上的一个双射，这一步同样可以通过打表的方式预处理，以避免后续每一个调用 FFT 时都重新计算（因为我们可能会遍历其它维度，或遍历多个 tensor）。使用 cuda 重写上述代码，加入 64 个线程的并行化之后，效率已经基本和 <code>torch.fft.fft</code> 相差不多了。</p>
+<p>至于 FFT 的逆变换 <code>ifft</code>, 只需稍稍改变 <code>root</code> 数组，并在最后归一化处理一下即可，本质上是一样的。</p>
+<h2 id="discussion">Discussion<a hidden class="anchor" aria-hidden="true" href="#discussion">#</a></h2>
+<p>不过，我们也不知道 PyTorch 对 FFT 做了哪些其它的优化，例如针对输入为实数的 <code>torch.fft.rfft</code>, PyTorch 的实现比 general 的 <code>torch.fft.fft</code> 快很多（简单的 intuition: 当输入为实数时，FFT 作用后的数组的前一半和后一半其实是共轭的关系，所以可以只维护前一半）。此外，PyTorch 也能高效处理数组长度不是 2 的幂的 FFT, 但我们的 radix-2 算法是做不到这一点的，需要实现其它算法（可参考 <a href="https://math.stackexchange.com/questions/77118/non-power-of-2-ffts">stack exchange: non-power-of-2-ffts</a>）。不过，如果我们实现 FFT 的目的是将其接入 conv, 那么长度不是 2 的幂次也没问题：只需 padding 到 2 的幂次，计算完之后切片 (slice) 即可。</p>
+<p>然而这样的 padding 方法很可能在内存上带来一定的开销：考虑 2D conv 的情形，假设 image size $256\times 256$, kernel size $3\times 3$, Stable Diffusion 等架构中常见的一个操作是，将 image padding 到 $258\times 258$, 这样经过卷积的输出图像大小仍然是 $256\times 256$. 然而，由于我们的方法只支持 2 的幂次，所以需要把 $258\times 258$ 进一步 padding 到 $512\times 512$, 同时将 $3\times 3$ 的 kernel 同样 padding 到 $512\times 512$, 几乎占用了 $8$ 倍的内存。</p>
+<p>目前的解决方案是：把 image 切割成若干个大小为 $2$ 的幂次的 chunk, 对每个 chunk 分别做 conv. 这样就可以规避内存的问题了。但是各个 chunk 之间不是独立的，所以在计算时需要处理 overlap, 这会增大计算时间（不过理论时间复杂度不变）。</p>
+<p>值得注意的是，PyTorch 中对卷积的实现（例如 <code>torch.nn.functional.conv2d</code>）使用的不是 FFT-conv, 在 kernel size 较小时比我们的方法快，但 kernel size 较大（例如和 image size 规模相当）时就不如我们的方法了。然而，FFT-based method 的误差会大于直接计算卷积。</p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>本文讨论了 FFT 的原理、并行化实现，以及如何在工程上优化内存开销、接入 conv 算子。回过头来看，最终版本的 FFT 代码已经和 naive implementation 面貌全非了，这启示我们，从基本的数学原理、到优美的代码实现、再到完整的工程应用，有很长的一段距离啊 (a long way to go!).</p>
+<h2 id="reference">Reference<a hidden class="anchor" aria-hidden="true" href="#reference">#</a></h2>
+<ul>
+<li><a href="https://github.com/fkodom/fft-conv-pytorch"><code>fft-conv-pytorch</code></a></li>
+<li><a href="https://pytorch.org/docs/stable/fft.html"><code>torch.fft</code></a></li>
+<li><a href="https://oi-wiki.org/math/poly/fft/">OI wiki for FFT</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Fast_Fourier_transform">Wikipedia for FFT</a></li>
+<li>Linear Algebra lecture notes, by Prof. Yilong Yang</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://shenzhiy21.github.io/tags/code/">Code</a></li>
+      <li><a href="https://shenzhiy21.github.io/tags/fft/">Fft</a></li>
+      <li><a href="https://shenzhiy21.github.io/tags/parallel/">Parallel</a></li>
+    </ul>
+
+<ul class="share-buttons">
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share FFT On the Road on x"
+            href="https://x.com/intent/tweet/?text=FFT%20On%20the%20Road&amp;url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2ffft%2f&amp;hashtags=code%2cfft%2cparallel">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share FFT On the Road on linkedin"
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2ffft%2f&amp;title=FFT%20On%20the%20Road&amp;summary=FFT%20On%20the%20Road&amp;source=https%3a%2f%2fshenzhiy21.github.io%2fposts%2ffft%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share FFT On the Road on reddit"
+            href="https://reddit.com/submit?url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2ffft%2f&title=FFT%20On%20the%20Road">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share FFT On the Road on facebook"
+            href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fshenzhiy21.github.io%2fposts%2ffft%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share FFT On the Road on whatsapp"
+            href="https://api.whatsapp.com/send?text=FFT%20On%20the%20Road%20-%20https%3a%2f%2fshenzhiy21.github.io%2fposts%2ffft%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share FFT On the Road on telegram"
+            href="https://telegram.me/share/url?text=FFT%20On%20the%20Road&amp;url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2ffft%2f">
+            <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share FFT On the Road on ycombinator"
+            href="https://news.ycombinator.com/submitlink?t=FFT%20On%20the%20Road&u=https%3a%2f%2fshenzhiy21.github.io%2fposts%2ffft%2f">
+            <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
+                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+                <path
+                    d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" />
+            </svg>
+        </a>
+    </li>
+</ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>@ 2024 Zhiyang Shen</span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
