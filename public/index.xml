@@ -7,8 +7,29 @@
     <generator>Hugo -- 0.125.1</generator>
     <language>en-us</language>
     <copyright>@ 2024 Zhiyang Shen</copyright>
-    <lastBuildDate>Thu, 16 May 2024 15:21:52 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 15 Jan 2025 13:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Machine Learning Compilation</title>
+      <link>http://localhost:1313/posts/mlc/</link>
+      <pubDate>Wed, 15 Jan 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/mlc/</guid>
+      <description>Lecture Notes on ML Compilation</description>
+    </item>
+    <item>
+      <title>Random Thoughts &amp; Ideas</title>
+      <link>http://localhost:1313/posts/random_thoughts/</link>
+      <pubDate>Wed, 15 Jan 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/random_thoughts/</guid>
+      <description>碎碎念</description>
+    </item>
+    <item>
+      <title>Lecture Notes</title>
+      <link>http://localhost:1313/posts/lecture-notes/</link>
+      <pubDate>Tue, 14 Jan 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/lecture-notes/</guid>
+      <description>Lecture Notes</description>
+    </item>
     <item>
       <title>Write a Memory Allocator for PyTorch</title>
       <link>http://localhost:1313/posts/memory-allocator/</link>
@@ -22,6 +43,20 @@
       <pubDate>Sat, 20 Apr 2024 10:46:52 +0800</pubDate>
       <guid>http://localhost:1313/posts/fft/</guid>
       <description>Guide to implement FFT in C++ with parallelism</description>
+    </item>
+    <item>
+      <title>Random Number Generator</title>
+      <link>http://localhost:1313/posts/rng/</link>
+      <pubDate>Sat, 20 Apr 2024 10:46:52 +0800</pubDate>
+      <guid>http://localhost:1313/posts/rng/</guid>
+      <description>Lecture notes on RNG</description>
+    </item>
+    <item>
+      <title>Alias Method for Sampling from Discrete Distribution</title>
+      <link>http://localhost:1313/posts/alias-method/</link>
+      <pubDate>Sat, 13 Apr 2024 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/alias-method/</guid>
+      <description>An Introduction to Alias Method</description>
     </item>
     <item>
       <title>SFTP guide</title>

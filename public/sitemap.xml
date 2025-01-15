@@ -3,6 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/idea/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/machine-learning/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/mlc/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/note/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/note/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/random_thoughts/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/system/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2025-01-15T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/lecture-notes/</loc>
+    <lastmod>2025-01-14T13:00:00+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/algorithm/</loc>
     <lastmod>2024-05-16T15:21:52+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/code/</loc>
@@ -14,19 +50,7 @@
     <loc>http://localhost:1313/tags/memory/</loc>
     <lastmod>2024-05-16T15:21:52+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2024-05-16T15:21:52+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/system/</loc>
-    <lastmod>2024-05-16T15:21:52+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2024-05-16T15:21:52+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/memory-allocator/</loc>
-    <lastmod>2024-05-16T15:21:52+08:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
     <lastmod>2024-05-16T15:21:52+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/fft/</loc>
@@ -37,6 +61,15 @@
   </url><url>
     <loc>http://localhost:1313/tags/parallel/</loc>
     <lastmod>2024-04-20T10:46:52+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/rng/</loc>
+    <lastmod>2024-04-20T10:46:52+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/stats/</loc>
+    <lastmod>2024-04-20T10:46:52+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/alias-method/</loc>
+    <lastmod>2024-04-13T13:00:00+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/network/</loc>
     <lastmod>2022-08-15T10:46:52+08:00</lastmod>

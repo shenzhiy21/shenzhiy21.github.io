@@ -3,9 +3,10 @@ title = 'FFT On the Road'
 date = 2024-04-20T10:46:52+08:00
 draft = false
 math = true
-tags = ['code', 'fft', 'parallel', 'system']
+tags = ['code', 'fft', 'parallel', 'system', 'algorithm', 'machine learning']
 categories = ['code']
 summary = "Guide to implement FFT in C++ with parallelism"
+
 +++
 
 ## Introduction

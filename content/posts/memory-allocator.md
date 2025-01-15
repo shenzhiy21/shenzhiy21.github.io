@@ -3,7 +3,7 @@ title = 'Write a Memory Allocator for PyTorch'
 date = 2024-05-16T15:21:52+08:00
 draft = false
 math = true
-tags = ['code', 'memory', 'system']
+tags = ['code', 'memory', 'system', 'algorithm', 'machine learning']
 categories = ['code']
 summary = "Write a memory allocator from scratch."
 
