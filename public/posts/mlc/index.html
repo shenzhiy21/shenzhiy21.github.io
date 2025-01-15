@@ -183,7 +183,7 @@
 <hr>
 <h2 id="概述">概述<a hidden class="anchor" aria-hidden="true" href="#概述">#</a></h2>
 <p>机器学习编译 (machine learning compilation, MLC) 是指，将机器学习算法从开发阶段，通过变换和优化算法，使其变成部署状态。</p>
-<p>MLC 的关键元素：tensor 和 tensor functions.</p>
+<p>MLC 的关键元素: tensor 和 tensor functions.</p>
 <p>Takeaway msg: <strong>值得思考 abstraction 和 implementation.</strong> 例如 MLC 做的大部分事情就是 tensor function 在不同层面的 abstraction 之间的变换。</p>
 <h2 id="张量程序抽象">张量程序抽象<a hidden class="anchor" aria-hidden="true" href="#张量程序抽象">#</a></h2>
 <ul>
@@ -202,6 +202,7 @@
 </ul>
 </li>
 </ul>
+<p>引入 <code>TensorIR</code> 的一个重要原因是, ML 的开发流程和传统的程序开发有一些不同, ML (system) 的开发流程往往是先搞一个初步的实现，再通过<strong>变换 (transformation)</strong> 生成不同的 <code>TensorIR</code> 变体，进行 tuning.</p>
 
 
   </div>
