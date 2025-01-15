@@ -1,11 +1,11 @@
 +++
-title = 'Lecture Notes'
+title = 'Lecture Notes (Pieces)'
 date = 2025-01-14T13:00:00+08:00
 draft = false
 math = true
 tags = ['note']
 categories = ['note']
-summary = "Lecture Notes"
+summary = "Lecture notes, but not comprehensive. In fact, pieces collected from everywhere."
 
 +++
 

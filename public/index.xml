@@ -14,7 +14,7 @@
       <link>http://localhost:1313/posts/mlc/</link>
       <pubDate>Wed, 15 Jan 2025 13:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/mlc/</guid>
-      <description>Lecture Notes on ML Compilation</description>
+      <description>Lecture Notes on ML Compilation by Tianqi Chen</description>
     </item>
     <item>
       <title>Random Thoughts &amp; Ideas</title>
@@ -24,11 +24,11 @@
       <description>碎碎念</description>
     </item>
     <item>
-      <title>Lecture Notes</title>
+      <title>Lecture Notes (Pieces)</title>
       <link>http://localhost:1313/posts/lecture-notes/</link>
       <pubDate>Tue, 14 Jan 2025 13:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/lecture-notes/</guid>
-      <description>Lecture Notes</description>
+      <description>Lecture notes, but not comprehensive. In fact, pieces collected from everywhere.</description>
     </item>
     <item>
       <title>Write a Memory Allocator for PyTorch</title>
