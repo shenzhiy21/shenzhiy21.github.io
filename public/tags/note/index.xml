@@ -2,32 +2,39 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Note on Zhiyang Shen&#39;s Blog</title>
-    <link>http://localhost:1313/tags/note/</link>
+    <link>https://shenzhiy21.github.io/tags/note/</link>
     <description>Recent content in Note on Zhiyang Shen&#39;s Blog</description>
     <generator>Hugo -- 0.125.1</generator>
     <language>en-us</language>
     <copyright>@ 2024 Zhiyang Shen</copyright>
-    <lastBuildDate>Wed, 15 Jan 2025 13:00:00 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/note/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 18 Jan 2025 09:00:00 +0800</lastBuildDate>
+    <atom:link href="https://shenzhiy21.github.io/tags/note/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Notes on Linear Attention</title>
+      <link>https://shenzhiy21.github.io/posts/linear-attn/</link>
+      <pubDate>Sat, 18 Jan 2025 09:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/posts/linear-attn/</guid>
+      <description>Notes on topics related to linear attention.</description>
+    </item>
     <item>
       <title>Machine Learning Compilation</title>
-      <link>http://localhost:1313/posts/mlc/</link>
+      <link>https://shenzhiy21.github.io/posts/mlc/</link>
       <pubDate>Wed, 15 Jan 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/mlc/</guid>
+      <guid>https://shenzhiy21.github.io/posts/mlc/</guid>
       <description>Lecture Notes on ML Compilation by Tianqi Chen</description>
     </item>
     <item>
       <title>Random Thoughts &amp; Ideas</title>
-      <link>http://localhost:1313/posts/random_thoughts/</link>
+      <link>https://shenzhiy21.github.io/posts/random_thoughts/</link>
       <pubDate>Wed, 15 Jan 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/random_thoughts/</guid>
+      <guid>https://shenzhiy21.github.io/posts/random_thoughts/</guid>
       <description>碎碎念</description>
     </item>
     <item>
       <title>Lecture Notes (Pieces)</title>
-      <link>http://localhost:1313/posts/lecture-notes/</link>
+      <link>https://shenzhiy21.github.io/posts/lecture-notes/</link>
       <pubDate>Tue, 14 Jan 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/lecture-notes/</guid>
+      <guid>https://shenzhiy21.github.io/posts/lecture-notes/</guid>
       <description>Lecture notes, but not comprehensive. In fact, pieces collected from everywhere.</description>
     </item>
   </channel>
