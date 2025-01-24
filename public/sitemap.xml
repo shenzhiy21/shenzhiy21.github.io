@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://shenzhiy21.github.io/posts/her/</loc>
+    <lastmod>2025-01-24T09:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://shenzhiy21.github.io/posts/</loc>
+    <lastmod>2025-01-24T09:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://shenzhiy21.github.io/</loc>
+    <lastmod>2025-01-24T09:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://shenzhiy21.github.io/categories/</loc>
     <lastmod>2025-01-18T09:00:00+08:00</lastmod>
   </url><url>
@@ -17,16 +26,10 @@
     <loc>https://shenzhiy21.github.io/posts/linear-attn/</loc>
     <lastmod>2025-01-18T09:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/</loc>
-    <lastmod>2025-01-18T09:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://shenzhiy21.github.io/tags/system/</loc>
     <lastmod>2025-01-18T09:00:00+08:00</lastmod>
   </url><url>
     <loc>https://shenzhiy21.github.io/tags/</loc>
-    <lastmod>2025-01-18T09:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://shenzhiy21.github.io/</loc>
     <lastmod>2025-01-18T09:00:00+08:00</lastmod>
   </url><url>
     <loc>https://shenzhiy21.github.io/tags/idea/</loc>

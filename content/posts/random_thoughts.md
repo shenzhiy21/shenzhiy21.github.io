@@ -37,3 +37,10 @@ summary = "碎碎念"
 不管对于 scene 还是 composite visualization 的建模，其实都有在 tree or graph 的选择中犹豫过。在 composite visualization 中，我们目前的想法是，可以从一个 DAG 中抽出若干个树，它们每个都是这个 DAG structure 的一个“实例”。
 
 这样的想法似乎也可以用到其它领域。
+
+## "Predicting" and "Understanding"
+
+Source: Machine Learning: A Probabilistic Perspective
+
+> Over the passed years, deep learning focused more too much on the “prediction of observable patterns”, but not enough on “understanding” the underlying latent structure behind these patterns.
+
