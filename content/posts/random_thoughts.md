@@ -1,6 +1,6 @@
 +++
 title = 'Random Thoughts & Ideas'
-date = 2025-01-15T13:00:00+08:00
+date = 2025-02-06T13:00:00+08:00
 draft = false
 math = true
 tags = ['idea', 'note']
@@ -44,3 +44,14 @@ Source: Machine Learning: A Probabilistic Perspective
 
 > Over the passed years, deep learning focused more too much on the “prediction of observable patterns”, but not enough on “understanding” the underlying latent structure behind these patterns.
 
+## Knowledge Transfer
+
+最近在读 [PagedAttention](https://arxiv.org/pdf/2309.06180), 这篇论文的 idea 其实是比较简单的，但是它促成了 [vLLM](https://github.com/vllm-project/vllm) 的发展，足见一个学术上的想法是如何慢慢转变为工业界的产品。其实 PagedAttention 就是一种 memory management 方案，并且完全借鉴了操作系统课上学过的页式内存管理。只不过，OS 管理的是各个**进程**占用的内存，而 LLM 管理的是各个**序列**的 KV cache.
+
+PagedAttention 如此成功的原因是什么呢？我觉得不在于算法层面的创新——毕竟页式内存管理的算法谁都会写——而是最初的那个 observation: LLM 的推理就和 OS 一样，在显存管理上会出现大量的 fragments.
+
+一旦注意到了这一点，其实也就知道如何用 OS 那边的老方法来解决 LLM 这边的新问题了。
+
+我觉得这样的“知识迁移”是挺值得我们学习的。同时，写这一段话也是希望自己可以多回顾一下以前学过的一些经典的算法，不要觉得和自己的领域没什么关系，说不定哪天就能用上了呢。你看 vLLM, 对于 beam search 场景下的 KV cache 管理，就还是参考了 OS 内存管理中的 COW (copy-on-write), 建议把 vLLM 纳入 OS 课程的 course project (bushi).
+
+最后推荐一下关于 Paged Attention 的一个 [知乎专栏](https://zhuanlan.zhihu.com/p/720157057) 以及一个 [GitHub 项目](https://github.com/tspeterkim/paged-attention-minimal)。
