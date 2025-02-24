@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 <title>Lecture Notes (Pieces) | Zhiyang Shen&#39;s Blog</title>
 <meta name="keywords" content="note">
-<meta name="description" content="Lecture notes, but not comprehensive. In fact, pieces collected from everywhere.">
+<meta name="description" content="Lecture notes (pieces) collected from everywhere.">
 <meta name="author" content="Zhiyang Shen">
 <link rel="canonical" href="https://shenzhiy21.github.io/posts/lecture-notes/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.9514d8875d000a50e6844112d7bdaaa71869d5b712f00bfe452405bd2e6514fd.css" integrity="sha256-lRTYh10AClDmhEES172qpxhp1bcS8Av&#43;RSQFvS5lFP0=" rel="preload stylesheet" as="style">
@@ -81,15 +81,15 @@
   
 
 <meta property="og:title" content="Lecture Notes (Pieces)" />
-<meta property="og:description" content="Lecture notes, but not comprehensive. In fact, pieces collected from everywhere." />
+<meta property="og:description" content="Lecture notes (pieces) collected from everywhere." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://shenzhiy21.github.io/posts/lecture-notes/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2025-01-14T13:00:00+08:00" />
-<meta property="article:modified_time" content="2025-01-14T13:00:00+08:00" />
+<meta property="article:published_time" content="2025-02-24T13:00:00+08:00" />
+<meta property="article:modified_time" content="2025-02-24T13:00:00+08:00" />
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Lecture Notes (Pieces)"/>
-<meta name="twitter:description" content="Lecture notes, but not comprehensive. In fact, pieces collected from everywhere."/>
+<meta name="twitter:description" content="Lecture notes (pieces) collected from everywhere."/>
 
 
 <script type="application/ld+json">
@@ -118,15 +118,15 @@
   "@type": "BlogPosting",
   "headline": "Lecture Notes (Pieces)",
   "name": "Lecture Notes (Pieces)",
-  "description": "Lecture notes, but not comprehensive. In fact, pieces collected from everywhere.",
+  "description": "Lecture notes (pieces) collected from everywhere.",
   "keywords": [
     "note"
   ],
-  "articleBody": "This post is a collection of random notes \u0026 ideas from lectures, seminars, talks, and articles. Some of them are just a few lines, some are more detailed. Hopefully they can be useful to someone (Yeah, including me).\n“The Bitter Lesson” By Rich Sutton. Link here.\nThe biggest lesson that can be read from 70 years of AI research is that general methods that leverage computation are ultimately the most effective, and by a large margin. The eventual success is tinged with bitterness, and often incompletely digested, because it is success over a favored, human-centric approach. One thing that should be learned from the bitter lesson is the great power of general purpose methods, of methods that continue to scale with increased computation even as the available computation becomes very great. The two methods that seem to scale arbitrarily in this way are search and learning. The second general point to be learned from the bitter lesson is that the actual contents of minds are tremendously, irredeemably complex; we should stop trying to find simple ways to think about the contents of minds, such as simple ways to think about space, objects, multiple agents, or symmetries. Intuitions on Language Models By Jason Wei @ OpenAI, at Stanford CS25: V4. Link here.\nnext word prediction == massive multi-task learning, such as: grammar, world knowledge, semantics, math, code While overall loss improves smoothly, individual loss can improve suddenly (“emergent”). GPT-3.5 \u0026 GPT-4 are similar in grammer-understanding, but GPT-4 is much better in math BTW, in this lecture, Hyung Won Chung @ OpenAI also shared some really interesting opinions about transformers. He “looked back” and compared the decoder-only structure nowaday with the encoder-decoder structure in the past.\nThe key point is like, we should carefully always “look back” and “rethink” about the assumptions we made along with the consequent design choices. Some assumptions might be outdated because of “scaling law” or a more general task we’re now facing. In this case, it’s better to give up the assumptions and redesign the model.\n",
-  "wordCount" : "339",
+  "articleBody": "This post is a collection of random notes \u0026 ideas from lectures, seminars, talks, and articles. Some of them are just a few lines, some are more detailed. Hopefully they can be useful to someone (Yeah, including me).\n“The Bitter Lesson” By Rich Sutton. Link here.\nThe biggest lesson that can be read from 70 years of AI research is that general methods that leverage computation are ultimately the most effective, and by a large margin. The eventual success is tinged with bitterness, and often incompletely digested, because it is success over a favored, human-centric approach. One thing that should be learned from the bitter lesson is the great power of general purpose methods, of methods that continue to scale with increased computation even as the available computation becomes very great. The two methods that seem to scale arbitrarily in this way are search and learning. The second general point to be learned from the bitter lesson is that the actual contents of minds are tremendously, irredeemably complex; we should stop trying to find simple ways to think about the contents of minds, such as simple ways to think about space, objects, multiple agents, or symmetries. Intuitions on Language Models By Jason Wei @ OpenAI, at Stanford CS25: V4. Link here.\nnext word prediction == massive multi-task learning, such as: grammar, world knowledge, semantics, math, code While overall loss improves smoothly, individual loss can improve suddenly (“emergent”). GPT-3.5 \u0026 GPT-4 are similar in grammer-understanding, but GPT-4 is much better in math BTW, in this lecture, Hyung Won Chung @ OpenAI also shared some really interesting opinions about transformers. He “looked back” and compared the decoder-only structure nowaday with the encoder-decoder structure in the past.\nThe key point is like, we should carefully always “look back” and “rethink” about the assumptions we made along with the consequent design choices. Some assumptions might be outdated because of “scaling law” or a more general task we’re now facing. In this case, it’s better to give up the assumptions and redesign the model.\n“Success in a Competitive Training Task” By Keller Jodan, inventor of the optimizer Muon, which is later used by MoonShotAI.\nI would like to quote the entire section from the author’s post.\nThe neural network optimization research literature is by now mostly filled with a graveyard of dead optimizers that claimed to beat AdamW, often by huge margins, but then were never adopted by the community. Hot take, I know.\nWith billions of dollars being spent on neural network training by an industry hungry for ways to reduce that cost, we can infer that the fault lies with the research community rather than the potential adopters. That is, something is going wrong with the research. Upon close inspection of individual papers, one finds that the most common culprit is bad baselines: Papers often don’t sufficiently tune their AdamW baseline before comparing it to a newly proposed optimizer.\nI would like to note that the publication of new methods which claim huge improvements but fail to replicate / live up to the hype is not a victimless crime, because it wastes the time, money, and morale of a large number of individual researchers and small labs who run and are disappointed by failed attempts to replicate and build on such methods every day.\nTo remedy this situation, I propose that the following evidential standard be adopted: The research community should demand that, whenever possible, new methods for neural network training should demonstrate success in a competitive training task.\nCompetitive tasks solve the undertuned baseline problem in two ways. First, the baseline in a competitive task is the prior record, which, if the task is popular, is likely to already be well-tuned. Second, even in the unlikely event that the prior record was not well-tuned, self-correction can occur via a new record that reverts the training to standard methods. The reason this should be possible is because standard methods usually have fast hardware-optimized implementations available, whereas new methods typically introduce some extra wallclock overhead; hence simply dropping the newly proposed method will suffice to set a new record. As a result, the chance of a large but spurious improvement to a standard method being persistently represented in the record history for a popular competitive task is small.\nTo give an example, I will describe the current evidence for Muon. The main evidence for it being better than AdamW comes from its success in the competitive task “NanoGPT speedrunning.” In particular, switching from AdamW to Muon set a new NanoGPT training speed record on 10/15/24, where Muon improved the training speed by 35%. Muon has persisted as the optimizer of choice through all 12 of the new NanoGPT speedrunning records since then, which have been set by 7 different researchers.\nMuon has a slower per-step wallclock time than AdamW, so if there existed hyperparameters that could make AdamW as sample-efficient as Muon, then it would be possible to set a new record by simply chucking Muon out of the window and putting good old AdamW back in. Therefore, to trust that Muon is better than AdamW, at least for training small language models, you actually don’t need to trust me (Keller Jordan) at all. Instead, you only need to trust that there exist researchers in the community who know how to tune AdamW and are interested in setting a new NanoGPT speedrunning record. Isn’t that beautiful?\n",
+  "wordCount" : "902",
   "inLanguage": "en",
-  "datePublished": "2025-01-14T13:00:00+08:00",
-  "dateModified": "2025-01-14T13:00:00+08:00",
+  "datePublished": "2025-02-24T13:00:00+08:00",
+  "dateModified": "2025-02-24T13:00:00+08:00",
   "author":{
     "@type": "Person",
     "name": "Zhiyang Shen"
@@ -219,7 +219,7 @@
     <h1 class="post-title entry-hint-parent">
       Lecture Notes (Pieces)
     </h1>
-    <div class="post-meta"><span title='2025-01-14 13:00:00 +0800 CST'>January 14, 2025</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;Zhiyang Shen
+    <div class="post-meta"><span title='2025-02-24 13:00:00 +0800 CST'>February 24, 2025</span>&nbsp;·&nbsp;5 min&nbsp;·&nbsp;Zhiyang Shen
 
 </div>
   </header> <div class="toc">
@@ -232,7 +232,9 @@
                 <li>
                     <a href="#the-bitter-lesson" aria-label="&ldquo;The Bitter Lesson&rdquo;">&ldquo;The Bitter Lesson&rdquo;</a></li>
                 <li>
-                    <a href="#intuitions-on-language-models" aria-label="Intuitions on Language Models">Intuitions on Language Models</a>
+                    <a href="#intuitions-on-language-models" aria-label="Intuitions on Language Models">Intuitions on Language Models</a></li>
+                <li>
+                    <a href="#success-in-a-competitive-training-task" aria-label="&ldquo;Success in a Competitive Training Task&rdquo;">&ldquo;Success in a Competitive Training Task&rdquo;</a>
                 </li>
             </ul>
         </div>
@@ -267,6 +269,17 @@ Some of them are just a few lines, some are more detailed. Hopefully they can be
 He &ldquo;looked back&rdquo; and compared the decoder-only structure nowaday with the encoder-decoder structure in the past.</p>
 <p>The key point is like, we should carefully always &ldquo;look back&rdquo; and &ldquo;rethink&rdquo; about the assumptions we made along with the consequent design choices.
 Some assumptions might be outdated because of &ldquo;scaling law&rdquo; or a more general task we&rsquo;re now facing. In this case, it&rsquo;s better to give up the assumptions and redesign the model.</p>
+<h2 id="success-in-a-competitive-training-task">&ldquo;Success in a Competitive Training Task&rdquo;<a hidden class="anchor" aria-hidden="true" href="#success-in-a-competitive-training-task">#</a></h2>
+<p>By <a href="https://kellerjordan.github.io/">Keller Jodan</a>, inventor of the optimizer <a href="https://github.com/KellerJordan/Muon">Muon</a>, which is later used by <a href="https://github.com/MoonshotAI/Moonlight">MoonShotAI</a>.</p>
+<p>I would like to quote the entire section from the author&rsquo;s <a href="https://kellerjordan.github.io/posts/muon/">post</a>.</p>
+<hr>
+<p>The neural network optimization research literature is by now mostly filled with a graveyard of dead optimizers that claimed to beat AdamW, often by huge margins, but then were never adopted by the community. Hot take, I know.</p>
+<p>With billions of dollars being spent on neural network training by an industry hungry for ways to reduce that cost, we can infer that the fault lies with the research community rather than the potential adopters. That is, something is going wrong with the research. Upon close inspection of individual papers, one finds that the most common culprit is bad baselines: Papers often don’t sufficiently tune their AdamW baseline before comparing it to a newly proposed optimizer.</p>
+<p>I would like to note that the publication of new methods which claim huge improvements but fail to replicate / live up to the hype is not a victimless crime, because it wastes the time, money, and morale of a large number of individual researchers and small labs who run and are disappointed by failed attempts to replicate and build on such methods every day.</p>
+<p>To remedy this situation, I propose that the following evidential standard be adopted: The research community should demand that, whenever possible, new methods for neural network training should demonstrate success in a competitive training task.</p>
+<p>Competitive tasks solve the undertuned baseline problem in two ways. First, the baseline in a competitive task is the prior record, which, if the task is popular, is likely to already be well-tuned. Second, even in the unlikely event that the prior record was not well-tuned, self-correction can occur via a new record that reverts the training to standard methods. The reason this should be possible is because standard methods usually have fast hardware-optimized implementations available, whereas new methods typically introduce some extra wallclock overhead; hence simply dropping the newly proposed method will suffice to set a new record. As a result, the chance of a large but spurious improvement to a standard method being persistently represented in the record history for a popular competitive task is small.</p>
+<p>To give an example, I will describe the current evidence for Muon. The main evidence for it being better than AdamW comes from its success in the competitive task “NanoGPT speedrunning.” In particular, switching from AdamW to Muon set a new NanoGPT training speed record on 10/15/24, where Muon improved the training speed by 35%. Muon has persisted as the optimizer of choice through all 12 of the new NanoGPT speedrunning records since then, which have been set by 7 different researchers.</p>
+<p>Muon has a slower per-step wallclock time than AdamW, so if there existed hyperparameters that could make AdamW as sample-efficient as Muon, then it would be possible to set a new record by simply chucking Muon out of the window and putting good old AdamW back in. Therefore, to trust that Muon is better than AdamW, at least for training small language models, you actually don’t need to trust me (Keller Jordan) at all. Instead, you only need to trust that there exist researchers in the community who know how to tune AdamW and are interested in setting a new NanoGPT speedrunning record. Isn’t that beautiful?</p>
 
 
   </div>

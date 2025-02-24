@@ -7,8 +7,15 @@
     <generator>Hugo -- 0.125.1</generator>
     <language>en-us</language>
     <copyright>@ 2024 Zhiyang Shen</copyright>
-    <lastBuildDate>Sun, 23 Feb 2025 13:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 24 Feb 2025 13:00:00 +0800</lastBuildDate>
     <atom:link href="https://shenzhiy21.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lecture Notes (Pieces)</title>
+      <link>https://shenzhiy21.github.io/posts/lecture-notes/</link>
+      <pubDate>Mon, 24 Feb 2025 13:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/posts/lecture-notes/</guid>
+      <description>Lecture notes (pieces) collected from everywhere.</description>
+    </item>
     <item>
       <title>LLM Quantization</title>
       <link>https://shenzhiy21.github.io/posts/quant/</link>
@@ -43,13 +50,6 @@
       <pubDate>Wed, 15 Jan 2025 13:00:00 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/posts/mlc/</guid>
       <description>Lecture Notes on ML Compilation by Tianqi Chen</description>
-    </item>
-    <item>
-      <title>Lecture Notes (Pieces)</title>
-      <link>https://shenzhiy21.github.io/posts/lecture-notes/</link>
-      <pubDate>Tue, 14 Jan 2025 13:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/lecture-notes/</guid>
-      <description>Lecture notes, but not comprehensive. In fact, pieces collected from everywhere.</description>
     </item>
     <item>
       <title>Write a Memory Allocator for PyTorch</title>
