@@ -2,99 +2,99 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://shenzhiy21.github.io/categories/</loc>
+    <loc>http://localhost:1313/categories/</loc>
     <lastmod>2025-02-24T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/lecture-notes/</loc>
+    <loc>http://localhost:1313/posts/lecture-notes/</loc>
     <lastmod>2025-02-24T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/note/</loc>
+    <loc>http://localhost:1313/tags/note/</loc>
     <lastmod>2025-02-24T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/categories/note/</loc>
+    <loc>http://localhost:1313/categories/note/</loc>
     <lastmod>2025-02-24T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/</loc>
+    <loc>http://localhost:1313/posts/</loc>
     <lastmod>2025-02-24T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/</loc>
+    <loc>http://localhost:1313/tags/</loc>
     <lastmod>2025-02-24T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/</loc>
+    <loc>http://localhost:1313/</loc>
     <lastmod>2025-02-24T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/code/</loc>
+    <loc>http://localhost:1313/tags/code/</loc>
     <lastmod>2025-02-23T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/categories/code/</loc>
+    <loc>http://localhost:1313/categories/code/</loc>
     <lastmod>2025-02-23T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/llm/</loc>
+    <loc>http://localhost:1313/tags/llm/</loc>
     <lastmod>2025-02-23T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/quant/</loc>
+    <loc>http://localhost:1313/posts/quant/</loc>
     <lastmod>2025-02-23T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/quant/</loc>
+    <loc>http://localhost:1313/tags/quant/</loc>
     <lastmod>2025-02-23T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/system/</loc>
+    <loc>http://localhost:1313/tags/system/</loc>
     <lastmod>2025-02-23T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/idea/</loc>
+    <loc>http://localhost:1313/tags/idea/</loc>
     <lastmod>2025-02-06T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/random_thoughts/</loc>
+    <loc>http://localhost:1313/posts/random_thoughts/</loc>
     <lastmod>2025-02-06T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/her/</loc>
+    <loc>http://localhost:1313/posts/her/</loc>
     <lastmod>2025-01-24T09:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/machine-learning/</loc>
+    <loc>http://localhost:1313/tags/machine-learning/</loc>
     <lastmod>2025-01-18T09:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/linear-attn/</loc>
+    <loc>http://localhost:1313/posts/linear-attn/</loc>
     <lastmod>2025-01-18T09:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/mlc/</loc>
+    <loc>http://localhost:1313/posts/mlc/</loc>
     <lastmod>2025-01-15T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/algorithm/</loc>
+    <loc>http://localhost:1313/tags/algorithm/</loc>
     <lastmod>2024-05-16T15:21:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/memory/</loc>
+    <loc>http://localhost:1313/tags/memory/</loc>
     <lastmod>2024-05-16T15:21:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/memory-allocator/</loc>
+    <loc>http://localhost:1313/posts/memory-allocator/</loc>
     <lastmod>2024-05-16T15:21:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/fft/</loc>
+    <loc>http://localhost:1313/tags/fft/</loc>
     <lastmod>2024-04-20T10:46:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/fft/</loc>
+    <loc>http://localhost:1313/posts/fft/</loc>
     <lastmod>2024-04-20T10:46:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/parallel/</loc>
+    <loc>http://localhost:1313/tags/parallel/</loc>
     <lastmod>2024-04-20T10:46:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/rng/</loc>
+    <loc>http://localhost:1313/posts/rng/</loc>
     <lastmod>2024-04-20T10:46:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/stats/</loc>
+    <loc>http://localhost:1313/tags/stats/</loc>
     <lastmod>2024-04-20T10:46:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/alias-method/</loc>
+    <loc>http://localhost:1313/posts/alias-method/</loc>
     <lastmod>2024-04-13T13:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/network/</loc>
+    <loc>http://localhost:1313/tags/network/</loc>
     <lastmod>2022-08-15T10:46:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/tags/sftp/</loc>
+    <loc>http://localhost:1313/tags/sftp/</loc>
     <lastmod>2022-08-15T10:46:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/sftp/</loc>
+    <loc>http://localhost:1313/posts/sftp/</loc>
     <lastmod>2022-08-15T10:46:52+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/series/</loc>
+    <loc>http://localhost:1313/series/</loc>
   </url>
 </urlset>

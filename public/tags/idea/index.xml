@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Idea on Zhiyang Shen&#39;s Blog</title>
-    <link>https://shenzhiy21.github.io/tags/idea/</link>
+    <link>http://localhost:1313/tags/idea/</link>
     <description>Recent content in Idea on Zhiyang Shen&#39;s Blog</description>
     <generator>Hugo -- 0.125.1</generator>
     <language>en-us</language>
     <copyright>@ 2024 Zhiyang Shen</copyright>
     <lastBuildDate>Thu, 06 Feb 2025 13:00:00 +0800</lastBuildDate>
-    <atom:link href="https://shenzhiy21.github.io/tags/idea/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/idea/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Random Thoughts &amp; Ideas</title>
-      <link>https://shenzhiy21.github.io/posts/random_thoughts/</link>
+      <link>http://localhost:1313/posts/random_thoughts/</link>
       <pubDate>Thu, 06 Feb 2025 13:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/random_thoughts/</guid>
+      <guid>http://localhost:1313/posts/random_thoughts/</guid>
       <description>碎碎念</description>
     </item>
   </channel>

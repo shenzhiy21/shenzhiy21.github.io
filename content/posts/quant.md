@@ -325,6 +325,44 @@ Climate change is also having a significant impact on the Atlantic Ocean, with r
 
 ---
 
+**Baseline: `transformers` Native Inference**: 162.89 tokens/s
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import time
+import torch
+
+path = '/data1/zhiyang/models/llama-2-7b-chat-hf'
+device = torch.device("cuda:0")
+
+tokenizer = AutoTokenizer.from_pretrained(path)
+model = AutoModelForCausalLM.from_pretrained(path, torch_dtype=torch.float16).to(device)
+
+prompt = "The Atlantic Ocean"
+start_time = time.time()
+input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+output = model.generate(input_ids, max_length=512)
+result = tokenizer.decode(output[0], skip_special_tokens=True)
+end_time = time.time()
+
+print(result)
+print(f"\n{len(result) / (end_time - start_time)} tokens/s")
+```
+
+注意：这里没有使用 `flash-attention` kernel. 如果加上 `attn_implementation="flash_attention_2"`, 在 512 的 sequence length 上反而速度只有 ~130 tokens/s, 大概是因为 flash-attn 还是更适合 Hopper 架构，对 3090 这样的老古董 device 并没有很好的优化吧。当然，flash-attn 本来就更适合长文本的情形，这里就不测了。之后另写一篇测评吧。
+
+The Atlantic Ocean is the second largest ocean in the world, covering approximately 20% of the Earth's surface. It is located between the Americas and Europe and Africa, and it separates the continents of North and South America from Europe and Africa. The Atlantic Ocean is a vital component of the Earth's climate system and plays a crucial role in regulating global weather patterns, ocean currents, and marine ecosystems.
+
+The Atlantic Ocean is home to a diverse range of marine life, including whales, dolphins, turtles, and a vast array of fish species. The ocean's waters are also rich in nutrients, including nitrogen, phosphorus, and iron, which support the growth of phytoplankton and other microorganisms. These microorganisms form the base of the ocean's food web, supporting a vast array of marine life.
+
+The Atlantic Ocean has a significant impact on the Earth's climate, playing a key role in the global water cycle and influencing weather patterns around the world. The ocean's currents help to distribute heat and moisture across the globe, and its thermohaline circulation (THC) plays a crucial role in regulating global climate patterns. The THC is a complex system of ocean currents that helps to distribute heat and nutrients around the globe, and it is thought to be one of the key factors influencing global climate patterns.
+
+The Atlantic Ocean has a long and complex history, with evidence of human activity dating back thousands of years. The ocean has played a significant role in the development of human civilization, with many ancient cultures relying on its resources for food, transportation, and trade. Today, the Atlantic Ocean continues to be an important source of food, energy, and transportation, with many countries relying on its resources for their economic well-being.
+
+Despite its importance, the Atlantic Ocean is facing a range of environmental challenges, including pollution, overfishing, and the impacts of climate change. Plastic pollution in particular is a major problem, with millions of tons of plastic waste entering the ocean every year, harming marine life and contaminating the food chain. Overfishing is also a significant issue, with many fish stocks being overexploited and depleted, leading to the collapse of fisheries
+
+---
+
 给生成速度打个表（单位 token/s）
 
 | | stride=16 | stride=32 | stride=64 |
@@ -336,7 +374,7 @@ Climate change is also having a significant impact on the Atlantic Ocean, with r
 
 ## Conclusion
 
-这篇文章主要在靠最后的实验输出凑字数（笑）。实验结论也并不太出乎意料，有趣的地方大概在于自己实现这些个算法的成就感吧！GPTQ int4 量化的版本在这里 [link](https://github.com/microsoft/antares/blob/latest/samples/05_llama2_7b_int4.py). 最后强推一下 [AutoRT](https://github.com/microsoft/antares) ！如果有手搓 customized kernel 的需求，又觉得 Triton/CUDA 太麻烦，不如试试它 :)
+这篇文章主要在靠最后的实验输出凑字数（笑）。实验结论也并不太出乎意料，当然速度上没有进行任何优化，所以距离 `transformers` 的版本仍然有 10x 的差距。但是有趣的地方大概在于自己实现这些个算法的成就感吧！GPTQ int4 量化的版本在这里 [link](https://github.com/microsoft/antares/blob/latest/samples/05_llama2_7b_int4.py). 最后强推一下 [AutoRT](https://github.com/microsoft/antares) ！如果有手搓 customized kernel 的需求，又觉得 Triton/CUDA 太麻烦，不如试试它 :)
 
 此外，最近其实和不少人探讨了这个问题，也就是算法和系统上的 trade-off. 搞算法的人设计出好多妙妙算法，但是未必能在系统上高效实现，从而也就未必能很好地落地。像最近的一些我觉得比较 impressive 的工作 ([GLA](https://arxiv.org/abs/2312.06635), [MLA](https://arxiv.org/abs/2412.19437), [NSA](https://arxiv.org/abs/2502.11089) 等等) 都感觉像是 algorithm 在 system/hardware 戴的镣铐下跳舞，或者说 algorithm 是在 "align" 到 hardware efficient design. 这样的算法设计一定是最优的吗？不一定，甚至可能一定不。事实上现在所有这些名声在外的 network design (Convolution, Residual, Attention, ...) 哪个是 "Optimal" 的呢？一个都不是呀！（打个比方，难道人脑会自动算 `matmul` 吗？）
 
