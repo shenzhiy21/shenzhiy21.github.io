@@ -7,8 +7,15 @@
     <generator>Hugo -- 0.125.1</generator>
     <language>en-us</language>
     <copyright>@ 2024 Zhiyang Shen</copyright>
-    <lastBuildDate>Mon, 24 Feb 2025 13:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 15 Mar 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Understanding Diffusion Models</title>
+      <link>http://localhost:1313/posts/diffusion/</link>
+      <pubDate>Sat, 15 Mar 2025 12:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/diffusion/</guid>
+      <description>From differential equation to diffusion models</description>
+    </item>
     <item>
       <title>Lecture Notes (Pieces)</title>
       <link>http://localhost:1313/posts/lecture-notes/</link>

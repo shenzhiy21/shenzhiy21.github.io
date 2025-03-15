@@ -3,7 +3,7 @@ title = 'Alias Method for Sampling from Discrete Distribution'
 date = 2024-04-13T13:00:00+08:00
 draft = false
 math = true
-tags = ['code', 'algorithm', 'stats']
+tags = ['code', 'algorithm', 'stats', 'math']
 categories = ['code']
 summary = "An Introduction to Alias Method"
 

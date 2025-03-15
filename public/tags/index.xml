@@ -7,13 +7,34 @@
     <generator>Hugo -- 0.125.1</generator>
     <language>en-us</language>
     <copyright>@ 2024 Zhiyang Shen</copyright>
-    <lastBuildDate>Mon, 24 Feb 2025 13:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 15 Mar 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Diffusion</title>
+      <link>http://localhost:1313/tags/diffusion/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/diffusion/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Math</title>
+      <link>http://localhost:1313/tags/math/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/math/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Note</title>
       <link>http://localhost:1313/tags/note/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/note/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Stats</title>
+      <link>http://localhost:1313/tags/stats/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/stats/</guid>
       <description></description>
     </item>
     <item>
@@ -84,13 +105,6 @@
       <link>http://localhost:1313/tags/parallel/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/parallel/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Stats</title>
-      <link>http://localhost:1313/tags/stats/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/stats/</guid>
       <description></description>
     </item>
     <item>

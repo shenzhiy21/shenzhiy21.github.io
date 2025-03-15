@@ -3,7 +3,7 @@ title = 'Random Number Generator'
 date = 2024-04-20T10:46:52+08:00
 draft = false
 math = true
-tags = ['code', 'stats', 'algorithm']
+tags = ['code', 'stats', 'algorithm', 'math']
 categories = ['code']
 summary = "Lecture notes on RNG"
 +++
