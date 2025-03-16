@@ -165,6 +165,8 @@ $$
 
 这里同样有 "conditional" 字眼，因为 $z$ 是给定的点。
 
+---
+
 同样以 Gaussian distribution 为例。我们首先构造一个 conditional flow function $\psi_t^{\text{target}}(x|z)$ 如下：
 
 $$
@@ -193,6 +195,26 @@ $$
 $$
 u_t^{\text{target}}(x|z) = \left(\dot{\alpha}_t - \frac{\dot{\beta}_t}{\beta_t}\alpha_t \right) z + \frac{\dot{\beta}_t}{\beta_t} x
 $$
+
+需要注意的是，这个 conditional vector field 的公式不仅对 Gaussian distribution 成立。事实上，只要 flow function 的形式为
+
+$$
+X_t = \alpha_t z + \beta_t X_0
+$$
+
+其中 $\alpha_0 = \beta_1 = 0, \alpha_1 = \beta_0 = 1$, 就能按照上述方法推导出
+
+$$
+u_t^{\text{target}}(x|z) = \left(\dot{\alpha}_t - \frac{\dot{\beta}_t}{\beta_t}\alpha_t \right) z + \frac{\dot{\beta}_t}{\beta_t} x
+$$
+
+这样的 flow function 可以视 probability path $X_t$ 作为 $X_0$ 和 $z$ 之间的一种 interpolation. 例如取 linear interpolation ($\alpha_t = t$, $\beta_t = 1-t$), 就能得到
+
+$$
+u_t^{\text{target}}(x|z) = \frac{z-x}{1-t}
+$$
+
+---
 
 类比上述 probability path 的做法，下一步就是把 $u_t^{\text{target}}(\cdot|z)$ 中的 condition $z$ 去除掉 (by weighted average)，得到 marginal vector field.
 
@@ -343,4 +365,191 @@ $$
 这就是 Stable Diffusion 3 和 Movie Gen Video 的训练算法。
 
 ## SDE and Diffusion Models
+
+接下来就不是 motivation-oriented 的内容了——因为从 SDE 的视角看待 diffusion 本来就是与历史的发展相悖的。这个 section 的目的是用同一套框架统一地看待 diffusion 和 flow matching.
+
+回顾最开始的 ODE:
+
+$$
+\frac{\mathrm d}{\mathrm dt}X_t = u_t(X_t)
+$$
+
+我们也可以写成如下的形式（虽然在数学上并不严谨）：
+
+$$
+\mathrm dX_t = u_t(X_t)\mathrm dt
+$$
+
+由初始值 $X_0$ 和 vector field $u_t$ 即可唯一确定 $X_t$. 假设我们在此加上一层微扰，会怎么样呢？即：
+
+$$
+\mathrm dX_t = u_t(X_t)\mathrm dt + \sigma_t\mathrm dW_t
+$$
+
+其中 $\sigma_t$ 称作 diffusion coefficient. $W_t(0\leq t\leq 1)$ 指的是一个随机过程 Wiener process (也就是我们熟知的 Brownian motion), 它的定义如下：
+
+1. $W_0 = 0$
+2. Normal increments: $W_t - W_s \sim \mathcal N(0, (t-s) I_d)$ for all $0\leq s < t\leq 1$.
+3. Independent increments: For any $0\leq t_0<t_1<\cdots<t_n=1$, the increments $W_{t_1} - W_{t_0},\cdots,W_{t_n} - W_{t_{n-1}}$ are independent random variables.
+
+我们可以用如下的 update rule 来模拟 $W_t$: 选定一个 $h>0$,
+
+$$
+W_{t+h} = W_t + \sqrt{h} \epsilon_t, \ \ \epsilon_t\sim\mathcal N(0, I_d), \ \ (t=0,h,2h,\cdots,1-h)
+$$
+
+类似 ODE, 我们也可以使用与 Euler method 相似的数值算法——Euler-Maruyama method——来模拟 SDE 的 update rule:
+
+$$
+X_{t+h} = X_t + hu_t(X_t) + \sqrt{h}\sigma_t\epsilon_t, \ \ \epsilon_t\sim\mathcal N(0, I_d)
+$$
+
+与 ODE 不同的是，由于 SDE 中 $X_t$ 不再 deterministic (而是概率分布), 所以无法定义 flow function $\psi$.
+
+接下来，类似上文的 $u_t^{\text{target}}$, 我们希望也能为 SDE 导出 training target. 回顾上文，为了验证 ODE 中 probability path $p_t$ 和 vector field $u_t$ 是否对应，我们利用了 divergence theorem:
+
+Given a vector field $u_t$ with $X_0\sim p_0$. Then $X_t\sim p_t$ for all $t\in[0,1]$ if and only if 
+
+$$
+\partial_t p_t(x) = -\text{div}(p_tu_t)(x),\ \ \forall t\in[0, 1]
+$$
+
+相比 ODE, SDE 多了一个额外的扰动项 $W_t$. 所以我们只要对原先的定理做一些修正。事实上，SDE 也有一个 extended version for divergence theorem: **Fokker-Planck Equation**.
+
+---
+
+**Theorem**. Let $p_t$ be a probability path and consider SDE
+
+$$
+X_0\sim p_{\text{init}},\ \ \mathrm dX_t = u_t(X_t)\mathrm dt + \sigma_t \mathrm dW_t
+$$
+
+Then $X_t$ has distribution $p_t$ for all $0\leq t\leq 1$ if and only if
+
+$$
+\partial_t p_t(x) = -\text{div}(p_t u_t)(x) + \frac{\sigma_t^2}{2}\Delta p_t(x),\ \ \forall x\in\R^d,0\leq t\leq 1
+$$
+
+---
+
+接下来，我们假设 probability path $p_t$ 对应 ODE (而非 SDE) 中的 vector field $u_t^{\text{target}}$. 或者说，
+
+$$
+X_0\sim p_{\text{init}}, \ \ \mathrm dX_t = u_t^{\text{target}}(X_t)\mathrm dt\Rightarrow X_t\sim p_t,\ \ \forall 0\leq t\leq 1
+$$
+
+下面的定理告诉我们，在 ODE 改为 SDE 后，为了保持 $X_t$ 仍然服从 probability path $p_t$, 需要 vector field 做出怎样的修正：
+
+$$
+\begin{aligned}
+& X_0\sim p_{\text{init}}, \ \ \mathrm dX_t = \left[u_t^{\text{target}}(X_t) + \frac{\sigma_t^2}{2}\nabla \log p_t(X_t) \right]\mathrm dt + \sigma_t \mathrm dW_t\\\
+\Rightarrow{}& X_t\sim p_t,\ \ \forall 0\leq t\leq 1
+\end{aligned}
+$$
+
+证明如下：
+
+---
+
+*Proof*.
+
+$$
+\begin{aligned}
+\partial_t p_t(x) &= -\text{div}(p_t u_t^{\text{target}})(x)\\\
+&= -\text{div}(p_t u_t^{\text{target}})(x) - \frac{\sigma_t^2}{2}\Delta p_t(x) + \frac{\sigma_t^2}{2}\Delta p_t(x)\\\
+&= -\text{div}(p_t u_t^{\text{target}})(x) - \text{div}(\frac{\sigma_t^2}{2}\nabla p_t)(x) + \frac{\sigma_t^2}{2}\Delta p_t(x)\\\
+&= -\text{div}(p_t u_t^{\text{target}})(x) - \text{div}(p_t\left[\frac{\sigma_t^2}{2}\nabla \log p_t \right])(x) + \frac{\sigma_t^2}{2}\Delta p_t(x)\\\
+&= -\text{div}(p_t\left[u_t^{\text{target}}+\frac{\sigma_t^2}{2}\nabla \log p_t \right])(x) + \frac{\sigma_t^2}{2}\Delta p_t(x)
+\end{aligned}
+$$
+
+So we are done.
+
+其中 line 3 用到了 $\text{div}$ 的定义，line 4 用到了 $x\nabla\log x = \nabla x$.
+
+---
+
+于是我们把 $\nabla\log p_t(x)$ 定义为 **marginal score function**. 对应地，$\nabla\log p_t(x|z)$ 为 **conditional score function**.
+
+类似前面 marginal/conditional vector field 可以通过 Bayesian posterior 联系起来，这里的 marginal/conditional score function 也有如下的关系：
+
+$$
+\begin{aligned}
+\nabla \log p_t(x) &= \frac{\nabla p_t(x)}{p_t(x)} = \frac{\nabla \int p_t(x|z)p_{\text{data}}(z)\mathrm dz}{p_t(x)}\\\
+&= \frac{\int\nabla p_t(x|z)p_{\text{data}}(z)\mathrm dz}{p_t(x)}\\\
+&= \int \nabla \log p_t(x|z)\frac{p_t(x|z)p_{\text{data}}(z)}{p_t(x)}\mathrm dz
+\end{aligned}
+$$
+
+在 diffusion 中，marginal score function 不一定好求，但是我们一般是知道 conditional score function $\nabla \log p_t(x|z)$ 的解析形式的。例如，对于 Gaussian path $p_t(x|z)=\mathcal N(x;\alpha_tz,\beta_t^2 I_d)$, 我们有
+
+$$
+\nabla\log p_t(x|z) = -\frac{x-\alpha_t z}{\beta_t^2}
+$$
+
+接下来，我们推导 diffusion model 的 training target. 类似 flow matching loss, 我们也可以对修正项 $\nabla\log p_t(x)$ 定义 **score matching loss** 以及它的 conditional 版本：
+
+$$
+\begin{aligned}
+\mathcal L_{SM}(\theta) &=\mathbb E_{t\sim U(0, 1), z\sim p_{\text{data}}, x\sim p_t(\cdot|z)}\left[||s_t^\theta(x)-\nabla\log p_t(x)||^2 \right]\\\
+\mathcal L_{CSM}(\theta) &=\mathbb E_{t\sim U(0, 1), z\sim p_{\text{data}}, x\sim p_t(\cdot|z)}\left[||s_t^\theta(x)-\nabla\log p_t(x|z)||^2 \right]
+\end{aligned}
+$$
+
+类似地我们可以证明（因为 $\nabla\log p_t(x)$ 和 $u_t^{\text{target}}(x)$ 一样是通过 Bayesian posterior 和它们的 conditional 版本联系起来的）：
+
+$$
+\mathcal L_{SM}(\theta) = \mathcal L_{CSM}(\theta) + C
+$$
+
+所以，只需要训练两个 network $u_t^\theta$ 和 $s_t^\theta$, 就可以按照公式
+
+$$
+X_0\sim p_{\text{init}},\ \ \mathrm dX_t = \left[u_t^\theta(x) + \frac{\sigma_t^2}{2}s_t^\theta(X_t) \right]\mathrm dt + \sigma_t \mathrm dW_t
+$$
+
+来模拟 diffusion model 的 inference 过程了。下面我们看看最经典的 DDPM 的公式该如何用这个方法推导出来：
+
+$$
+\begin{aligned}
+\mathcal L_{CSM}(\theta) &=\mathbb E_{t\sim U(0, 1), z\sim p_{\text{data}}, x\sim p_t(\cdot|z)}\left[||s_t^\theta(x)-\nabla\log p_t(x|z)||^2 \right]\\\
+&=\mathbb E_{t\sim U(0, 1), z\sim p_{\text{data}}, x\sim p_t(\cdot|z)}\left[||s_t^\theta(x) + \frac{x-\alpha_t z}{\beta_t^2} ||^2 \right]\\\
+&=\mathbb E_{t\sim U(0, 1), z\sim p_{\text{data}}, \epsilon\sim \mathcal N(0, I_d)}\left[s_t^\theta(\alpha_t z + \beta_t\epsilon) + \frac{\epsilon}{\beta_t} ||^2 \right]\\\
+&=\frac{1}{\beta_t^2}\mathbb E_{t\sim U(0, 1), z\sim p_{\text{data}}, \epsilon\sim \mathcal N(0, I_d)}\left[\beta_t s_t^\theta(\alpha_t z + \beta_t\epsilon) + \epsilon ||^2 \right]
+\end{aligned}
+$$
+
+令 $\epsilon_t^\theta(x) = -\beta_t s_t^\theta(x)$, 并忽略掉常数项 $\frac{1}{\beta_t^2}$ 则有
+
+$$
+\mathcal L_{\text{DDPM}}(\theta) = \mathbb E_{t\sim U(0, 1), z\sim p_{\text{data}}, \epsilon\sim \mathcal N(0, I_d)}\left[||\epsilon_t^\theta(\alpha_t z +\beta_t\epsilon) - \epsilon ||^2 \right]
+$$
+
+换句话说，$\epsilon_t^\theta$ "learns to predict the noise that was used to corrupt a data sample $z$".
+
+作为对比，附上 DDPM 论文中的 algorithm 1 里面的 loss function:
+
+$$
+||\epsilon - \epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0+\sqrt{1-\bar{\alpha}_t}\epsilon, t) ||^2
+$$
+
+> 注：按照 DDPM 以及之后的许多工作的 convention, 这里的 $x_0$ 指的是从 $p_{\text{data}}$ 中采样的数据，即我们的 $z$.
+
+然而，这里还有一个问题：按照我们的推导，diffusion model 既需要训练 score function $s$, 也要学习 vector field $u$ 呀！为什么 DDPM 只训练了前者呢？事实上，对 Gaussian probability path, 我们有如下性质：
+
+For $p_t(x|z) = \mathcal N(\alpha_t z,\beta_t^2 I_d)$, it holds that the conditional (resp. marginal) vector field can be converted into the conditional (resp. marginal) score:
+
+$$
+\begin{aligned}
+u_t^{\text{target}}(x|z) &= \left(\beta_t^2\frac{\dot(\alpha)_t}{\alpha_t}-\dot{\beta}_t\beta_t \right)\nabla\log p_t(x|z) + \frac{\dot{\alpha}_t}{\alpha_t}x \\\
+u_t^{\text{target}}(x) &= \left(\beta_t^2\frac{\dot(\alpha)_t}{\alpha_t}-\dot{\beta}_t\beta_t \right)\nabla\log p_t(x) + \frac{\dot{\alpha}_t}{\alpha_t}x
+\end{aligned}
+$$
+
+读者请自行证明。提示如下：
+
+1. 对第一个等式，直接代入 $u_t^{\text{target}}$ 和 $\nabla\log p_t(x|z)$ 在 Gaussian path 下的表达式即可；
+2. 对第二个等式，利用等式 1 以及 conditional 与 marginal 之间的转换公式 (Bayesian posterior) 。
+
+换句话说，对 Gaussian probability path, 我们不需要训两个网络，只需要训一个就好了。
 
