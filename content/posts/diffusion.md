@@ -553,3 +553,86 @@ $$
 
 换句话说，对 Gaussian probability path, 我们不需要训两个网络，只需要训一个就好了。
 
+---
+
+Lecture notes 中也提到了关于 diffusion 的一些历史产物。正如上文所述，最先的 diffusion model 并没有采用 SDE 来建模，而是构造了 Markov chain in discrete time: $t=0,1,2,\cdots$. 此外，loss function 是采用 ELBO 来近似的——正如其名，只是 loss 的一个 lower bound, 不是真正的 loss. 后来，Song Yang 在 [这篇文章 (ICLR 2021 Oral)](https://arxiv.org/pdf/2011.13456) 中指出 Markov chain 其实是 SDE 的一种近似，而 SDE 的建模在数学上更优美和严谨。
+
+## Guidance
+
+好啦！我们已经掌握了 flow matching & diffusion 的数学原理，但是对于图像生成的任务而言，图像生成模型一般都有 text input, 属于 conditional generation. 如何扩展我们的模型来适应这一需求？
+
+我们首先看第一个问题。对于 conditional generation, 形式即为 $p_{\text{data}}(x|y)$. 其中 $y$ 既可以像 stable diffusion 等模型中常见的那样天马行空，也可以像 MNIST 这样: $y\in\mathcal Y=\\{0,1,\cdots, 9\\}$. 为了和上文的 condition $z$ 进行区分，我们把此处的 text prompt 称为 **guidance**, 把 $u_t^{\text{target}}(x|y) $ 称为 **guided vector field**. 此处的任务目标即为：任意给定定义域中的 $y$, 都能生成 $X_1\sim p_{\text{data}}(\cdot|y)$.
+
+先看 flow model. 此处只需稍微修改 loss function:
+
+$$
+\mathcal L_{\text{CFM}}^{\text{guided}}(\theta)=\mathbb E_{(z,y)\sim p_{\text{data}}(z,y),t\sim U(0,1),x\sim p_t(\cdot|z)}||u_t^\theta(x|y)-u_t^{\text{target}}(x|z)||^2
+$$
+
+然而，虽然这个 loss 在理论上正确，但是实践中人们发现生成的图像并不很符合 $y$ 的 guidence. 为此有了著名的 **classifier-free guidance** 技术。它的推导过程如下：
+
+对于 Gaussian probability path, 我们先前得到过 vector field 和 score function 之间的关系：
+
+$$
+u_t^{\text{target}}(x|y) = a_t x + b_t\nabla\log p_t(x|y)
+$$
+
+其中
+
+$$
+(a_t, b_t) = \left(\frac{\dot{\alpha}_t}{\alpha_t},\frac{\dot{\alpha}_t\beta_t^2 - \dot{\beta}_t \beta_t\alpha_t}{\alpha_t} \right)
+$$
+
+注意到，根据 Bayesian rule 我们可以变换 score function:
+
+$$
+\nabla\log p_t(x|y) = \nabla\left(\frac{p_t(x)p_t(y|x)}{p_t(y)} \right) = \nabla\log p_t(x) + \nabla\log p_t(y|x)
+$$
+
+代入上述公式得到
+
+$$
+u_t^{\text{target}}(x|y) = a_tx + b_t(\nabla\log p_t(x) + \nabla\log p_t(y|x)) = u_t^{\text{target}}(x)+ b_t\nabla\log p_t(y|x)
+$$
+
+为了提升 guidance 的作用，我们自然想到可以提高 $\nabla\log p_t(y|x)$ 的权重：
+
+$$
+\tilde u_t(x|y) = u_t^{\text{target}}(x) + wb_t\nabla \log p_t(y|x)
+$$
+
+重新利用 Bayesian rule 得到
+
+$$
+\begin{aligned}
+\tilde u_t(x|y) &= u_t^{\text{target}}(x) + wb_t\nabla \log p_t(y|x)\\\
+&= u_t^{\text{target}}(x) + wb_t(\nabla\log p_t(x|y) - \nabla\log p_t(x))\\\
+&= u_t^{\text{target}}(x) - (wa_tx+wb_tnabla\log p_t(x)) + (wa_tx+wb_t\nabla\log p_t(x|y))\\\
+&= (1-w)u_t^{\text{target}}(x) + wu_t^{\text{target}}(x|y)
+\end{aligned}
+$$
+
+也就是说，新的训练目标 $\tilde u_t(x|y)$ 其实是 unguided vector field 和 guided vector field 的线性组合。
+
+然而，这是否意味着我们需要训两个神经网络呢？并不是。我们可以把 unguided vector field 视作 $y=\varnothing$ 这一特殊的类别。在训练时，只需要按照一定的概率将采样到的 $y$ 设置成 $\varnothing$ 即可。形式化地，
+
+$$
+\begin{aligned}
+\mathcal L_{\text{CFM}}^{\text{CFG}}(\theta) &= \mathbb E_\square ||u_t^\theta(x|y) - u_t^{\text{target}}(x|z)||^2\\\
+\square &= (z,y)\sim p_{\text{data}}(z,y),t\sim U(0, 1), x\sim p_t(\cdot|z), \text{replace }y=\varnothing\text{ with prob. }\eta
+\end{aligned}
+$$
+
+在 inference 时，根据如下的 vector field 进行更新即可：
+
+$$
+\tilde u_t(x|y) = (1-w)u_t^{\text{target}}(x|\varnothing) + wu_t^{\text{target}}(x|y)
+$$
+
+对于 diffusion model, 对 score function 做类似修改即可。
+
+## Conclusion
+
+至此，这门课程关于 flow matching & diffusion 的原理就结束了。最后还稍微讲了一下 CLIP, VAE 等技术，以及 SD3, Movie Gen 等模型的 network architecture. 但是由于是工程上的实践、而非数学原理或技巧，所以此处就不赘述了。我学习下来感觉有很大的收获。说到底，如果只看 Stable Diffusion 等 paper 的算法原理，其实是非常简单的，实现起来也并不困难（这里指的是 loss function 和 update rule, 不是 network architecture），然而其背后的概率统计知识是非常深刻的。
+
+接下来我会自己尝试 implement SD3 from scratch. 期待下一篇 post!

@@ -1,7 +1,7 @@
 baseURL: https://shenzhiy21.github.io
 languageCode: en-us
-title: Zhiyang Shen's Blog
-copyright: "@ 2024 Zhiyang Shen"
+title: Zhiyang's Blog
+copyright: "@ 2025 Zhiyang Shen"
 theme: "PaperMod"
 enableInlineShortcodes: true
 taxonomies:
@@ -35,9 +35,9 @@ params:
   ShowPageNums: true
   ShowToc: true
   homeInfoParams:
-    Title: "Hi There! 👋"
+    Title: "Hi There!👋 Welcome to my page!"
     Content: >
-      Welcome to my personal website!
+      I am Zhiyang Shen, an undergraduate student at Tsinghua University, majoring in Software Engineering. I'm interested in machine learning, especially focusing on visualization & XAI. Besides, I'm keen on MLsys since my internship at MSR Asia. Please feel free to contact me if you want to explore the fascinating world of AI together!
   socialIcons:
     - name: github
       title: View My Github Profile
@@ -45,6 +45,9 @@ params:
     - name: email
       title: Send Me An Email!
       url: "mailto:chiyangshen@outlook.com"
+    - name: linkedin
+      title: View My LinkedIn Profile
+      url: "https://www.linkedin.com/in/zhiyang-shen-0036b2324/"
     - name: steam
       title: View My Steam Profile
       url: "https://steamcommunity.com/profiles/76561199266114458/"
