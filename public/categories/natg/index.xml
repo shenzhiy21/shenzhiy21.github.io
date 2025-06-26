@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Natg on Zhiyang&#39;s Blog</title>
+    <link>http://localhost:1313/categories/natg/</link>
+    <description>Recent content in Natg on Zhiyang&#39;s Blog</description>
+    <generator>Hugo -- 0.147.8</generator>
+    <language>en-us</language>
+    <copyright>@ 2025 Zhiyang Shen</copyright>
+    <lastBuildDate>Thu, 26 Jun 2025 13:00:00 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/natg/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Alias Method for Sampling from Discrete Distribution</title>
+      <link>http://localhost:1313/posts/number-theory/</link>
+      <pubDate>Thu, 26 Jun 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/number-theory/</guid>
+      <description>An Introduction to Alias Method</description>
+    </item>
+  </channel>
+</rss>

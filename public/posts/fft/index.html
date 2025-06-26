@@ -10,7 +10,7 @@
 <meta name="description" content="Guide to implement FFT in C&#43;&#43; with parallelism">
 <meta name="author" content="Zhiyang Shen">
 <link rel="canonical" href="http://localhost:1313/posts/fft/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.9514d8875d000a50e6844112d7bdaaa71869d5b712f00bfe452405bd2e6514fd.css" integrity="sha256-lRTYh10AClDmhEES172qpxhp1bcS8Av&#43;RSQFvS5lFP0=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d63079815d18f277504cf66aa2f64064cea74ac90c714e35aa4680da8d8b05c4.css" integrity="sha256-1jB5gV0Y8ndQTPZqovZAZM6nSskMcU41qkaA2o2LBcQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -197,8 +197,7 @@
 <p>Let $x_0,\cdots,x_{n-1}$ be complex numbers. The DFT is defined by the formula:
 $$
 X_k=\sum_{m=0}^{n-1}x_m e^{-\mathrm i2\pi km/n},k=0,\cdots,n-1
-$$</p>
-</blockquote>
+$$</p></blockquote>
 <p>这里 $e^{\mathrm i2\pi/n}$ 是 $n$ 次单位根 (primitive $n$-th root of unity).</p>
 <p>我们可以给出一个 trivial 的 C++ 实现，时间复杂度为 $O(n^2)$.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;&gt;</span> fft_naive(<span style="color:#66d9ef">const</span> std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>std<span style="color:#f92672">::</span>complex<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">float</span><span style="color:#f92672">&gt;&gt;&amp;</span> x) {
@@ -233,8 +232,7 @@ $$
 <p>We have the following decomposition, where $D_n=\text{diag}(1,\omega,\cdots,\omega^{n-1})$, and $P$ is a matrix permuting all odd columns to the left and all even columns to the right.
 $$
 F_{2n}=\begin{pmatrix}I_n&amp;D_n\\I_n&amp;-D_n\end{pmatrix}\begin{pmatrix}F_n&amp;0\\0&amp;F_n\end{pmatrix}P
-$$</p>
-</blockquote>
+$$</p></blockquote>
 <p>也就是说，假设求出了 $F_n$, 我们就能快速地计算出 $F_{2n}$. 类似地，也可以推广到 $F_{3n}$.</p>
 <p>如果考虑求 $F_n$ 的时间复杂度，那么上述线性变换的递推式为
 $$

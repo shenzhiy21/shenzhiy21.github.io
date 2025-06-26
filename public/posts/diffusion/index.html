@@ -10,7 +10,7 @@
 <meta name="description" content="From differential equation to diffusion models">
 <meta name="author" content="Zhiyang Shen">
 <link rel="canonical" href="http://localhost:1313/posts/diffusion/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.9514d8875d000a50e6844112d7bdaaa71869d5b712f00bfe452405bd2e6514fd.css" integrity="sha256-lRTYh10AClDmhEES172qpxhp1bcS8Av&#43;RSQFvS5lFP0=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d63079815d18f277504cf66aa2f64064cea74ac90c714e35aa4680da8d8b05c4.css" integrity="sha256-1jB5gV0Y8ndQTPZqovZAZM6nSskMcU41qkaA2o2LBcQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -194,8 +194,7 @@
 <h2 id="how-to-generate-images">How to Generate Images<a hidden class="anchor" aria-hidden="true" href="#how-to-generate-images">#</a></h2>
 <p>我们还是先想想如何 formalize 最原始的 image generation 任务（“原始”的意思是，不考虑输入额外的 prompt/image 作为 condition）。按照统计学习的基本认知，这个任务的定义是：假设有一批训练数据 $z\in \R^d$ 服从概率分布 $z\sim p_{\text{data}}$, 我们的目标是生成更多满足相同分布的数据。最直接的想法就是用 neural nets 建模并学习 $p_{\text{data}}$, 然后从中采样。然而如何用 NN 来描述一个 prob distribution 是一件很棘手的事情。为了 walk around 这个难题，diffusion &amp; flow matching 采用的对策是：从一个简单的概率分布 $p_{\text{init}}$（例如 Gaussian）中采样 $x\sim p_{\text{init}}$, 然后考虑如何把 $x$ “变换”到服从 $p_{\text{data}}$.</p>
 <blockquote>
-<p>Note: Gaussian distribution $p_{\text{init}}$ 可以视作噪声，所以 diffusion 也被称为去噪 (denoise) 的过程。</p>
-</blockquote>
+<p>Note: Gaussian distribution $p_{\text{init}}$ 可以视作噪声，所以 diffusion 也被称为去噪 (denoise) 的过程。</p></blockquote>
 <p>这里其实描述的是这样一个问题：<strong>给定两个概率分布 $p_{\text{init}}$ 和 $p_{\text{data}}$, 我该如何建模它们之间的“变换”关系？</strong>（“变换”，也就是说从 $p_{\text{init}}$ 中采集的样本经过该变换可以对应到 $p_{\text{data}}$ 中的一个样本）</p>
 <h2 id="probability-path">Probability Path<a hidden class="anchor" aria-hidden="true" href="#probability-path">#</a></h2>
 <p>针对上述问题，probability path 是一个还算自然的想法：我们引入时间变量 $t\in [0, 1]$, 并定义一个随时间变化的概率分布 $p_t$, 只要让它满足 $p_0 = p_{\text{init}}$, $p_1 = p_{\text{data}}$ 即可描述此变换。由于 $t$ 是连续的，所以可以想象成 $p_0$ 随着时间不断演化至 $p_1$. 这就是 probability path 名字的由来。这样的建模在数学里应该是挺常见的，例如微分几何中描述一段闭合曲线就常常用 $s_t (t\in [0, 1])$ 这样的形式。</p>
@@ -246,8 +245,7 @@ p_t(\cdot|z) = \mathcal(\alpha_t z,\beta_t^2 I_d)
 $$</p>
 <p>其中 $\alpha_t,\beta_t$ 被称为 sheduler, 并且满足 $\alpha_0=\beta_1=0, \alpha_1 = \beta_0 = 1$. 我们自然有 $p_0(\cdot|z)=p_{\text{init}}$ 和 $p_1(\cdot|z) = \delta_z$. 其中 $\delta_z$ 是 Dirac delta distribution, 也就是我们变换的终点。</p>
 <blockquote>
-<p>注意：这里其实是用一个特殊的概率分布 $\delta_z$ 来替换了 $z$ 这个点。所以我们已经学会了一种特殊的 dist2dist, 即 Gaussian to Dirac. 而我们定义的 $p_t$ 就是一条 probability path.</p>
-</blockquote>
+<p>注意：这里其实是用一个特殊的概率分布 $\delta_z$ 来替换了 $z$ 这个点。所以我们已经学会了一种特殊的 dist2dist, 即 Gaussian to Dirac. 而我们定义的 $p_t$ 就是一条 probability path.</p></blockquote>
 <p>我们可以一般化地定义：A <strong>conditional probability path</strong> is a set of distribution $p_t(x|z)$ such that</p>
 <p>$$
 p_0(\cdot|z) = p_{\text{init}}, \ \ p_1(\cdot| z) = \delta_z, \text{  for all }z\in\R^d
@@ -291,8 +289,7 @@ $$</p>
 </ol>
 <p>这里我们尝试思路 1.</p>
 <blockquote>
-<p>TODO: 其实我也没想清楚为什么不采用思路 2. 一个可能的解释是，虽然 flow matching model 可以用 ODE 建模、可以定义 flow function, 但是 diffusion model 是用 SDE 来建模的、无法定义 flow function, 也就只能采用思路 1 了。这种解释有些牵强，毕竟现在 SOTA 的模型大多开始用 flow matching 来替换 diffusion 了，明明可以用思路 2. 此处有待进一步思考。</p>
-</blockquote>
+<p>TODO: 其实我也没想清楚为什么不采用思路 2. 一个可能的解释是，虽然 flow matching model 可以用 ODE 建模、可以定义 flow function, 但是 diffusion model 是用 SDE 来建模的、无法定义 flow function, 也就只能采用思路 1 了。这种解释有些牵强，毕竟现在 SOTA 的模型大多开始用 flow matching 来替换 diffusion 了，明明可以用思路 2. 此处有待进一步思考。</p></blockquote>
 <p>对于思路 1, 意思就是我们训练的神经网络 $u^\theta$ 要尽可能逼近真实的 vector field $u^{\text{target}}$. 这谁都会。采取和刚才类似的心路历程，接下来还有两步：</p>
 <ol>
 <li>假设 $X_0$ 不再是一个 deterministic value, 而是概率分布 $p_{\text{init}}$ 中的一个样本，那该如何定义这种带有随机性的 &ldquo;stochastic conditional vector field&rdquo;?</li>
@@ -561,8 +558,7 @@ $$</p>
 ||\epsilon - \epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0+\sqrt{1-\bar{\alpha}_t}\epsilon, t) ||^2
 $$</p>
 <blockquote>
-<p>注：按照 DDPM 以及之后的许多工作的 convention, 这里的 $x_0$ 指的是从 $p_{\text{data}}$ 中采样的数据，即我们的 $z$.</p>
-</blockquote>
+<p>注：按照 DDPM 以及之后的许多工作的 convention, 这里的 $x_0$ 指的是从 $p_{\text{data}}$ 中采样的数据，即我们的 $z$.</p></blockquote>
 <p>然而，这里还有一个问题：按照我们的推导，diffusion model 既需要训练 score function $s$, 也要学习 vector field $u$ 呀！为什么 DDPM 只训练了前者呢？事实上，对 Gaussian probability path, 我们有如下性质：</p>
 <p>For $p_t(x|z) = \mathcal N(\alpha_t z,\beta_t^2 I_d)$, it holds that the conditional (resp. marginal) vector field can be converted into the conditional (resp. marginal) score:</p>
 <p>$$

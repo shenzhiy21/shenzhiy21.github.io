@@ -4,11 +4,18 @@
     <title>Posts on Zhiyang&#39;s Blog</title>
     <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on Zhiyang&#39;s Blog</description>
-    <generator>Hugo -- 0.125.1</generator>
+    <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
-    <lastBuildDate>Sat, 15 Mar 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 26 Jun 2025 13:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What if Each Number is a Polynomial?</title>
+      <link>http://localhost:1313/posts/number-theory/</link>
+      <pubDate>Thu, 26 Jun 2025 13:00:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/number-theory/</guid>
+      <description>关于数论的一些很久以前的小想法 / Some naive ideas about number theory years ago &amp;hellip;</description>
+    </item>
     <item>
       <title>Understanding Diffusion Models</title>
       <link>http://localhost:1313/posts/diffusion/</link>
@@ -36,13 +43,6 @@
       <pubDate>Thu, 06 Feb 2025 13:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/random_thoughts/</guid>
       <description>碎碎念</description>
-    </item>
-    <item>
-      <title>About Her</title>
-      <link>http://localhost:1313/posts/her/</link>
-      <pubDate>Fri, 24 Jan 2025 09:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/her/</guid>
-      <description>关于一个叫 zxr 的女孩子的一切</description>
     </item>
     <item>
       <title>Notes on Linear Attention</title>

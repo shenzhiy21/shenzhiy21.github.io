@@ -10,7 +10,7 @@
 <meta name="description" content="Notes on topics related to linear attention.">
 <meta name="author" content="Zhiyang Shen">
 <link rel="canonical" href="http://localhost:1313/posts/linear-attn/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.9514d8875d000a50e6844112d7bdaaa71869d5b712f00bfe452405bd2e6514fd.css" integrity="sha256-lRTYh10AClDmhEES172qpxhp1bcS8Av&#43;RSQFvS5lFP0=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d63079815d18f277504cf66aa2f64064cea74ac90c714e35aa4680da8d8b05c4.css" integrity="sha256-1jB5gV0Y8ndQTPZqovZAZM6nSskMcU41qkaA2o2LBcQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -190,8 +190,7 @@
 <p>写这篇 blog 的动机是，最近 <a href="https://arxiv.org/abs/2501.08313">MiniMax-O1</a> 把 linear attention model scale up 起来了，虽然他们是第一个吃螃蟹的人、这个模型对 long-text 的表现据说一般，但我感觉 efficient attention 大概是 LLM 未来发展的一个方向。此外还有 Google 的 <a href="https://arxiv.org/abs/2501.00663">Titans</a> 也是在做线性 RNN. 包括之前的 <a href="https://arxiv.org/abs/2312.00752">Mamba</a> 等等。另外想借着学习 linear attention, 再补一下 MLsys 层面的一些<a href="https://github.com/fla-org/flash-linear-attention">知识</a>，紧跟 <a href="https://sustcsonglin.github.io/">Sonta</a> 姐姐的步伐！</p>
 <h2 id="linear-attention-blog--科学空间">Linear Attention Blog @ 科学空间<a hidden class="anchor" aria-hidden="true" href="#linear-attention-blog--科学空间">#</a></h2>
 <blockquote>
-<p>这一节作为 intro, 来自 Jianlin Su 老师的一篇 <a href="https://spaces.ac.cn/archives/7546">blog</a>.</p>
-</blockquote>
+<p>这一节作为 intro, 来自 Jianlin Su 老师的一篇 <a href="https://spaces.ac.cn/archives/7546">blog</a>.</p></blockquote>
 <p>我们回顾一下 scaled-dot attention 在<strong>训练</strong>阶段的形式：</p>
 <p>$$
 \text{Attn}(Q, K, V) = \text{softmax}(QK^T)V
@@ -227,8 +226,7 @@ $$</p>
 <p>需要注意的是，这里的 $O(1)$ 是对于 $n$ 而言的。对于 $d$ (也就是 <code>head_size</code>) 的复杂度其实是 $O(d^2)$. 由于 $d$ 通常取值为 $32, 64, 128$ 等，所以此时还能接受。但是如果对于 $d$ 的复杂度达到 $\Theta(d^3)$, 就不太能接受了：例如 $64^3=262,144$, 已经超过了 <code>128k</code> 的 sequence length, 没法忽略。</p>
 <h2 id="modern-rnn">Modern RNN<a hidden class="anchor" aria-hidden="true" href="#modern-rnn">#</a></h2>
 <blockquote>
-<p>这一节参考了 Sonta 姐姐的 <a href="https://www.bilibili.com/video/BV1MDwAeWEoM/">talk</a>. 我从 Sonta 身上学到的最重要的一点就是，设计这些新的模型架构，一方面需要算法方面的 insight, 另一方面也需要深刻体会 system 层面如何高效实现你提出的算法（甚至算法本身也可以去 align 系统的计算优劣势）。</p>
-</blockquote>
+<p>这一节参考了 Sonta 姐姐的 <a href="https://www.bilibili.com/video/BV1MDwAeWEoM/">talk</a>. 我从 Sonta 身上学到的最重要的一点就是，设计这些新的模型架构，一方面需要算法方面的 insight, 另一方面也需要深刻体会 system 层面如何高效实现你提出的算法（甚至算法本身也可以去 align 系统的计算优劣势）。</p></blockquote>
 <h3 id="chunkwise-linear-attention">Chunkwise Linear Attention<a hidden class="anchor" aria-hidden="true" href="#chunkwise-linear-attention">#</a></h3>
 <p>其实，苏老师说的这个 non-negative similarity function $\text{sim}(\cdot, \cdot)$ 不要也行。或者说，为什么不允许 attention score 有负值呢？所以，接下来我们考虑 linear attention 的一种最简单的情形：$\text{sim}(q_i, k_j) = q_i^Tk_j$.</p>
 <p>在 training 阶段，有两种方式：parallel form 和 recurrent form. 形式分别为（注意 parallel form 加上了 mask）：</p>
@@ -264,8 +262,7 @@ $$</p>
 <li>对整个 sequence 分块 (block) 并行；</li>
 <li>每个 block 内部，以 32bit (而非原本针对 ASCII 的 8bit) 为读写单元，也就是把 4 个 ASCII 字符看成一个 chunk.</li>
 </ol>
-<p>其实是和 linear attention 有异曲同工之处的。</p>
-</blockquote>
+<p>其实是和 linear attention 有异曲同工之处的。</p></blockquote>
 <p>在 notation 上为了和原文保持一致，我们下面把 sequence length 记为 $L$ 而非 $n$.</p>
 <p>把 $L$ 分成 $L/C$ 个 chunk, 在每个 chunk 内部采用 parallel form, 而对于历史信息采用 recurrent form.</p>
 <p>Notation:</p>
