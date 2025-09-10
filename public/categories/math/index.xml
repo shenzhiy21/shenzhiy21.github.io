@@ -4,17 +4,17 @@
     <title>Math on Zhiyang&#39;s Blog</title>
     <link>http://localhost:1313/categories/math/</link>
     <description>Recent content in Math on Zhiyang&#39;s Blog</description>
-    <generator>Hugo -- 0.147.8</generator>
+    <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
     <lastBuildDate>Thu, 26 Jun 2025 13:00:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/math/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Alias Method for Sampling from Discrete Distribution</title>
+      <title>What if Each Number is a Polynomial?</title>
       <link>http://localhost:1313/posts/number-theory/</link>
       <pubDate>Thu, 26 Jun 2025 13:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/number-theory/</guid>
-      <description>An Introduction to Alias Method</description>
+      <description>关于数论的一些很久以前的小想法 / Some naive ideas about number theory years ago &amp;hellip;</description>
     </item>
   </channel>
 </rss>
