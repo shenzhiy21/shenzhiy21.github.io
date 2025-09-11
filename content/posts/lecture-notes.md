@@ -1,6 +1,6 @@
 +++
 title = 'Lecture Notes (Pieces)'
-date = 2025-02-24T13:00:00+08:00
+date = 2025-09-11T13:00:00+08:00
 draft = false
 math = true
 tags = ['note']
@@ -57,3 +57,63 @@ Competitive tasks solve the undertuned baseline problem in two ways. First, the 
 To give an example, I will describe the current evidence for Muon. The main evidence for it being better than AdamW comes from its success in the competitive task “NanoGPT speedrunning.” In particular, switching from AdamW to Muon set a new NanoGPT training speed record on 10/15/24, where Muon improved the training speed by 35%. Muon has persisted as the optimizer of choice through all 12 of the new NanoGPT speedrunning records since then, which have been set by 7 different researchers.
 
 Muon has a slower per-step wallclock time than AdamW, so if there existed hyperparameters that could make AdamW as sample-efficient as Muon, then it would be possible to set a new record by simply chucking Muon out of the window and putting good old AdamW back in. Therefore, to trust that Muon is better than AdamW, at least for training small language models, you actually don’t need to trust me (Keller Jordan) at all. Instead, you only need to trust that there exist researchers in the community who know how to tune AdamW and are interested in setting a new NanoGPT speedrunning record. Isn’t that beautiful?
+
+## Towards High-Quality Writing for Research Publications
+
+By Steve Lin @ Microsoft.
+
+### Clear Writing Comes From Clear Thinking
+
+- "Fortunately the act of composition, or creation, disciplines the mind; writing is one way to go about thinking ..." quote from book *The Elements of Style*.
+- "Don't worry if you don't understand this book completely on the first reading. We didn't understand it all on the first writing!" quote from book *Design Patterns*.
+- "If you can't explain it simply, you don't understand it well enough." by Albert Einstein.
+
+A good research process: writing during the whole stage of developing (coding).
+
+Writing helps to organize the ideas clearly.
+
+### How to Write a **Bad** Research Paper
+
+- Write the paper for only yourself (asssume the audience knows everything)
+- Dismiss previous work (say nothing positive about previous methods)
+- Just describe what you did (not explain why; not mention alternatives)
+- Focus mainly on details (This is really important for me! You spent 3 months of the 6-month project on optimizing a certain part of the code, so you should spend half the paper talking about it)
+
+### Tips on Writing Clearly
+
+- Keep it simple !!!
+  - Use plain (not complex) sentences to express
+  - Be precise
+  - Use examples
+- Clear structure
+  - One main idea per paragraph
+  - Begin each section/subsection with a brief note on what will be presented and how it fits into the paper structure
+- Good use of language
+  - Stress position
+  - Topic position. An example:
+    - Collectin samples is the first step in water quality studies. (Next to talk about collecting samples)
+    - The first step in water quality studies is collecting samples. (Next to talk about the second step)
+  - Avoid grammar errors and style errors
+    - American English or British English
+    - [doesn't] $\rightarrow$ does not. Because [doesn't] is informal.
+    - 4 $\rightarrow$ four. (in some cases, more formal)
+
+### Guideliens for Different Paper Sections
+
+- Abstract: cover the following parts
+  - The problem your work addresses
+  - Why the problem is interesting
+  - What is new about your solution
+  - Results and impact of solution
+- Introduction
+  - Introduce problem and explain why it is interesting and relevant
+  - Briefly review common approaches to problem
+  - Describe your novel solution at a high level
+  - Highlight contributions, what is different
+  - What results you get
+- Discussion (perhaps the most interesting part for experts)
+  - Limitations, how they might be addressed
+  - Conditions when assumptions can be relaxed
+  - Insight on contributions, how they can be useful in other problems
+
+Other tips: get others to read; read after taking a long break.

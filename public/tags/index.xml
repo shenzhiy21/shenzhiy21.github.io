@@ -2,123 +2,123 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Zhiyang&#39;s Blog</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>https://shenzhiy21.github.io/tags/</link>
     <description>Recent content in Tags on Zhiyang&#39;s Blog</description>
-    <generator>Hugo -- 0.150.0</generator>
+    <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
-    <lastBuildDate>Thu, 11 Sep 2025 00:41:54 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 11 Sep 2025 13:00:00 +0800</lastBuildDate>
+    <atom:link href="https://shenzhiy21.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Note</title>
-      <link>http://localhost:1313/tags/note/</link>
-      <pubDate>Thu, 11 Sep 2025 00:41:54 +0800</pubDate>
-      <guid>http://localhost:1313/tags/note/</guid>
+      <link>https://shenzhiy21.github.io/tags/note/</link>
+      <pubDate>Thu, 11 Sep 2025 13:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/tags/note/</guid>
       <description></description>
     </item>
     <item>
       <title>Math</title>
-      <link>http://localhost:1313/tags/math/</link>
+      <link>https://shenzhiy21.github.io/tags/math/</link>
       <pubDate>Thu, 26 Jun 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/tags/math/</guid>
+      <guid>https://shenzhiy21.github.io/tags/math/</guid>
       <description></description>
     </item>
     <item>
       <title>Diffusion</title>
-      <link>http://localhost:1313/tags/diffusion/</link>
+      <link>https://shenzhiy21.github.io/tags/diffusion/</link>
       <pubDate>Sat, 15 Mar 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/tags/diffusion/</guid>
+      <guid>https://shenzhiy21.github.io/tags/diffusion/</guid>
       <description></description>
     </item>
     <item>
       <title>Stats</title>
-      <link>http://localhost:1313/tags/stats/</link>
+      <link>https://shenzhiy21.github.io/tags/stats/</link>
       <pubDate>Sat, 15 Mar 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/tags/stats/</guid>
+      <guid>https://shenzhiy21.github.io/tags/stats/</guid>
       <description></description>
     </item>
     <item>
       <title>Code</title>
-      <link>http://localhost:1313/tags/code/</link>
+      <link>https://shenzhiy21.github.io/tags/code/</link>
       <pubDate>Sun, 23 Feb 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/tags/code/</guid>
+      <guid>https://shenzhiy21.github.io/tags/code/</guid>
       <description></description>
     </item>
     <item>
       <title>Llm</title>
-      <link>http://localhost:1313/tags/llm/</link>
+      <link>https://shenzhiy21.github.io/tags/llm/</link>
       <pubDate>Sun, 23 Feb 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/tags/llm/</guid>
+      <guid>https://shenzhiy21.github.io/tags/llm/</guid>
       <description></description>
     </item>
     <item>
       <title>Quant</title>
-      <link>http://localhost:1313/tags/quant/</link>
+      <link>https://shenzhiy21.github.io/tags/quant/</link>
       <pubDate>Sun, 23 Feb 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/tags/quant/</guid>
+      <guid>https://shenzhiy21.github.io/tags/quant/</guid>
       <description></description>
     </item>
     <item>
       <title>System</title>
-      <link>http://localhost:1313/tags/system/</link>
+      <link>https://shenzhiy21.github.io/tags/system/</link>
       <pubDate>Sun, 23 Feb 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/tags/system/</guid>
+      <guid>https://shenzhiy21.github.io/tags/system/</guid>
       <description></description>
     </item>
     <item>
       <title>Idea</title>
-      <link>http://localhost:1313/tags/idea/</link>
+      <link>https://shenzhiy21.github.io/tags/idea/</link>
       <pubDate>Thu, 06 Feb 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/tags/idea/</guid>
+      <guid>https://shenzhiy21.github.io/tags/idea/</guid>
       <description></description>
     </item>
     <item>
       <title>Machine Learning</title>
-      <link>http://localhost:1313/tags/machine-learning/</link>
+      <link>https://shenzhiy21.github.io/tags/machine-learning/</link>
       <pubDate>Sat, 18 Jan 2025 09:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/tags/machine-learning/</guid>
+      <guid>https://shenzhiy21.github.io/tags/machine-learning/</guid>
       <description></description>
     </item>
     <item>
       <title>Algorithm</title>
-      <link>http://localhost:1313/tags/algorithm/</link>
+      <link>https://shenzhiy21.github.io/tags/algorithm/</link>
       <pubDate>Thu, 16 May 2024 15:21:52 +0800</pubDate>
-      <guid>http://localhost:1313/tags/algorithm/</guid>
+      <guid>https://shenzhiy21.github.io/tags/algorithm/</guid>
       <description></description>
     </item>
     <item>
       <title>Memory</title>
-      <link>http://localhost:1313/tags/memory/</link>
+      <link>https://shenzhiy21.github.io/tags/memory/</link>
       <pubDate>Thu, 16 May 2024 15:21:52 +0800</pubDate>
-      <guid>http://localhost:1313/tags/memory/</guid>
+      <guid>https://shenzhiy21.github.io/tags/memory/</guid>
       <description></description>
     </item>
     <item>
       <title>Fft</title>
-      <link>http://localhost:1313/tags/fft/</link>
+      <link>https://shenzhiy21.github.io/tags/fft/</link>
       <pubDate>Sat, 20 Apr 2024 10:46:52 +0800</pubDate>
-      <guid>http://localhost:1313/tags/fft/</guid>
+      <guid>https://shenzhiy21.github.io/tags/fft/</guid>
       <description></description>
     </item>
     <item>
       <title>Parallel</title>
-      <link>http://localhost:1313/tags/parallel/</link>
+      <link>https://shenzhiy21.github.io/tags/parallel/</link>
       <pubDate>Sat, 20 Apr 2024 10:46:52 +0800</pubDate>
-      <guid>http://localhost:1313/tags/parallel/</guid>
+      <guid>https://shenzhiy21.github.io/tags/parallel/</guid>
       <description></description>
     </item>
     <item>
       <title>Network</title>
-      <link>http://localhost:1313/tags/network/</link>
+      <link>https://shenzhiy21.github.io/tags/network/</link>
       <pubDate>Mon, 15 Aug 2022 10:46:52 +0800</pubDate>
-      <guid>http://localhost:1313/tags/network/</guid>
+      <guid>https://shenzhiy21.github.io/tags/network/</guid>
       <description></description>
     </item>
     <item>
       <title>Sftp</title>
-      <link>http://localhost:1313/tags/sftp/</link>
+      <link>https://shenzhiy21.github.io/tags/sftp/</link>
       <pubDate>Mon, 15 Aug 2022 10:46:52 +0800</pubDate>
-      <guid>http://localhost:1313/tags/sftp/</guid>
+      <guid>https://shenzhiy21.github.io/tags/sftp/</guid>
       <description></description>
     </item>
   </channel>

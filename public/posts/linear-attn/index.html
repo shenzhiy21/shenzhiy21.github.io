@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Notes on Linear Attention | Zhiyang&#39;s Blog</title>
 <meta name="keywords" content="note, machine learning, system">
 <meta name="description" content="Notes on topics related to linear attention.">
 <meta name="author" content="Zhiyang Shen">
-<link rel="canonical" href="http://localhost:1313/posts/linear-attn/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.d650382e2960ee05a60f62667fbcc70be6c57ec165b4481bda9908e9dab78694.css" integrity="sha256-1lA4Lilg7gWmD2Jmf7zHC&#43;bFfsFltEgb2pkI6dq3hpQ=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="canonical" href="https://shenzhiy21.github.io/posts/linear-attn/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d63079815d18f277504cf66aa2f64064cea74ac90c714e35aa4680da8d8b05c4.css" integrity="sha256-1jB5gV0Y8ndQTPZqovZAZM6nSskMcU41qkaA2o2LBcQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://shenzhiy21.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://shenzhiy21.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://shenzhiy21.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://shenzhiy21.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://shenzhiy21.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/linear-attn/">
+<link rel="alternate" hreflang="en" href="https://shenzhiy21.github.io/posts/linear-attn/">
 <noscript>
     <style>
         #theme-toggle,
@@ -77,7 +77,71 @@
 </script>
 
 
+<meta property="og:title" content="Notes on Linear Attention" />
+<meta property="og:description" content="Notes on topics related to linear attention." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://shenzhiy21.github.io/posts/linear-attn/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-01-18T09:00:00+08:00" />
+<meta property="article:modified_time" content="2025-01-18T09:00:00+08:00" />
 
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Notes on Linear Attention"/>
+<meta name="twitter:description" content="Notes on topics related to linear attention."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://shenzhiy21.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Notes on Linear Attention",
+      "item": "https://shenzhiy21.github.io/posts/linear-attn/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Notes on Linear Attention",
+  "name": "Notes on Linear Attention",
+  "description": "Notes on topics related to linear attention.",
+  "keywords": [
+    "note", "machine learning", "system"
+  ],
+  "articleBody": "写在前面 写这篇 blog 的动机是，最近 MiniMax-O1 把 linear attention model scale up 起来了，虽然他们是第一个吃螃蟹的人、这个模型对 long-text 的表现据说一般，但我感觉 efficient attention 大概是 LLM 未来发展的一个方向。此外还有 Google 的 Titans 也是在做线性 RNN. 包括之前的 Mamba 等等。另外想借着学习 linear attention, 再补一下 MLsys 层面的一些知识，紧跟 Sonta 姐姐的步伐！\nLinear Attention Blog @ 科学空间 这一节作为 intro, 来自 Jianlin Su 老师的一篇 blog.\n我们回顾一下 scaled-dot attention 在训练阶段的形式：\n$$ \\text{Attn}(Q, K, V) = \\text{softmax}(QK^T)V $$\n这里忽略了缩放因子，且假设 $Q, K, V\\in \\R^{n\\times d}$, 其中对于 long-context 有 $n\\gg d$.\n由于这个 softmax 的存在，矩阵乘法不能换序，必须先算出 $QK^T$, 这里的复杂度是 $O(n^2d)\\approx O(n^2)$. 但是如果没有 softmax, 就可以先算 $K^TV$, 复杂度是 $O(nd^2)\\approx O(n)$.\n实际上，Attention 可以写成如下的形式：\n$$ \\text{Attn}(Q, K, V)_i = \\frac{\\sum _{j=1}^{n} e^{q_i^T k_j} v_j}{\\sum _{j=1}^{n} e^{q_i^T k_j}} $$\n可以据此提出一个对 Attention 的一般定义：\n$$ \\text{Attn}(Q, K, V)_i = \\frac{\\sum _{j=1}^n \\text{sim}(q_i, k_j) v_j}{\\sum _{j=1}^n \\text{sim}(q_i, k_j)} $$\n其中需要保证 $\\text{sim}(q_i, k_j)\\geq 0$. 一个想法是\n$$ \\text{sim}(q_i, k_j) = \\phi(q_i)^T \\varphi(k_j) $$\n其中取 $\\phi, \\varphi$ 是非负的函数。例如 $\\phi(x) = \\varphi(x) = \\text{elu}(x) + 1$.\n接下来我们考虑自回归生成任务，也就是推理阶段。此时每个位置的 embedding 无法和未来的 embedding 产生 attention, 相当于加上一个 mask. 对应到公式中，只需要改变 $\\sum _{j=1}^n$ 为 $\\sum _{j=1}^i$.\n$$ \\text{Attn}(Q, k, V)_i = \\frac{\\sum _{j=1}^i (\\phi(q_i)^T \\varphi(k_j))v_j}{\\sum _{j=1}^i \\phi(q_i)^T \\varphi(k_j)} = \\frac{\\phi(q_i)^T \\sum _{j=1}^i \\varphi(k_j)v_j^T}{\\phi(q_i)^T \\sum _{j=1}^i \\varphi(k_j)} $$\n在推理时，令 $S_i = \\sum _{j=1}^i \\varphi(k_j)v_j^T$, $z_i=\\sum _{j=1}^i \\varphi(k_j)$, 则有\n$$ \\text{Attn}(Q, K, V)_i = \\frac{\\phi(q_i)^T S_i}{\\phi(q_i)^T z_i} $$\n以及递推关系\n$$ S_i = S_{i-1} + \\varphi(k_i)v_i^T, z_i = z_{i-1} + \\varphi(k_i) $$\n说明这种 Attention 可以用 RNN 来实现。好处是，生成每个 token 的时间复杂度为 $O(1)$, 空间复杂度也为 $O(1)$.\n需要注意的是，这里的 $O(1)$ 是对于 $n$ 而言的。对于 $d$ (也就是 head_size) 的复杂度其实是 $O(d^2)$. 由于 $d$ 通常取值为 $32, 64, 128$ 等，所以此时还能接受。但是如果对于 $d$ 的复杂度达到 $\\Theta(d^3)$, 就不太能接受了：例如 $64^3=262,144$, 已经超过了 128k 的 sequence length, 没法忽略。\nModern RNN 这一节参考了 Sonta 姐姐的 talk. 我从 Sonta 身上学到的最重要的一点就是，设计这些新的模型架构，一方面需要算法方面的 insight, 另一方面也需要深刻体会 system 层面如何高效实现你提出的算法（甚至算法本身也可以去 align 系统的计算优劣势）。\nChunkwise Linear Attention 其实，苏老师说的这个 non-negative similarity function $\\text{sim}(\\cdot, \\cdot)$ 不要也行。或者说，为什么不允许 attention score 有负值呢？所以，接下来我们考虑 linear attention 的一种最简单的情形：$\\text{sim}(q_i, k_j) = q_i^Tk_j$.\n在 training 阶段，有两种方式：parallel form 和 recurrent form. 形式分别为（注意 parallel form 加上了 mask）：\n$$ O=(QK^T\\odot M)V\\in\\R^{n\\times d} $$\n以及\n$$ \\begin{aligned} S_t \u0026= S_{t-1} + v_tk_t^T \\in \\R^{d\\times d}\\\\ o_t \u0026= S_t q_t \\in \\R^d \\end{aligned} $$\n他们各自的 pros and cons 在于：\nParallel form pro: 矩阵乘法的形式，GPU 友好，方便用 tensorcore 加速 con: 时间复杂度为 $O(n^2)$, 没有解决长文本的高复杂度问题 Recurrent form pro: 时间复杂度 $O(n)$, 空间复杂度 $O(1)$ con: 难以并行计算，此外没有 pure matmul 运算，GPU 利用率差 所以一个自然的想法是能不能把它们的优势结合起来，也就是 “chunkwise”.\n我记得当时在做 ANS 的加速的时候也遇到了这个问题。甚至可能所有 sequential form 的计算逻辑都会在试图并行加速时遇到这个问题。但是 ANS 的一个不同之处是，只有 recurrent form, 至少我没推出 parallel form. 但当时我们的并行方案包括：\n对整个 sequence 分块 (block) 并行； 每个 block 内部，以 32bit (而非原本针对 ASCII 的 8bit) 为读写单元，也就是把 4 个 ASCII 字符看成一个 chunk. 其实是和 linear attention 有异曲同工之处的。\n在 notation 上为了和原文保持一致，我们下面把 sequence length 记为 $L$ 而非 $n$.\n把 $L$ 分成 $L/C$ 个 chunk, 在每个 chunk 内部采用 parallel form, 而对于历史信息采用 recurrent form.\nNotation:\n$$ \\begin{aligned} S_{[i]} \u0026:= S_{iC}\\in\\R^{d\\times d}\\\\ \\square_{[i]} \u0026:= \\square_{iC+1:(i+1)C}\\in \\R^{C\\times d},\\text{for } \\square\\in{Q,K,V,O} \\end{aligned} $$\n状态矩阵 $S$ 的递推关系为：\n$$ S_{[t+1]} = S_{[t]} + V_{[t]}^TK_{[t]} $$\nAttention 计算公式为：\n$$ O_{[t]} = Q_{[t]}S_{[t]}^T + (Q_{[t]}K_{[t]}^T\\odot M)V_{[t]} $$\n这就是最基本的 chunkwise linear attention 形式。\nDecay Term $S_t$ 可以视为当前状态的一种表示，然而我们发现，对 $S_t$ 的更新方式 $S_t = S_{t-1} + v_t k_t^T$ 很容易跑飞。一种修正方式是加上 decay term $\\gamma$:\n$$ S_t = \\gamma S_{t-1} + v_t k_t^T $$\n在实际应用 (RetNet, Lightning Attention) 中，加上 decay term 之后效果就会提升不少。\n更一般地，$\\gamma$ 未必需要是定值。我们可以为它加上 “selectivity” (data-dependent decay, e.g. Mamba2, mLSTM, Gated Retention):\n$$ S_t = \\gamma_t S_{t-1} + v_t k_t^T $$\n不同的 $\\gamma_t$ 可以某种程度上“控制”模型的记忆和遗忘。\n更一般地，$\\gamma$ 为什么一定得是一个 scalar 呢？为什么不能是一个 tensor 呢？例如，$G_t\\in \\R^{d\\times d}$:\n$$ S_t = G_t \\odot S_{t-1} + v_t k_t^T $$\nDelta Rule 另一方面，我们可以重新审视一下 linear attention 对 $S_t$ 的更新：\n$$ S_t = S_{t-1} + v_t k_t^T $$\n这可以看成对如下的优化目标的单步优化：\n$$ \\mathcal L_t(S) = -\\lang S k_t, v_t\\rang $$\n使用 gradient descent:\n$$ \\begin{aligned} S_t \u0026= S_{t-1} - \\beta_t \\nabla \\mathcal L_t(S_{t-1})\\\\ \u0026= S_{t-1} + \\beta_t v_t k_t^T \\end{aligned} $$\n如果不用 dot product, 而是以 regression loss 作为优化目标：\n$$ \\mathcal L_t(S) = \\frac{1}{2} || S k_t - v_t ||^2 $$\n同样使用 gradient descent 可以得到新的递推公式 (DeltaNet):\n$$ \\begin{aligned} S_t \u0026= S_{t-1} - \\beta_t (S_{t-1}k_t - v_t) k_t^T\\\\ \u0026= S_{t-1}(I - \\beta_t k_t k_t^T) + \\beta_t v_t k_t^T \\end{aligned} $$\nGated DeltaNet 如果我们把 Mamba2 (gated update rule) 和 DeltaNet (delta update rule) 结合起来，就可以得到：\n$$ S_t = S_{t-1}(\\alpha_t(I - \\beta_t k_t k_t^T)) + \\beta_t v_t k_t^T $$\n其中 $\\alpha_t$ 的计算方式参考 Mamba2.\nSonta 他们做了 single needle in a haystack (海底捞针) 这个任务上面的实验。简单介绍一下这个 task. 它分为三个 level:\nLv1: 一段合成的长文本中，插入一个 magic number. 模型需要记忆并输出 magic number. Lv2: 不再用合成文本，而是真实文本。 Lv3: magic number 的 pattern 不再是简单的 0-9 数字，而是更复杂的 uuid. 大概的结论是：\nDecay term in Mamba2 hurts memory retention; Delta rule memorizes better. Data-dependent decay helps filter out irrelevant information; Delta rule fail to filter. Gated DeltaNet performs best. Accelerating DeltaNet 这一节参考了 Sonta 的 blog DeltaNet Explained.\n我们考虑如下的事情：对于 DeltaNet 的状态更新\n$$ \\begin{aligned} S_t \u0026= S_{t-1}\\left(I - \\beta_t k_t k_t^T\\right) + \\beta_t v_t k_t^T\\\\ \u0026= \\sum_{i=1}^t \\left(\\beta_i v_i k_i^T \\prod_{j=i+1}^t \\left(I - \\beta_j k_j k_j^T \\right) \\right) \\end{aligned} $$\n如何找到一个关于 $d$ 是平方复杂度的算法？\n",
+  "wordCount" : "742",
+  "inLanguage": "en",
+  "datePublished": "2025-01-18T09:00:00+08:00",
+  "dateModified": "2025-01-18T09:00:00+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Zhiyang Shen"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://shenzhiy21.github.io/posts/linear-attn/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Zhiyang's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://shenzhiy21.github.io/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 
 <body class="" id="top">
@@ -95,7 +159,7 @@
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Zhiyang&#39;s Blog (Alt + H)">Zhiyang&#39;s Blog</a>
+            <a href="https://shenzhiy21.github.io/" accesskey="h" title="Zhiyang&#39;s Blog (Alt + H)">Zhiyang&#39;s Blog</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -121,12 +185,12 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/categories/" title="Categories">
+                <a href="https://shenzhiy21.github.io/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/tags/" title="Tags">
+                <a href="https://shenzhiy21.github.io/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
@@ -357,15 +421,15 @@ $$</p>
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/note/">Note</a></li>
-      <li><a href="http://localhost:1313/tags/machine-learning/">Machine Learning</a></li>
-      <li><a href="http://localhost:1313/tags/system/">System</a></li>
+      <li><a href="https://shenzhiy21.github.io/tags/note/">Note</a></li>
+      <li><a href="https://shenzhiy21.github.io/tags/machine-learning/">Machine Learning</a></li>
+      <li><a href="https://shenzhiy21.github.io/tags/system/">System</a></li>
     </ul>
 
 <ul class="share-buttons">
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Notes on Linear Attention on x"
-            href="https://x.com/intent/tweet/?text=Notes%20on%20Linear%20Attention&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2flinear-attn%2f&amp;hashtags=note%2cmachinelearning%2csystem">
+            href="https://x.com/intent/tweet/?text=Notes%20on%20Linear%20Attention&amp;url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2flinear-attn%2f&amp;hashtags=note%2cmachinelearning%2csystem">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
@@ -374,7 +438,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Notes on Linear Attention on linkedin"
-            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2flinear-attn%2f&amp;title=Notes%20on%20Linear%20Attention&amp;summary=Notes%20on%20Linear%20Attention&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2flinear-attn%2f">
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2flinear-attn%2f&amp;title=Notes%20on%20Linear%20Attention&amp;summary=Notes%20on%20Linear%20Attention&amp;source=https%3a%2f%2fshenzhiy21.github.io%2fposts%2flinear-attn%2f">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
@@ -383,7 +447,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Notes on Linear Attention on reddit"
-            href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2flinear-attn%2f&title=Notes%20on%20Linear%20Attention">
+            href="https://reddit.com/submit?url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2flinear-attn%2f&title=Notes%20on%20Linear%20Attention">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
@@ -392,7 +456,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Notes on Linear Attention on facebook"
-            href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2flinear-attn%2f">
+            href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fshenzhiy21.github.io%2fposts%2flinear-attn%2f">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
@@ -401,7 +465,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Notes on Linear Attention on whatsapp"
-            href="https://api.whatsapp.com/send?text=Notes%20on%20Linear%20Attention%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2flinear-attn%2f">
+            href="https://api.whatsapp.com/send?text=Notes%20on%20Linear%20Attention%20-%20https%3a%2f%2fshenzhiy21.github.io%2fposts%2flinear-attn%2f">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
@@ -410,7 +474,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Notes on Linear Attention on telegram"
-            href="https://telegram.me/share/url?text=Notes%20on%20Linear%20Attention&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2flinear-attn%2f">
+            href="https://telegram.me/share/url?text=Notes%20on%20Linear%20Attention&amp;url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2flinear-attn%2f">
             <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
@@ -419,7 +483,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Notes on Linear Attention on ycombinator"
-            href="https://news.ycombinator.com/submitlink?t=Notes%20on%20Linear%20Attention&u=http%3a%2f%2flocalhost%3a1313%2fposts%2flinear-attn%2f">
+            href="https://news.ycombinator.com/submitlink?t=Notes%20on%20Linear%20Attention&u=https%3a%2f%2fshenzhiy21.github.io%2fposts%2flinear-attn%2f">
             <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
                 xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
                 <path
