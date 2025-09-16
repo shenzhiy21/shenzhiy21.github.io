@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Math on Zhiyang&#39;s Blog</title>
-    <link>https://shenzhiy21.github.io/categories/math/</link>
-    <description>Recent content in Math on Zhiyang&#39;s Blog</description>
+    <title>Visualization on Zhiyang&#39;s Blog</title>
+    <link>https://shenzhiy21.github.io/categories/visualization/</link>
+    <description>Recent content in Visualization on Zhiyang&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
     <lastBuildDate>Tue, 16 Sep 2025 18:21:52 +0800</lastBuildDate>
-    <atom:link href="https://shenzhiy21.github.io/categories/math/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://shenzhiy21.github.io/categories/visualization/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Research Idea</title>
       <link>https://shenzhiy21.github.io/posts/research-idea/</link>
@@ -30,13 +30,6 @@ and create composite visualizations.&lt;/p&gt;
 Visualization Scenes&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;A basic example:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>What if Each Number is a Polynomial?</title>
-      <link>https://shenzhiy21.github.io/posts/number-theory/</link>
-      <pubDate>Thu, 26 Jun 2025 13:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/number-theory/</guid>
-      <description>关于数论的一些很久以前的小想法 / Some naive ideas about number theory years ago &amp;hellip;</description>
     </item>
   </channel>
 </rss>
