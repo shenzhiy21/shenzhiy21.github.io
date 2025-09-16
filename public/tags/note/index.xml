@@ -4,24 +4,24 @@
     <title>Note on Zhiyang&#39;s Blog</title>
     <link>https://shenzhiy21.github.io/tags/note/</link>
     <description>Recent content in Note on Zhiyang&#39;s Blog</description>
-    <generator>Hugo -- 0.147.8</generator>
+    <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
-    <lastBuildDate>Thu, 11 Sep 2025 13:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 16 Sep 2025 00:41:54 +0800</lastBuildDate>
     <atom:link href="https://shenzhiy21.github.io/tags/note/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CUDA Notes</title>
+      <link>https://shenzhiy21.github.io/posts/gpu/</link>
+      <pubDate>Tue, 16 Sep 2025 00:41:54 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/posts/gpu/</guid>
+      <description>Just tracing the process of learning CUDA programming</description>
+    </item>
     <item>
       <title>Lecture Notes (Pieces)</title>
       <link>https://shenzhiy21.github.io/posts/lecture-notes/</link>
       <pubDate>Thu, 11 Sep 2025 13:00:00 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/posts/lecture-notes/</guid>
       <description>Lecture notes (pieces) collected from everywhere.</description>
-    </item>
-    <item>
-      <title>CUDA Notes</title>
-      <link>https://shenzhiy21.github.io/posts/gpu/</link>
-      <pubDate>Thu, 11 Sep 2025 00:41:54 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/gpu/</guid>
-      <description>Just tracing the process of learning CUDA programming</description>
     </item>
     <item>
       <title>Understanding Diffusion Models</title>
