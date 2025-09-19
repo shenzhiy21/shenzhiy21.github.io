@@ -37,7 +37,7 @@ params:
   homeInfoParams:
     Title: "Hi There!👋 Welcome to my page!"
     Content: >
-      I am Zhiyang Shen, an undergraduate student at Tsinghua University, majoring in Software Engineering. I'm interested in machine learning, especially focusing on visualization & XAI. Besides, I'm keen on MLsys since my internship at MSR Asia. Please feel free to contact me if you want to explore the fascinating world of AI together!
+      I am Zhiyang Shen (沈之洋), a first year PhD student at Tsinghua University. My current research interest lies in the intersection of visualization and AI. I love playing DOTA2 and reading novels (detective stories especially). I enjoy music of various genres, and my favorite artists are Zhao Lei (赵雷) and Anpu (安溥). Feel free to contact me :)
   socialIcons:
     - name: github
       title: View My Github Profile
