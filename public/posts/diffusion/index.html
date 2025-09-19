@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>Understanding Diffusion Models | Zhiyang&#39;s Blog</title>
 <meta name="keywords" content="diffusion, math, note, stats">
 <meta name="description" content="From differential equation to diffusion models">
 <meta name="author" content="Zhiyang Shen">
-<link rel="canonical" href="https://shenzhiy21.github.io/posts/diffusion/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.d63079815d18f277504cf66aa2f64064cea74ac90c714e35aa4680da8d8b05c4.css" integrity="sha256-1jB5gV0Y8ndQTPZqovZAZM6nSskMcU41qkaA2o2LBcQ=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://shenzhiy21.github.io/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://shenzhiy21.github.io/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://shenzhiy21.github.io/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://shenzhiy21.github.io/apple-touch-icon.png">
-<link rel="mask-icon" href="https://shenzhiy21.github.io/safari-pinned-tab.svg">
+<link rel="canonical" href="http://localhost:1313/posts/diffusion/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d650382e2960ee05a60f62667fbcc70be6c57ec165b4481bda9908e9dab78694.css" integrity="sha256-1lA4Lilg7gWmD2Jmf7zHC&#43;bFfsFltEgb2pkI6dq3hpQ=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://shenzhiy21.github.io/posts/diffusion/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/diffusion/">
 <noscript>
     <style>
         #theme-toggle,
@@ -77,71 +77,7 @@
 </script>
 
 
-<meta property="og:title" content="Understanding Diffusion Models" />
-<meta property="og:description" content="From differential equation to diffusion models" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://shenzhiy21.github.io/posts/diffusion/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2025-03-15T12:00:00+08:00" />
-<meta property="article:modified_time" content="2025-03-15T12:00:00+08:00" />
 
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Understanding Diffusion Models"/>
-<meta name="twitter:description" content="From differential equation to diffusion models"/>
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://shenzhiy21.github.io/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "Understanding Diffusion Models",
-      "item": "https://shenzhiy21.github.io/posts/diffusion/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Understanding Diffusion Models",
-  "name": "Understanding Diffusion Models",
-  "description": "From differential equation to diffusion models",
-  "keywords": [
-    "diffusion", "math", "note", "stats"
-  ],
-  "articleBody": "Introduction 最近在学习 diffusion 的数学原理和代码实现，目标是能自己手搓一个 image generation model. 之前对 diffusion 当然也有一些了解，主要是实习的时候做了一些系统层面的尝试，例如剪枝、量化、FFT. 然而对模型原理的认识并不是很充分（虽然也看了 ddpm, latent diffusion 这些文章）。当时主要是 follow 了这篇 tutorial: Understanding Diffusion Models: A Unified Perspective 来学习数学原理的，当然作者写得非常好，但是我并没有太 get 到从 ELBO 和 VAE 开始讲起的心路历程（虽然但是也可以料想到十年左右前的 researcher 就是很曲折的吧）、以及用 Markov chain 建模的动机。最近被安利了 MIT 的这门课程 Introduction to Flow Matching and Diffusion Models, 它是从 ODE/SDE 的角度入手和推导的，我觉得这样的心路历程更自然一些，学习之后大有醍醐灌顶之感。所以下面记录一下我学习这门课的一些 notes 和心得体会。\n我追求的是所谓“美”，也就是希望这套算法背后的数学推导是足够自然的。所以，接下来的内容将花大量篇幅“考察”每一步推导的“动机”是否足够自然。如果你不喜欢这种风格，那很抱歉，这里没有只给结论的 “TL;DR”.\nHow to Generate Images 我们还是先想想如何 formalize 最原始的 image generation 任务（“原始”的意思是，不考虑输入额外的 prompt/image 作为 condition）。按照统计学习的基本认知，这个任务的定义是：假设有一批训练数据 $z\\in \\R^d$ 服从概率分布 $z\\sim p_{\\text{data}}$, 我们的目标是生成更多满足相同分布的数据。最直接的想法就是用 neural nets 建模并学习 $p_{\\text{data}}$, 然后从中采样。然而如何用 NN 来描述一个 prob distribution 是一件很棘手的事情。为了 walk around 这个难题，diffusion \u0026 flow matching 采用的对策是：从一个简单的概率分布 $p_{\\text{init}}$（例如 Gaussian）中采样 $x\\sim p_{\\text{init}}$, 然后考虑如何把 $x$ “变换”到服从 $p_{\\text{data}}$.\nNote: Gaussian distribution $p_{\\text{init}}$ 可以视作噪声，所以 diffusion 也被称为去噪 (denoise) 的过程。\n这里其实描述的是这样一个问题：给定两个概率分布 $p_{\\text{init}}$ 和 $p_{\\text{data}}$, 我该如何建模它们之间的“变换”关系？（“变换”，也就是说从 $p_{\\text{init}}$ 中采集的样本经过该变换可以对应到 $p_{\\text{data}}$ 中的一个样本）\nProbability Path 针对上述问题，probability path 是一个还算自然的想法：我们引入时间变量 $t\\in [0, 1]$, 并定义一个随时间变化的概率分布 $p_t$, 只要让它满足 $p_0 = p_{\\text{init}}$, $p_1 = p_{\\text{data}}$ 即可描述此变换。由于 $t$ 是连续的，所以可以想象成 $p_0$ 随着时间不断演化至 $p_1$. 这就是 probability path 名字的由来。这样的建模在数学里应该是挺常见的，例如微分几何中描述一段闭合曲线就常常用 $s_t (t\\in [0, 1])$ 这样的形式。\n然而，如何直接地形式化地“写出” $p_t$ 仍然是一件很麻烦的事情。什么是我们会做的呢？很自然地联想到：虽然我们不会描述概率分布之间的变换 (cuz it’s stochastic), 但是我们会描述两个样本之间的变换呀 (cuz it’s deterministic) ！给定两个点 $x_0, x_1\\in \\R^d$, 随便画一条曲线连接它们，并用 $t\\in [0, 1]$ 来刻画曲线上的每一个点。太简单了！\n与此同时，我们还有一整套成熟的工具来研究这个变换——常微分方程！\nODE Background 这里复习一下 ODE 的知识，顺便统一一下后文的 notations.\nODE 可以由 vector field $u$ 来定义。\n$$ u:\\R^d\\times [0, 1]\\rightarrow \\R^d,\\ \\ (x, t)\\rightarrow u_t(x) $$\n使得\n$$ \\begin{aligned} \\frac{\\mathrm d}{\\mathrm dt}X_t \u0026= u_t(X_t)\\\\ X_0 \u0026= x_0 \\end{aligned} $$\n这个 ODE 的解叫做 “flow”: $\\psi:\\R^d\\times [0,1]\\rightarrow \\R^d$, $(x_0, t)\\rightarrow \\psi_t(x_0)$ 使得\n$$ \\begin{aligned} \\frac{\\mathrm d}{\\mathrm dt}\\psi_t(x_0) \u0026= u_t(\\psi_t(x_0))\\\\ \\psi_0(x_0) \u0026= x_0 \\end{aligned} $$\n给定一个初始值 $X_0=x_0$, 可以根据 $\\psi$ 来定义轨迹 (trajectory) $X_t = \\psi_t(X_0)$, 使得它满足 vector field 的约束。\n再复习一下数值分析课上学过的知识：给定 $u$ 和 $X_0=x_0$, 如何数值求解 $X_1$?\n最简单的是 Euler method: 给定 $n\\in \\N$ 和 $h=n^{-1}$, 采取如下的 update rule:\n$$ X_{t+h} = X_t + hu_t(X_t), \\ \\ (t = 0,h,2h,\\cdots, 1-h) $$\n我们也可以用更精细的方法，例如 Heun’s method:\n$$ \\begin{aligned} X_{t+h}’ \u0026= X_t + h u_t(X_t)\\\\ X_{t+h} \u0026= X_t + \\frac{h}{2} \\left(u_t(X_t) + u_{t+h}(X_{t+h}’) \\right) \\end{aligned} $$\n大概的解释是：先用 Euler method 给出每个时刻 $X_{t+h}$ 的一个 initial guess $X_{t+h}’$, 再对它进行修正。\n然而，在 diffusion model 中，使用简单的 Euler method 基本就够了。\nConditional and Marginal Probability Path 那么，既然有了 ODE 的知识储备，如何解决我们最开始提出的问题呢？即：如何建模两个概率分布之间的变换？\n我们还是慢慢来。现在会建模点到点的变换 (point2point) 了，那就接着试试建模从概率分布到点的变换 (dist2point), 最后推广到两个概率分布之间的变换 (dist2dist).\n给定概率分布 $p_{\\text{data}} = p_1$ 中的一个样本 $z\\in\\R^d$, 如何建模 $p_{\\text{init}}$ 到 $z$ 的变换呢？也就是说，我们要做的事情是：设计一个变换过程，使得任意采样一个点 $x\\sim p_{\\text{init}}$, 总可以变换到给定的 $z$.\n简单起见，还是假设 $p_{\\text{init}} = \\mathcal N(0, I_d)$. 我们可以定义如下的随时间变化的概率分布 $p_t(\\cdot|z)$:\n$$ p_t(\\cdot|z) = \\mathcal(\\alpha_t z,\\beta_t^2 I_d) $$\n其中 $\\alpha_t,\\beta_t$ 被称为 sheduler, 并且满足 $\\alpha_0=\\beta_1=0, \\alpha_1 = \\beta_0 = 1$. 我们自然有 $p_0(\\cdot|z)=p_{\\text{init}}$ 和 $p_1(\\cdot|z) = \\delta_z$. 其中 $\\delta_z$ 是 Dirac delta distribution, 也就是我们变换的终点。\n注意：这里其实是用一个特殊的概率分布 $\\delta_z$ 来替换了 $z$ 这个点。所以我们已经学会了一种特殊的 dist2dist, 即 Gaussian to Dirac. 而我们定义的 $p_t$ 就是一条 probability path.\n我们可以一般化地定义：A conditional probability path is a set of distribution $p_t(x|z)$ such that\n$$ p_0(\\cdot|z) = p_{\\text{init}}, \\ \\ p_1(\\cdot| z) = \\delta_z, \\text{ for all }z\\in\\R^d $$\n这里的 “conditional” 的意思是，这一条 path 必须先给定 condition $z$.\n那么，一个自然的想法是：遍历 $p_{\\text{data}}$ 中的“所有” $z$, 不就是我们需要的、一般化的 dist2dist 了吗！为此，我们定义 marginal probability path $p_t(x)$: a distribution that we obtain by first sampling a data point $z\\sim p_{\\text{data}}$ and then sampling from $p_t(\\cdot|z)$. 形式化地：\n$$ z\\sim p_{\\text{data}}, x\\sim p_t(\\cdot|z)\\Rightarrow x\\sim p_t\\\\ p_t(x) = \\int p_t(x|z)p_{\\text{data}}(z)\\mathrm dz $$\n这里的 “marginal” 意思就是遍历所有可能的 condition $z$, 并根据 $z$ 的分布做一次加权平均，得到的新分布。\n我们可以验证：$p_0 = p_{\\text{init}}$, $p_1 = p_{\\text{data}}$:\n$$ \\begin{aligned} p_0(x) \u0026= \\int p_0(x|z)p_{\\text{data}}(z)\\mathrm dz = \\int p_{\\text{init}}(x)p_{\\text{data}}(z)\\mathrm dz = p_{\\text{init}}(x)\\\\ p_1(x) \u0026= \\int p_1(x|z)p_{\\text{data}}(z)\\mathrm dz = \\int \\delta_z(x)p_{\\text{data}}(z)\\mathrm dz = p_{\\text{data}}(x) \\end{aligned} $$\n所以，marginal probability path 就可以看成任意两个分布 $p_{\\text{init}}$ 和 $p_{\\text{data}}$ 之间的一种 interpolation.\nSo we are done!\nConditional and Marginal Vector Fields 回顾一下我们现在想明白了什么东西：\nWhat has been done: 如何形式化建模 image generation task：先从已知分布 $p_{\\text{init}}$ 中采样，再变换到目标分布 $p_{\\text{data}}$ 如何刻画两个分布之间的变换：用 marginal probability path What remains unknown: 作为一个 neural net, 怎么建模？ 如何训练？即：如何定义优化目标 (loss function)？ 我们还是慢慢来。假设现在的任务仍然是 point2point. 给定初始点 $x_0$ 和变换规则 ODE, 如何训练一个 NN 来预测 $x_1$? 这其实就是一个经典的 regression task. 根据刚才的 ODE 小节，有两个显而易见的思路：\n把 NN 建模为 vector field $u$, 然后使用 Euler method 对时间步 $t$ 反复迭代求出 $X_1$ 把 NN 建模为 flow function $\\psi$, 然后直接代入 $X_0 = x_0$ 和 $t=1$ 即可求出 $X_1$ 这里我们尝试思路 1.\nTODO: 其实我也没想清楚为什么不采用思路 2. 一个可能的解释是，虽然 flow matching model 可以用 ODE 建模、可以定义 flow function, 但是 diffusion model 是用 SDE 来建模的、无法定义 flow function, 也就只能采用思路 1 了。这种解释有些牵强，毕竟现在 SOTA 的模型大多开始用 flow matching 来替换 diffusion 了，明明可以用思路 2. 此处有待进一步思考。\n对于思路 1, 意思就是我们训练的神经网络 $u^\\theta$ 要尽可能逼近真实的 vector field $u^{\\text{target}}$. 这谁都会。采取和刚才类似的心路历程，接下来还有两步：\n假设 $X_0$ 不再是一个 deterministic value, 而是概率分布 $p_{\\text{init}}$ 中的一个样本，那该如何定义这种带有随机性的 “stochastic conditional vector field”? 假设终点 $X_1$ 也不再是一个 deterministic value, 而是 $p_{\\text{data}}$ 中的一个样本，又如何定义这种 “marginal vector field”? 第一步的定义是很自然的：\nFor every data point $z\\in\\R^d$, let $u_t^{\\text{target}}(\\cdot|z)$ denote a conditional vector field, defined so that the corresponding ODE yields the conditional probability path $p_t(\\cdot|z)$. Formally speaking,\n$$ X_0\\sim p_{\\text{init}}, \\ \\ \\frac{\\mathrm d}{\\mathrm dt}X_t = u_t^{\\text{target}}(X_t|z)\\Rightarrow X_t\\sim p_t(\\cdot|z) $$\n这里同样有 “conditional” 字眼，因为 $z$ 是给定的点。\n同样以 Gaussian distribution 为例。我们首先构造一个 conditional flow function $\\psi_t^{\\text{target}}(x|z)$ 如下：\n$$ \\psi_t^{\\text{target}}(x|z) = \\alpha_t z + \\beta_t x $$\n根据定义，如果 $X_0\\sim p_{\\text{init}}=\\mathcal N(0, I_d)$, 那么\n$$ X_t = \\psi_t^{\\text{target}}(X_0|z) = \\alpha_t z + \\beta_t X_0 \\sim \\mathcal N(\\alpha_t z, \\beta_t^2 I_d) = p_t(\\cdot|z) $$\n所以，$\\psi$ 是满足 conditional probability path 的 flow function. 接下来，为了得到 conditional vector field, 只需 $\\psi$ 对时间求导：\n$$ \\begin{aligned} \u0026\\frac{\\mathrm d}{\\mathrm dt}\\psi_t^{\\text{target}}(x|z) = u^{\\text{target}}(\\psi_t^{\\text{target}}(x|z)|z), \\forall x, z\\in \\R^d\\\\ \\Leftrightarrow{}\u0026 \\dot{\\alpha}_t z + \\dot{\\beta}_t x = u_t^{\\text{target}}(\\alpha_t z + \\beta_t x | z), \\forall x, z\\in \\R^d\\\\ \\Leftrightarrow{}\u0026 \\dot{\\alpha}_t z + \\dot{\\beta}_t \\left(\\frac{x - \\alpha_t z}{\\beta_t} \\right) = u_t^{\\text{target}}(x|z), \\forall x,z\\in\\R^d\\\\ \\Leftrightarrow{}\u0026 \\left(\\dot{\\alpha}_t - \\frac{\\dot{\\beta}_t}{\\beta_t}\\alpha_t \\right) z + \\frac{\\dot{\\beta}_t}{\\beta_t} x = u_t^{\\text{target}}(x|z),\\forall x,z\\in\\R^d \\end{aligned} $$\n因此，对应的 conditional vector field 为\n$$ u_t^{\\text{target}}(x|z) = \\left(\\dot{\\alpha}_t - \\frac{\\dot{\\beta}_t}{\\beta_t}\\alpha_t \\right) z + \\frac{\\dot{\\beta}_t}{\\beta_t} x $$\n需要注意的是，这个 conditional vector field 的公式不仅对 Gaussian distribution 成立。事实上，只要 flow function 的形式为\n$$ X_t = \\alpha_t z + \\beta_t X_0 $$\n其中 $\\alpha_0 = \\beta_1 = 0, \\alpha_1 = \\beta_0 = 1$, 就能按照上述方法推导出\n$$ u_t^{\\text{target}}(x|z) = \\left(\\dot{\\alpha}_t - \\frac{\\dot{\\beta}_t}{\\beta_t}\\alpha_t \\right) z + \\frac{\\dot{\\beta}_t}{\\beta_t} x $$\n这样的 flow function 可以视 probability path $X_t$ 作为 $X_0$ 和 $z$ 之间的一种 interpolation. 例如取 linear interpolation ($\\alpha_t = t$, $\\beta_t = 1-t$), 就能得到\n$$ u_t^{\\text{target}}(x|z) = \\frac{z-x}{1-t} $$\n类比上述 probability path 的做法，下一步就是把 $u_t^{\\text{target}}(\\cdot|z)$ 中的 condition $z$ 去除掉 (by weighted average)，得到 marginal vector field.\n于是，我们定义 marginal vector field $u_t^{\\text{target}}(x)$ 如下：\n$$ u_t^{\\text{target}}(x) = \\int u_t^{\\text{target}}(x|z) \\frac{p_t(x|z)p_{\\text{data}}(z)}{p_t(x)}\\mathrm dz $$\n只不过这里不再是以 $p_{\\text{data}}(z)$ 作为 weights, 而是采取了 Bayesian 后验 $\\frac{p_t(x|z)p_{\\text{data}}(z)}{p_t(x)}$.\n为什么这么定义？因为我们希望 marginal vector field $u_t^{\\text{target}}(x)$ 能对应到 marginal probability path, 正如 conditional vector field 能对应到 conditional probability path. 只有对应上了，我们才能以 $u_t^{\\text{target}}$ 作为 neural net 的建模对象。于是，接下来的定理就揭示了这一点：\nTheorem: the marginal vector field follows the marginal probability path, i.e.\n$$ X_0\\sim p_{\\text{init}}, \\ \\ \\frac{\\mathrm d}{\\mathrm dt}X_t = u_t^{\\text{target}}(X_t)\\Rightarrow X_t\\sim p_t,\\forall t\\in [0, 1] $$\n如果该定理成立，那么特别地取 $t=1$ 就有 $X_1\\sim p_1=p_{\\text{data}}$ 了。该定理的证明如下。\nProof.\n首先给一个引理 continuity equation or divergence theorem（微分形式）：\nGiven a vector field $u_t^{\\text{target}}$ with $X_0\\sim p_{\\text{init}}$. Then $X_t\\sim p_t$ for all $t\\in [0, 1]$ if and only if\n$$ \\frac{\\mathrm d}{\\mathrm dt}p_t(x) = -\\text{div}(p_t u_t^{\\text{target}})(x) \\ \\ \\text{for all }x\\in \\R^d, t\\in [0, 1] $$\nwhere $\\text{div}$ is the divergence operation defined as: $\\text{div}(v)(x) = \\sum_{i=1}^d \\frac{\\partial}{\\partial x_i} v(x)$\n根据该引理，只需证明我们定义的 marginal vector field $u_t^{\\text{target}}$ 是满足 continuity equation 的：\n$$ \\begin{aligned} \\frac{\\mathrm d}{\\mathrm dt}p_t(x) \u0026= \\frac{\\mathrm d}{\\mathrm dt}\\int p_t(x|z)p_{\\text{data}}(z)\\mathrm dz\\\\ \u0026= \\int \\frac{\\mathrm d}{\\mathrm dt}p_t(x|z)p_{\\text{data}}(z)\\mathrm dz\\\\ \u0026= \\int -\\text{div}\\left(p_t(\\cdot|z)u_t^{\\text{target}}(\\cdot|z) \\right)(x)p_{\\text{data}}(z)\\mathrm dz\\\\ \u0026= -\\text{div}\\left(\\int p_t(\\cdot|z)u_t^{\\text{target}}(\\cdot|z)p_{\\text{data}}(z)\\mathrm dz \\right)(x)\\\\ \u0026= -\\text{div}\\left(p_t(\\cdot)\\int u_t^{\\text{target}}(\\cdot|z) \\frac{p_t(\\cdot|z)p_{\\text{data}}(z)}{p_t(\\cdot)}\\mathrm dz \\right)(x)\\\\ \u0026= -\\text{div}(p_tu_t^{\\text{target}})(x) \\end{aligned} $$\nSo we are done!\n这里主要的 trick 是使用两次 continuity equation, 再结合 divergence operator 和 integral 可以交换次序。如果要追求更自然一些，其实应该是先有了这个证明，再反向推导出了 marginal vector field 的构造公式（定义）。\nLoss Function 回顾一下刚才的 “what remains unknown”. 我们已经知道了如何建模，剩下唯一的问题就是如何定义 loss function.\n假设我们的 NN 参数化为 $\\theta$, 输入为 $t$ 和 $x=X_t$, 一个自然的想法就是使用 L2 loss:\n$$ \\mathbb E\\left[ || u_t^\\theta(x) - u_t^{\\text{target}}(x) ||^2\\right] $$\n其中 $t$ 和 $x$ 都需要 take expectation. 不妨考虑 $t\\sim U(0, 1)$, $x\\sim p_t$. 注意由于 $p_t$ 是 marginal probability path, 并不好直接计算，所以对 $x$ 的采样也必须折中地通过 conditional probability path 来 walk around, 也就是先采样 $z\\sim p_{\\text{data}}$, 再采样 $x\\sim p_t(\\cdot|z)=\\mathcal(\\alpha_t z,\\beta_t^2 I_d)$. 所以，我们定义 flow matching loss\n$$ \\mathcal L_{FM}(\\theta) = \\mathbb E_{t\\sim U(0, 1), z\\sim p_{\\text{data}}, x\\sim p_t(\\cdot|z)}\\left[|| u_t^\\theta(x) - u_t^{\\text{target}}(x)||^2 \\right] $$\n然而，由于计算 marginal vector field 需要对 $z$ 积分：\n$$ u_t^{\\text{target}}(x) = \\int u_t^{\\text{target}}(x|z) \\frac{p_t(x|z)p_{\\text{data}}(z)}{p_t(x)}\\mathrm dz $$\n所以上述 loss function 并不容易计算。但是，conditional vector field 是容易计算的：\n$$ u_t^{\\text{target}}(x|z) = \\left(\\dot{\\alpha}_t - \\frac{\\dot{\\beta}_t}{\\beta_t}\\alpha_t \\right) z + \\frac{\\dot{\\beta}_t}{\\beta_t} x $$\n所以，我们“退而求其次”修改 loss function. 定义 conditional flow matching loss 为\n$$ \\mathcal L_{CFM}(\\theta) = \\mathbb E_{t\\sim U(0, 1), z\\sim p_{\\text{data}}, x\\sim p_t(\\cdot|z)}\\left[|| u_t^\\theta(x) - u_t^{\\text{target}}(x|z)||^2 \\right] $$\n不过，我们要思考的是：这样暴力地把 marginal 换为 conditional 是否合理呢？接下来的定理就要告诉我们：这样替换对训练而言是完全等价的。\nTheorem:\n$$ \\mathcal L_{FM}(\\theta) = \\mathcal L_{CFM}(\\theta) + C $$\nwhere $C$ is independent of $\\theta$.\nProof.\n$$ \\begin{aligned} \\mathcal L_{FM}(\\theta) \u0026= \\mathbb E_{t\\sim U(0, 1), x\\sim p_t}\\left[|| u_t^\\theta(x) - u_t^{\\text{target}}(x) ||^2 \\right] \\\\ \u0026= \\mathbb E_{t\\sim U(0, 1), x\\sim p_t}\\left[||u_t^\\theta(x)||^2\\right]\\\\ \u0026\\ \\ \\ \\ - 2 \\mathbb E_{t\\sim U(0, 1), x\\sim p_t}\\left[u_t^\\theta(x)^Tu_t^{\\text{target}}(x) \\right]\\\\ \u0026\\ \\ \\ \\ + \\mathbb E_{t\\sim U(0, 1), x\\sim p_t}\\left[||u_t^{\\text{target}}(x)||^2 \\right]\\\\ \u0026= \\mathbb E_{t\\sim U(0, 1), z\\sim p_{\\text{data}}, x\\sim p_t(\\cdot|z)}\\left[||u_t^\\theta(x)||^2\\right]\\\\ \u0026\\ \\ \\ \\ - 2 \\mathbb E_{t\\sim U(0, 1), x\\sim p_t}\\left[u_t^\\theta(x)^Tu_t^{\\text{target}}(x) \\right]\\\\ \u0026\\ \\ \\ \\ + C_1\\\\ \\end{aligned} $$\n其中第二项为\n$$ \\begin{aligned} \u0026\\mathbb E_{t\\sim U(0, 1), x\\sim p_t}\\left[u_t^\\theta(x)^Tu_t^{\\text{target}}(x) \\right]\\\\ ={}\u0026\\int_0^1 \\int p_t(x)u_t^\\theta(x)^Tu_t^{\\text{target}}(x)\\mathrm dx\\mathrm dt\\\\ ={}\u0026\\int_0^1 \\int p_t(x)u_t^\\theta(x)^T\\left[\\int u_t^{\\text{target}}(x|z) \\frac{p_t(x|z)p_{\\text{data}}(z)}{p_t(x)}\\mathrm dz \\right]\\mathrm dx\\mathrm dt\\\\ ={}\u0026\\int_0^1 \\int \\int u_t^\\theta(x)^Tu_t^{\\text{target}}(x|z) p_t(x|z) p_{\\text{data}}(z)\\mathrm dz\\mathrm dx\\mathrm dt\\\\ ={}\u0026\\mathbb E_{t\\sim U(0, 1), z\\sim p_{\\text{data}}, x\\sim p_t(\\cdot|z)}\\left[u_t^\\theta(x)^Tu_t^{\\text{target}}(x|z) \\right] \\end{aligned} $$\n因此\n$$ \\begin{aligned} \\mathcal L_{FM}(\\theta) \u0026= \\mathbb E_{t\\sim U(0, 1), z\\sim p_{\\text{data}}, x\\sim p_t(\\cdot|z)}\\left[||u_t^\\theta(x)||^2\\right]\\\\ \u0026\\ \\ \\ \\ - 2 \\mathbb E_{t\\sim U(0, 1), x\\sim p_t}\\left[u_t^\\theta(x)^Tu_t^{\\text{target}}(x) \\right]\\\\ \u0026\\ \\ \\ \\ + C_1\\\\ \u0026= \\mathbb E_{t\\sim U(0, 1), z\\sim p_{\\text{data}}, x\\sim p_t(\\cdot|z)}\\left[||u_t^\\theta(x) - u_t^{\\text{target}}(x|z)||^2 \\right]\\\\ \u0026\\ \\ \\ \\ - \\mathbb E_{t\\sim U(0, 1), z\\sim p_{\\text{data}}, x\\sim p_t(\\cdot|z)}\\left[||u_t^{\\text{target}}(x|z)||^2 \\right]\\\\ \u0026\\ \\ \\ \\ + C_1\\\\ \u0026= \\mathcal L_{CFM}(\\theta) + C_2 + C_1 \\end{aligned} $$\nSo we are done. 这里主要的 trick 是用了两次 $||a-b||^2 = ||a||^2 - 2a^Tb + ||b||^2$.\n如果以 Gaussian distribution 作为 $p_{\\text{init}}$, 那么 loss function 即为：\n$$ \\mathcal L_{CFM}(\\theta) = \\mathbb E_{t\\sim U(0, 1), z\\sim p_{\\text{data}}, x\\sim \\mathcal N(\\alpha_t z,\\beta_t^2 I_d)}\\left[ ||u_t^\\theta(x) - \\left(\\dot{\\alpha}_t - \\frac{\\dot{\\beta}_t}{\\beta_t}\\alpha_t \\right) z - \\frac{\\dot{\\beta}_t}{\\beta_t}x ||^2 \\right]\\\\ $$\n$$ =\\mathbb E_{t\\sim U(0, 1), z\\sim p_{\\text{data}}, \\epsilon \\sim \\mathcal N(0, I_d)}\\left[|| u_t^\\theta(\\alpha_t z +\\beta_t \\epsilon) - (\\dot{\\alpha}_t z + \\dot{\\beta}_t\\epsilon)||^2 \\right] $$\n对 sheduler 的一种特殊取法为 $\\alpha_t = t$, $\\beta_t = 1-t$. 此时的 probability path 被称为 CondOT probability path. 代入得到如下的 training algorithm:\nSample $z$ from training dataset Sample a random time $t\\sim U(0, 1)$ Sample noise $\\epsilon\\sim \\mathcal N(0, I_d)$ Set $x = tz + (1-t)\\epsilon$ Compute loss $\\mathcal L(\\theta) = ||u_t^\\theta(x) - (z -\\epsilon)||^2$ Update $\\theta$ via gradient descent on $\\mathcal L(\\theta)$ 这就是 Stable Diffusion 3 和 Movie Gen Video 的训练算法。\nSDE and Diffusion Models 接下来就不是 motivation-oriented 的内容了——因为从 SDE 的视角看待 diffusion 本来就是与历史的发展相悖的。这个 section 的目的是用同一套框架统一地看待 diffusion 和 flow matching.\n回顾最开始的 ODE:\n$$ \\frac{\\mathrm d}{\\mathrm dt}X_t = u_t(X_t) $$\n我们也可以写成如下的形式（虽然在数学上并不严谨）：\n$$ \\mathrm dX_t = u_t(X_t)\\mathrm dt $$\n由初始值 $X_0$ 和 vector field $u_t$ 即可唯一确定 $X_t$. 假设我们在此加上一层微扰，会怎么样呢？即：\n$$ \\mathrm dX_t = u_t(X_t)\\mathrm dt + \\sigma_t\\mathrm dW_t $$\n其中 $\\sigma_t$ 称作 diffusion coefficient. $W_t(0\\leq t\\leq 1)$ 指的是一个随机过程 Wiener process (也就是我们熟知的 Brownian motion), 它的定义如下：\n$W_0 = 0$ Normal increments: $W_t - W_s \\sim \\mathcal N(0, (t-s) I_d)$ for all $0\\leq s \u003c t\\leq 1$. Independent increments: For any $0\\leq t_0",
-  "wordCount" : "2786",
-  "inLanguage": "en",
-  "datePublished": "2025-03-15T12:00:00+08:00",
-  "dateModified": "2025-03-15T12:00:00+08:00",
-  "author":{
-    "@type": "Person",
-    "name": "Zhiyang Shen"
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://shenzhiy21.github.io/posts/diffusion/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Zhiyang's Blog",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://shenzhiy21.github.io/favicon.ico"
-    }
-  }
-}
-</script>
 </head>
 
 <body class="" id="top">
@@ -159,7 +95,7 @@
 <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://shenzhiy21.github.io/" accesskey="h" title="Zhiyang&#39;s Blog (Alt + H)">Zhiyang&#39;s Blog</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Zhiyang&#39;s Blog (Alt + H)">Zhiyang&#39;s Blog</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -185,12 +121,12 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="https://shenzhiy21.github.io/categories/" title="Categories">
+                <a href="http://localhost:1313/categories/" title="Categories">
                     <span>Categories</span>
                 </a>
             </li>
             <li>
-                <a href="https://shenzhiy21.github.io/tags/" title="Tags">
+                <a href="http://localhost:1313/tags/" title="Tags">
                     <span>Tags</span>
                 </a>
             </li>
@@ -698,16 +634,16 @@ $$</p>
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://shenzhiy21.github.io/tags/diffusion/">Diffusion</a></li>
-      <li><a href="https://shenzhiy21.github.io/tags/math/">Math</a></li>
-      <li><a href="https://shenzhiy21.github.io/tags/note/">Note</a></li>
-      <li><a href="https://shenzhiy21.github.io/tags/stats/">Stats</a></li>
+      <li><a href="http://localhost:1313/tags/diffusion/">Diffusion</a></li>
+      <li><a href="http://localhost:1313/tags/math/">Math</a></li>
+      <li><a href="http://localhost:1313/tags/note/">Note</a></li>
+      <li><a href="http://localhost:1313/tags/stats/">Stats</a></li>
     </ul>
 
 <ul class="share-buttons">
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Understanding Diffusion Models on x"
-            href="https://x.com/intent/tweet/?text=Understanding%20Diffusion%20Models&amp;url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2fdiffusion%2f&amp;hashtags=diffusion%2cmath%2cnote%2cstats">
+            href="https://x.com/intent/tweet/?text=Understanding%20Diffusion%20Models&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdiffusion%2f&amp;hashtags=diffusion%2cmath%2cnote%2cstats">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
@@ -716,7 +652,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Understanding Diffusion Models on linkedin"
-            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2fdiffusion%2f&amp;title=Understanding%20Diffusion%20Models&amp;summary=Understanding%20Diffusion%20Models&amp;source=https%3a%2f%2fshenzhiy21.github.io%2fposts%2fdiffusion%2f">
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdiffusion%2f&amp;title=Understanding%20Diffusion%20Models&amp;summary=Understanding%20Diffusion%20Models&amp;source=http%3a%2f%2flocalhost%3a1313%2fposts%2fdiffusion%2f">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
@@ -725,7 +661,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Understanding Diffusion Models on reddit"
-            href="https://reddit.com/submit?url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2fdiffusion%2f&title=Understanding%20Diffusion%20Models">
+            href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdiffusion%2f&title=Understanding%20Diffusion%20Models">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
@@ -734,7 +670,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Understanding Diffusion Models on facebook"
-            href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fshenzhiy21.github.io%2fposts%2fdiffusion%2f">
+            href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2fposts%2fdiffusion%2f">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
@@ -743,7 +679,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Understanding Diffusion Models on whatsapp"
-            href="https://api.whatsapp.com/send?text=Understanding%20Diffusion%20Models%20-%20https%3a%2f%2fshenzhiy21.github.io%2fposts%2fdiffusion%2f">
+            href="https://api.whatsapp.com/send?text=Understanding%20Diffusion%20Models%20-%20http%3a%2f%2flocalhost%3a1313%2fposts%2fdiffusion%2f">
             <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
@@ -752,7 +688,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Understanding Diffusion Models on telegram"
-            href="https://telegram.me/share/url?text=Understanding%20Diffusion%20Models&amp;url=https%3a%2f%2fshenzhiy21.github.io%2fposts%2fdiffusion%2f">
+            href="https://telegram.me/share/url?text=Understanding%20Diffusion%20Models&amp;url=http%3a%2f%2flocalhost%3a1313%2fposts%2fdiffusion%2f">
             <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
                 <path
                     d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
@@ -761,7 +697,7 @@ $$</p>
     </li>
     <li>
         <a target="_blank" rel="noopener noreferrer" aria-label="share Understanding Diffusion Models on ycombinator"
-            href="https://news.ycombinator.com/submitlink?t=Understanding%20Diffusion%20Models&u=https%3a%2f%2fshenzhiy21.github.io%2fposts%2fdiffusion%2f">
+            href="https://news.ycombinator.com/submitlink?t=Understanding%20Diffusion%20Models&u=http%3a%2f%2flocalhost%3a1313%2fposts%2fdiffusion%2f">
             <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
                 xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
                 <path
