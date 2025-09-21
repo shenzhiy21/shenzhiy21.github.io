@@ -4,7 +4,7 @@
     <title>Posts on Zhiyang&#39;s Blog</title>
     <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on Zhiyang&#39;s Blog</description>
-    <generator>Hugo -- 0.147.8</generator>
+    <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
     <lastBuildDate>Tue, 16 Sep 2025 00:41:54 +0800</lastBuildDate>
@@ -57,13 +57,6 @@
       <pubDate>Thu, 06 Feb 2025 13:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/random_thoughts/</guid>
       <description>碎碎念</description>
-    </item>
-    <item>
-      <title>About Her</title>
-      <link>http://localhost:1313/posts/her/</link>
-      <pubDate>Fri, 24 Jan 2025 09:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/her/</guid>
-      <description>关于一个叫 zxr 的女孩子的一切</description>
     </item>
     <item>
       <title>Notes on Linear Attention</title>
