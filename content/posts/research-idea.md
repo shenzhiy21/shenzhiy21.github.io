@@ -135,3 +135,23 @@ Strategies such as VAE may be utilized to do this.
 
 It's quite interesting, because it can both improve the accuracy of the model
 and reduce the time requried for thinking.
+
+## Visualizing Data Filtering Process
+
+This image shows the multi-stage data filtering pipeline for [Qwen-Image](https://arxiv.org/abs/2508.02324).
+
+![](/images/research-idea/qwen-image-data-filter-pipeline.png)
+
+During the data filtering process, it's important to visualize:
+- Which data are discarded?
+- What is the proportion?
+- Is there any distribution / pattern of the discarded data?
+- What is the hierarchical data flow?
+
+These visualizations may help data engineers to figure out if there is
+anything wrong in their implementation. It would be much better than
+simply refering to some basic statistics (*e.g.*, proportion, or number).
+
+Things to do:
+- How to design useful interactions?
+- What kinds of visualizations to use?
