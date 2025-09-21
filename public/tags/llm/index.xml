@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Llm on Zhiyang&#39;s Blog</title>
-    <link>https://shenzhiy21.github.io/tags/llm/</link>
+    <link>http://localhost:1313/tags/llm/</link>
     <description>Recent content in Llm on Zhiyang&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
     <lastBuildDate>Sun, 23 Feb 2025 13:00:00 +0800</lastBuildDate>
-    <atom:link href="https://shenzhiy21.github.io/tags/llm/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/llm/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>LLM Quantization</title>
-      <link>https://shenzhiy21.github.io/posts/quant/</link>
+      <link>http://localhost:1313/posts/quant/</link>
       <pubDate>Sun, 23 Feb 2025 13:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/quant/</guid>
+      <guid>http://localhost:1313/posts/quant/</guid>
       <description>8bit-Quantization Implementation for LLama-2-7b Model</description>
     </item>
   </channel>
