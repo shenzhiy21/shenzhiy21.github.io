@@ -2,109 +2,123 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Posts on Zhiyang&#39;s Blog</title>
-    <link>http://localhost:1313/posts/</link>
+    <link>https://shenzhiy21.github.io/posts/</link>
     <description>Recent content in Posts on Zhiyang&#39;s Blog</description>
-    <generator>Hugo -- 0.150.0</generator>
+    <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
-    <lastBuildDate>Tue, 16 Sep 2025 00:41:54 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 Sep 2025 18:21:52 +0800</lastBuildDate>
+    <atom:link href="https://shenzhiy21.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Reinforcement Learning Notes</title>
+      <link>https://shenzhiy21.github.io/posts/rl/</link>
+      <pubDate>Sat, 20 Sep 2025 18:21:52 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/posts/rl/</guid>
+      <description>Notes on everything related with RL.</description>
+    </item>
     <item>
       <title>CUDA Notes</title>
-      <link>http://localhost:1313/posts/gpu/</link>
+      <link>https://shenzhiy21.github.io/posts/gpu/</link>
       <pubDate>Tue, 16 Sep 2025 00:41:54 +0800</pubDate>
-      <guid>http://localhost:1313/posts/gpu/</guid>
+      <guid>https://shenzhiy21.github.io/posts/gpu/</guid>
       <description>Just tracing the process of learning CUDA programming</description>
     </item>
     <item>
       <title>Lecture Notes (Pieces)</title>
-      <link>http://localhost:1313/posts/lecture-notes/</link>
+      <link>https://shenzhiy21.github.io/posts/lecture-notes/</link>
       <pubDate>Thu, 11 Sep 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/lecture-notes/</guid>
+      <guid>https://shenzhiy21.github.io/posts/lecture-notes/</guid>
       <description>Lecture notes (pieces) collected from everywhere.</description>
     </item>
     <item>
       <title>Research Idea</title>
-      <link>http://localhost:1313/posts/research-idea/</link>
+      <link>https://shenzhiy21.github.io/posts/research-idea/</link>
       <pubDate>Sat, 16 Aug 2025 18:21:52 +0800</pubDate>
-      <guid>http://localhost:1313/posts/research-idea/</guid>
+      <guid>https://shenzhiy21.github.io/posts/research-idea/</guid>
       <description>Record some research ideas of my interest.</description>
     </item>
     <item>
       <title>What if Each Number is a Polynomial?</title>
-      <link>http://localhost:1313/posts/number-theory/</link>
+      <link>https://shenzhiy21.github.io/posts/number-theory/</link>
       <pubDate>Thu, 26 Jun 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/number-theory/</guid>
+      <guid>https://shenzhiy21.github.io/posts/number-theory/</guid>
       <description>关于数论的一些很久以前的小想法 / Some naive ideas about number theory years ago &amp;hellip;</description>
     </item>
     <item>
       <title>Understanding Diffusion Models</title>
-      <link>http://localhost:1313/posts/diffusion/</link>
+      <link>https://shenzhiy21.github.io/posts/diffusion/</link>
       <pubDate>Sat, 15 Mar 2025 12:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/diffusion/</guid>
+      <guid>https://shenzhiy21.github.io/posts/diffusion/</guid>
       <description>From differential equation to diffusion models</description>
     </item>
     <item>
       <title>LLM Quantization</title>
-      <link>http://localhost:1313/posts/quant/</link>
+      <link>https://shenzhiy21.github.io/posts/quant/</link>
       <pubDate>Sun, 23 Feb 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/quant/</guid>
+      <guid>https://shenzhiy21.github.io/posts/quant/</guid>
       <description>8bit-Quantization Implementation for LLama-2-7b Model</description>
     </item>
     <item>
       <title>Random Thoughts &amp; Ideas</title>
-      <link>http://localhost:1313/posts/random_thoughts/</link>
+      <link>https://shenzhiy21.github.io/posts/random_thoughts/</link>
       <pubDate>Thu, 06 Feb 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/random_thoughts/</guid>
+      <guid>https://shenzhiy21.github.io/posts/random_thoughts/</guid>
       <description>碎碎念</description>
     </item>
     <item>
+      <title>About Her</title>
+      <link>https://shenzhiy21.github.io/posts/her/</link>
+      <pubDate>Fri, 24 Jan 2025 09:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/posts/her/</guid>
+      <description>关于一个叫 zxr 的女孩子的一切</description>
+    </item>
+    <item>
       <title>Notes on Linear Attention</title>
-      <link>http://localhost:1313/posts/linear-attn/</link>
+      <link>https://shenzhiy21.github.io/posts/linear-attn/</link>
       <pubDate>Sat, 18 Jan 2025 09:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/linear-attn/</guid>
+      <guid>https://shenzhiy21.github.io/posts/linear-attn/</guid>
       <description>Notes on topics related to linear attention.</description>
     </item>
     <item>
       <title>Machine Learning Compilation</title>
-      <link>http://localhost:1313/posts/mlc/</link>
+      <link>https://shenzhiy21.github.io/posts/mlc/</link>
       <pubDate>Wed, 15 Jan 2025 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/mlc/</guid>
+      <guid>https://shenzhiy21.github.io/posts/mlc/</guid>
       <description>Lecture Notes on ML Compilation by Tianqi Chen</description>
     </item>
     <item>
       <title>Write a Memory Allocator for PyTorch</title>
-      <link>http://localhost:1313/posts/memory-allocator/</link>
+      <link>https://shenzhiy21.github.io/posts/memory-allocator/</link>
       <pubDate>Thu, 16 May 2024 15:21:52 +0800</pubDate>
-      <guid>http://localhost:1313/posts/memory-allocator/</guid>
+      <guid>https://shenzhiy21.github.io/posts/memory-allocator/</guid>
       <description>Write a memory allocator from scratch.</description>
     </item>
     <item>
       <title>FFT On the Road</title>
-      <link>http://localhost:1313/posts/fft/</link>
+      <link>https://shenzhiy21.github.io/posts/fft/</link>
       <pubDate>Sat, 20 Apr 2024 10:46:52 +0800</pubDate>
-      <guid>http://localhost:1313/posts/fft/</guid>
+      <guid>https://shenzhiy21.github.io/posts/fft/</guid>
       <description>Guide to implement FFT in C++ with parallelism</description>
     </item>
     <item>
       <title>Random Number Generator</title>
-      <link>http://localhost:1313/posts/rng/</link>
+      <link>https://shenzhiy21.github.io/posts/rng/</link>
       <pubDate>Sat, 20 Apr 2024 10:46:52 +0800</pubDate>
-      <guid>http://localhost:1313/posts/rng/</guid>
+      <guid>https://shenzhiy21.github.io/posts/rng/</guid>
       <description>Lecture notes on RNG</description>
     </item>
     <item>
       <title>Alias Method for Sampling from Discrete Distribution</title>
-      <link>http://localhost:1313/posts/alias-method/</link>
+      <link>https://shenzhiy21.github.io/posts/alias-method/</link>
       <pubDate>Sat, 13 Apr 2024 13:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/alias-method/</guid>
+      <guid>https://shenzhiy21.github.io/posts/alias-method/</guid>
       <description>An Introduction to Alias Method</description>
     </item>
     <item>
       <title>SFTP guide</title>
-      <link>http://localhost:1313/posts/sftp/</link>
+      <link>https://shenzhiy21.github.io/posts/sftp/</link>
       <pubDate>Mon, 15 Aug 2022 10:46:52 +0800</pubDate>
-      <guid>http://localhost:1313/posts/sftp/</guid>
+      <guid>https://shenzhiy21.github.io/posts/sftp/</guid>
       <description>Simple guide to use SFTP in terminal</description>
     </item>
   </channel>
