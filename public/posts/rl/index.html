@@ -10,7 +10,7 @@
 <meta name="description" content="Notes on everything related with RL.">
 <meta name="author" content="Zhiyang Shen">
 <link rel="canonical" href="http://localhost:1313/posts/rl/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.d63079815d18f277504cf66aa2f64064cea74ac90c714e35aa4680da8d8b05c4.css" integrity="sha256-1jB5gV0Y8ndQTPZqovZAZM6nSskMcU41qkaA2o2LBcQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d650382e2960ee05a60f62667fbcc70be6c57ec165b4481bda9908e9dab78694.css" integrity="sha256-1lA4Lilg7gWmD2Jmf7zHC&#43;bFfsFltEgb2pkI6dq3hpQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -208,7 +208,7 @@ p(s&rsquo;,r|s,a)=\text{Pr}\{S_{t+1}=s&rsquo;,R_{t+1}=r|S_t=s,A_t=a \}
 $$</p>
 <p>Then we can compute the expected rewards for state-action pairs:
 $$
-r(s,a) =\textbf{E}[R_{t+1}|S_t=s,A_t=a]=\sum_{r\in\mathcal R}r\sum_{s&rsquo;\in\mathcal S}p(s&rsquo;,r|s,a)
+r(s,a) =\mathbb{E}[R_{t+1}|S_t=s,A_t=a]=\sum_{r\in\mathcal R}r\sum_{s&rsquo;\in\mathcal S}p(s&rsquo;,r|s,a)
 $$</p>
 <p>The state-transition probabilities:
 $$
@@ -216,8 +216,33 @@ p(s&rsquo;|s,a)=\text{Pr}\{S_{t+1}=s&rsquo;|S_t=s,A_t=a \}=\sum_{r\in\mathcal R}
 $$</p>
 <p>The expected rewards for state-action-next_state triples:
 $$
-r(s,a,s&rsquo;)=\mathbb E[R_{t+1}|S_t=s,A_t=a,S_{t+1}=s&rsquo;]=\frac{\sum_{r\in\mathcal R}rp(s&rsquo;,r|s,a)}{p(s&rsquo;|s,a)}
+r(s,a,s&rsquo;)=\mathbb E\left[R_{t+1}\middle|S_t=s,A_t=a,S_{t+1}=s&rsquo;\right]=\frac{\sum_{r\in\mathcal R}rp(s&rsquo;,r|s,a)}{p(s&rsquo;|s,a)}
 $$</p>
+<p><em>Value function</em>: functions of <em>states</em> or <em>state-action pairs</em> that estimates how good it is for that state (or state-action pair).
+Formally, the <em>state-value function</em> of a state $s$ under a policy $\pi$, denoted $v_{\pi}(s)$, is the expected return when starting in $s$ and following $\pi$ thereafter.
+$$
+v_{\pi}(s) = \mathbb E_{\pi}\left[G_t\middle|S_t=s \right]=\mathbb E_{\pi}\left[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1}\middle|S_t=s \right]
+$$</p>
+<p>Similarly, the <em>action-value function</em> of taking action $a$ in state $s$ under policy $\pi$ is defined as:
+$$
+q_{\pi}(s, a) = \mathbb E_{\pi}\left[G_t\middle|S_t=s,A_t=a \right]=\mathbb E_{\pi}\left[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1} \middle| S_t=s, A_t=a \right]
+$$</p>
+<p>These functions can be estimated by many methods, <em>e.g.</em>:</p>
+<ul>
+<li>Monte Carlo methods</li>
+<li>parameterized function approximators</li>
+</ul>
+<p><em>Bellman equation</em>:</p>
+<p>$$
+\begin{aligned}
+v_{\pi}(s) &amp;= \mathbb E_{\pi}\left[G_t \middle| S_t=s\right]\\
+&amp;= \mathbb E_{\pi}\left[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1}\middle|S_t=s \right]\\
+&amp;= \mathbb E_{\pi}\left[R_{t+1}+\gamma\sum_{k=0}^{\infty}\gamma^k R_{t+k+2}\middle|S_t=s \right]\\
+&amp;= \sum_{a} \pi(a|s)\sum_{s&rsquo;}\sum_{r}p(s&rsquo;,r|s,a)\left[r+\gamma\mathbb E_{\pi}\left[\sum_{k=0}^\infty \gamma^k R_{t+k+2}\middle|S_{t+1}=s&rsquo; \right] \right]\\
+&amp;= \sum_a \pi(a|s)\sum_{s&rsquo;,r}p(s&rsquo;,r|s,a)\left[r+\gamma v_{\pi}(s&rsquo;) \right]
+\end{aligned}
+$$</p>
+<p><em>Optimal policy</em>: if $v_{\pi_*}(s)\geq v_{\pi}(s)$ for all policy $\pi$.</p>
 
 
   </div>

@@ -49,7 +49,7 @@ $$
 
 Then we can compute the expected rewards for state-action pairs:
 $$
-r(s,a) =\textbf{E}[R_{t+1}|S_t=s,A_t=a]=\sum_{r\in\mathcal R}r\sum_{s'\in\mathcal S}p(s',r|s,a)
+r(s,a) =\mathbb{E}[R_{t+1}|S_t=s,A_t=a]=\sum_{r\in\mathcal R}r\sum_{s'\in\mathcal S}p(s',r|s,a)
 $$
 
 The state-transition probabilities:
@@ -59,5 +59,34 @@ $$
 
 The expected rewards for state-action-next_state triples:
 $$
-r(s,a,s')=\mathbb E[R_{t+1}|S_t=s,A_t=a,S_{t+1}=s']=\frac{\sum_{r\in\mathcal R}rp(s',r|s,a)}{p(s'|s,a)}
+r(s,a,s')=\mathbb E\left[R_{t+1}\middle|S_t=s,A_t=a,S_{t+1}=s'\right]=\frac{\sum_{r\in\mathcal R}rp(s',r|s,a)}{p(s'|s,a)}
 $$
+
+*Value function*: functions of *states* or *state-action pairs* that estimates how good it is for that state (or state-action pair).
+Formally, the *state-value function* of a state $s$ under a policy $\pi$, denoted $v_{\pi}(s)$, is the expected return when starting in $s$ and following $\pi$ thereafter.
+$$
+v_{\pi}(s) = \mathbb E_{\pi}\left[G_t\middle|S_t=s \right]=\mathbb E_{\pi}\left[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1}\middle|S_t=s \right]
+$$
+
+Similarly, the *action-value function* of taking action $a$ in state $s$ under policy $\pi$ is defined as:
+$$
+q_{\pi}(s, a) = \mathbb E_{\pi}\left[G_t\middle|S_t=s,A_t=a \right]=\mathbb E_{\pi}\left[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1} \middle| S_t=s, A_t=a \right]
+$$
+
+These functions can be estimated by many methods, *e.g.*:
+- Monte Carlo methods
+- parameterized function approximators
+
+*Bellman equation*:
+
+$$
+\begin{aligned}
+v_{\pi}(s) &= \mathbb E_{\pi}\left[G_t \middle| S_t=s\right]\\\
+&= \mathbb E_{\pi}\left[\sum_{k=0}^{\infty}\gamma^k R_{t+k+1}\middle|S_t=s \right]\\\
+&= \mathbb E_{\pi}\left[R_{t+1}+\gamma\sum_{k=0}^{\infty}\gamma^k R_{t+k+2}\middle|S_t=s \right]\\\
+&= \sum_{a} \pi(a|s)\sum_{s'}\sum_{r}p(s',r|s,a)\left[r+\gamma\mathbb E_{\pi}\left[\sum_{k=0}^\infty \gamma^k R_{t+k+2}\middle|S_{t+1}=s' \right] \right]\\\
+&= \sum_a \pi(a|s)\sum_{s',r}p(s',r|s,a)\left[r+\gamma v_{\pi}(s') \right]
+\end{aligned}
+$$
+
+*Optimal policy*: if $v_{\pi_*}(s)\geq v_{\pi}(s)$ for all policy $\pi$.
