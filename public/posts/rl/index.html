@@ -291,36 +291,44 @@ $$</p>
 <li>The environment is known, <em>i.e.</em>, we know the state transition $p(s&rsquo;,r|s,a)$. Therefore, we can first get $q_*(s,a)$ by Bellman optimality equation, and take $\argmax$.</li>
 <li>The environment is unknown. Here, we must approximate the environment by sampling. Otherwise, consider to learn $q_*$ instead.</li>
 </ol>
-<p>However, modern RL algorithms often learn the parameterized policy $\pi_\theta(s,a)$ directly, which is more robust, more suitable for continuous action spaces, and easier to implement under deep learning frameworks.</p>
+<p>However, modern RL algorithms often learn the parameterized policy $\pi_\theta(a|s)$ directly, which is more robust, more suitable for continuous action spaces, and easier to implement under deep learning frameworks.</p>
 <p>Some classic RL algorithms:</p>
-<ul>
-<li>Dynamic Programming
-<ul>
-<li>Requirement: known environment</li>
-<li>Learns: $v(s)$</li>
-</ul>
-</li>
-<li>Monte Carlo methods
-<ul>
-<li>Requirement: known environment</li>
-<li>Learns: $q(s,a)$</li>
-</ul>
-</li>
-<li>Temporal-Difference (TD) methods
-<ul>
-<li>Requirement: environment-free</li>
-<li>Learns: $q(s,a)$</li>
-<li>Methods: SARSA, Q-Learning &hellip;</li>
-</ul>
-</li>
-<li>Policy Gradient methods
-<ul>
-<li>Requirement: environment-free</li>
-<li>Learns: $\pi(a|s)$</li>
-<li>Methods: REINFORCE, Actor-Critic (<em>e.g.</em> PPO) &hellip;</li>
-</ul>
-</li>
-</ul>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: center">Algorithm</th>
+          <th style="text-align: center">Environment</th>
+          <th style="text-align: center">What it Learns</th>
+          <th style="text-align: center">Common Methods</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">Dynamic Programming (DP)</td>
+          <td style="text-align: center">Known</td>
+          <td style="text-align: center">$v(s)$</td>
+          <td style="text-align: center">-</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Monte Carlo (MC)</td>
+          <td style="text-align: center">Known</td>
+          <td style="text-align: center">$q(s,a)$</td>
+          <td style="text-align: center">MCTS</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Temporal-Difference (TD)</td>
+          <td style="text-align: center">Unknown</td>
+          <td style="text-align: center">$q(s,a)$</td>
+          <td style="text-align: center">SARSA, Q-Learning</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">Policy Gradient</td>
+          <td style="text-align: center">Unknown</td>
+          <td style="text-align: center">$π(a|s)$</td>
+          <td style="text-align: center">REINFORCE, Actor-Critic (e.g. PPO)</td>
+      </tr>
+  </tbody>
+</table>
 
 
   </div>

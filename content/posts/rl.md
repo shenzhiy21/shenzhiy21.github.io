@@ -146,20 +146,13 @@ If it learns the optimal state-value function $v_\*(s)$, then it's more difficul
 1. The environment is known, *i.e.*, we know the state transition $p(s',r|s,a)$. Therefore, we can first get $q_\*(s,a)$ by Bellman optimality equation, and take $\argmax$.
 2. The environment is unknown. Here, we must approximate the environment by sampling. Otherwise, consider to learn $q_\*$ instead.
 
-However, modern RL algorithms often learn the parameterized policy $\pi_\theta(s,a)$ directly, which is more robust, more suitable for continuous action spaces, and easier to implement under deep learning frameworks.
+However, modern RL algorithms often learn the parameterized policy $\pi_\theta(a|s)$ directly, which is more robust, more suitable for continuous action spaces, and easier to implement under deep learning frameworks.
 
 Some classic RL algorithms:
-- Dynamic Programming
-  - Requirement: known environment
-  - Learns: $v(s)$
-- Monte Carlo methods
-  - Requirement: known environment
-  - Learns: $q(s,a)$
-- Temporal-Difference (TD) methods
-  - Requirement: environment-free
-  - Learns: $q(s,a)$
-  - Methods: SARSA, Q-Learning ...
-- Policy Gradient methods
-  - Requirement: environment-free
-  - Learns: $\pi(a|s)$
-  - Methods: REINFORCE, Actor-Critic (*e.g.* PPO) ...
+
+| Algorithm                  | Environment | What it Learns | Common Methods                     |
+|:--------------------------:|:-----------:|:--------------:|:--------------------------------:  |
+| Dynamic Programming (DP)   | Known       | $v(s)$         | -                                  |
+| Monte Carlo (MC)           | Known       | $q(s,a)$       | MCTS                               |
+| Temporal-Difference (TD)   | Unknown     | $q(s,a)$       | SARSA, Q-Learning                  |
+| Policy Gradient            | Unknown     | $π(a\|s)$      | REINFORCE, Actor-Critic (e.g. PPO) |
