@@ -10,7 +10,7 @@
 <meta name="description" content="Notes on everything related with RL.">
 <meta name="author" content="Zhiyang Shen">
 <link rel="canonical" href="http://localhost:1313/posts/rl/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.d650382e2960ee05a60f62667fbcc70be6c57ec165b4481bda9908e9dab78694.css" integrity="sha256-1lA4Lilg7gWmD2Jmf7zHC&#43;bFfsFltEgb2pkI6dq3hpQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d63079815d18f277504cf66aa2f64064cea74ac90c714e35aa4680da8d8b05c4.css" integrity="sha256-1jB5gV0Y8ndQTPZqovZAZM6nSskMcU41qkaA2o2LBcQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -152,7 +152,7 @@
     <h1 class="post-title entry-hint-parent">
       Reinforcement Learning Notes
     </h1>
-    <div class="post-meta"><span title='2025-09-20 18:21:52 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;Zhiyang Shen
+    <div class="post-meta"><span title='2025-09-20 18:21:52 +0800 CST'>September 20, 2025</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;Zhiyang Shen
 
 </div>
   </header> <div class="toc">
@@ -242,7 +242,85 @@ v_{\pi}(s) &amp;= \mathbb E_{\pi}\left[G_t \middle| S_t=s\right]\\
 &amp;= \sum_a \pi(a|s)\sum_{s&rsquo;,r}p(s&rsquo;,r|s,a)\left[r+\gamma v_{\pi}(s&rsquo;) \right]
 \end{aligned}
 $$</p>
-<p><em>Optimal policy</em>: if $v_{\pi_*}(s)\geq v_{\pi}(s)$ for all policy $\pi$.</p>
+<p>In some cases, the probability of (starting from state $s$, and taking action $a$ to move to state $s&rsquo;$) doesn&rsquo;t depend on reward $r$, <em>i.e.</em>, this state transition always outputs the same reward.
+Therefore, the reward will be a function of $s$ and $a$, denoted as $R_s^a$.
+Then, we don&rsquo;t have to take expectation for variable $r$:
+$$
+v_{\pi}(s)=\sum_a\pi(a|s)\sum_{s&rsquo;}p(s&rsquo;|s,a)[R_s^a+\gamma v_\pi(s&rsquo;)]
+$$</p>
+<p>This kind of MDP can be <em>induced</em> to a <em>Markov Reward Process</em> (MRP) according to the policy $\pi$, defined as:
+$$
+\mathcal P_{s,s&rsquo;}^\pi =\sum_{a}\pi(a|s)p(s&rsquo;|s,a), \ \  R_s^\pi = \sum_a \pi(a|s)R_s^a
+$$</p>
+<p>And the Bellman equation can be expressed by the induced MRP, in a vectorized form:
+$$
+\vec{v}_{\pi} = \vec{R}^{\pi} + \gamma \mathcal{P}^{\pi}\vec{v}_{\pi}
+$$</p>
+<p><em>Optimal policy</em>: for any MDP, there exists an optimal policy $\pi_*$ that is &ldquo;better than&rdquo; all other policies:
+$$
+v_{\pi_*}(s)\geq v_{\pi}(s),\forall \pi,\forall s
+$$</p>
+<p>This also leads to the <em>optimal state-value function</em> and <em>optimal action-value function</em>, denoted $v_*(s)$ and $q_*(s,a)$ respectively.</p>
+<p>We have <em>Bellman optimality equation</em> for the optimal state-value function:
+$$
+\begin{aligned}
+v_{*}(s) &amp;= \max_a q_{*}(s,a) \\
+&amp;= \max_a \mathbb E_{\pi_*}\left[G_t\middle| S_t=s,A_t=a \right] \\
+&amp;= \max_a \mathbb E_{\pi_*}\left[\sum_{k=0}^\infty \gamma^k R_{t+k+1}\middle |S_t=s,A_t=a \right]\\
+&amp;= \max_a \mathbb E_{\pi_*}\left[R_{t+1} + \gamma\sum_{k=0}^\infty \gamma^k R_{t+k+2} \middle | S_t=s,A_t=a \right] \\
+&amp;= \max_a \mathbb E_{\pi_*}\left[R_{t+1}+\gamma v_{*}(S_{t+1})\middle| S_t=s,A_t=a \right] \\
+&amp;= \max_a\sum_{s&rsquo;,r}p(s&rsquo;,r|s,a)[r+\gamma v_* (s&rsquo;)]
+\end{aligned}
+$$</p>
+<p>And also the <em>Bellman optimality equation</em> for $q_*$:
+$$
+\begin{aligned}
+q_*(s,a) &amp;= \mathbb E_{\pi_*} \left[R_{t+1}+\gamma\max_{a&rsquo;}q_*(S_{t+1},a&rsquo;)\middle| S_t=s,A_t=a \right]\\
+&amp;= \sum_{s&rsquo;,r}p(s&rsquo;,r|s,a)\left[r+\gamma\max_{a&rsquo;}q_*(s&rsquo;,a&rsquo;) \right]
+\end{aligned}
+$$</p>
+<blockquote>
+<p>Bellman optimality equations only hold true for the optimal policy!</p></blockquote>
+<p>Traditionally, a RL algorithm learns either $v_*$ or $q_*$. Now the question is, how to decide the optimal policy?</p>
+<p>If it learns $q_*(s,a)$, then it only needs to choose the action that maximizes $q_*(s,a)$ for the current state $s$:
+$$
+\pi^*(s)= \argmax_a q_*(s,a)
+$$</p>
+<p>If it learns the optimal state-value function $v_*(s)$, then it&rsquo;s more difficult. Consider two cases:</p>
+<ol>
+<li>The environment is known, <em>i.e.</em>, we know the state transition $p(s&rsquo;,r|s,a)$. Therefore, we can first get $q_*(s,a)$ by Bellman optimality equation, and take $\argmax$.</li>
+<li>The environment is unknown. Here, we must approximate the environment by sampling. Otherwise, consider to learn $q_*$ instead.</li>
+</ol>
+<p>However, modern RL algorithms often learn the parameterized policy $\pi_\theta(s,a)$ directly, which is more robust, more suitable for continuous action spaces, and easier to implement under deep learning frameworks.</p>
+<p>Some classic RL algorithms:</p>
+<ul>
+<li>Dynamic Programming
+<ul>
+<li>Requirement: known environment</li>
+<li>Learns: $v(s)$</li>
+</ul>
+</li>
+<li>Monte Carlo methods
+<ul>
+<li>Requirement: known environment</li>
+<li>Learns: $q(s,a)$</li>
+</ul>
+</li>
+<li>Temporal-Difference (TD) methods
+<ul>
+<li>Requirement: environment-free</li>
+<li>Learns: $q(s,a)$</li>
+<li>Methods: SARSA, Q-Learning &hellip;</li>
+</ul>
+</li>
+<li>Policy Gradient methods
+<ul>
+<li>Requirement: environment-free</li>
+<li>Learns: $\pi(a|s)$</li>
+<li>Methods: REINFORCE, Actor-Critic (<em>e.g.</em> PPO) &hellip;</li>
+</ul>
+</li>
+</ul>
 
 
   </div>

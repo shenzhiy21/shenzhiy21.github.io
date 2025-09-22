@@ -89,4 +89,77 @@ v_{\pi}(s) &= \mathbb E_{\pi}\left[G_t \middle| S_t=s\right]\\\
 \end{aligned}
 $$
 
-*Optimal policy*: if $v_{\pi_*}(s)\geq v_{\pi}(s)$ for all policy $\pi$.
+In some cases, the probability of (starting from state $s$, and taking action $a$ to move to state $s'$) doesn't depend on reward $r$, *i.e.*, this state transition always outputs the same reward.
+Therefore, the reward will be a function of $s$ and $a$, denoted as $R_s^a$.
+Then, we don't have to take expectation for variable $r$:
+$$
+v_{\pi}(s)=\sum_a\pi(a|s)\sum_{s'}p(s'|s,a)[R_s^a+\gamma v_\pi(s')]
+$$
+
+This kind of MDP can be *induced* to a *Markov Reward Process* (MRP) according to the policy $\pi$, defined as:
+$$
+\mathcal P_{s,s'}^\pi =\sum_{a}\pi(a|s)p(s'|s,a), \ \  R_s^\pi = \sum_a \pi(a|s)R_s^a
+$$
+
+And the Bellman equation can be expressed by the induced MRP, in a vectorized form:
+$$
+\vec{v}_{\pi} = \vec{R}^{\pi} + \gamma \mathcal{P}^{\pi}\vec{v}\_{\pi}
+$$
+
+*Optimal policy*: for any MDP, there exists an optimal policy $\pi_*$ that is "better than" all other policies:
+$$
+v\_{\pi\_\*}(s)\geq v\_{\pi}(s),\forall \pi,\forall s
+$$
+
+This also leads to the *optimal state-value function* and *optimal action-value function*, denoted $v_\*(s)$ and $q_\*(s,a)$ respectively.
+
+We have *Bellman optimality equation* for the optimal state-value function:
+$$
+\begin{aligned}
+v_{\*}(s) &= \max_a q_{\*}(s,a) \\\
+&= \max_a \mathbb E_{\pi_\*}\left[G_t\middle| S_t=s,A_t=a \right] \\\
+&= \max_a \mathbb E_{\pi_\*}\left[\sum_{k=0}^\infty \gamma^k R_{t+k+1}\middle |S_t=s,A_t=a \right]\\\
+&= \max_a \mathbb E_{\pi_\*}\left[R_{t+1} + \gamma\sum_{k=0}^\infty \gamma^k R_{t+k+2} \middle | S_t=s,A_t=a \right] \\\
+&= \max_a \mathbb E_{\pi_\*}\left[R_{t+1}+\gamma v_{\*}(S_{t+1})\middle| S_t=s,A_t=a \right] \\\
+&= \max_a\sum_{s',r}p(s',r|s,a)[r+\gamma v_\* (s')]
+\end{aligned}
+$$
+
+And also the *Bellman optimality equation* for $q_\*$:
+$$
+\begin{aligned}
+q_\*(s,a) &= \mathbb E_{\pi_\*} \left[R_{t+1}+\gamma\max_{a'}q_\*(S_{t+1},a')\middle| S_t=s,A_t=a \right]\\\
+&= \sum_{s',r}p(s',r|s,a)\left[r+\gamma\max_{a'}q_\*(s',a') \right]
+\end{aligned}
+$$
+
+> Bellman optimality equations only hold true for the optimal policy!
+
+Traditionally, a RL algorithm learns either $v_\*$ or $q_\*$. Now the question is, how to decide the optimal policy?
+
+If it learns $q_\*(s,a)$, then it only needs to choose the action that maximizes $q_\*(s,a)$ for the current state $s$:
+$$
+\pi^\*(s)= \argmax_a q_\*(s,a)
+$$
+
+If it learns the optimal state-value function $v_\*(s)$, then it's more difficult. Consider two cases:
+1. The environment is known, *i.e.*, we know the state transition $p(s',r|s,a)$. Therefore, we can first get $q_\*(s,a)$ by Bellman optimality equation, and take $\argmax$.
+2. The environment is unknown. Here, we must approximate the environment by sampling. Otherwise, consider to learn $q_\*$ instead.
+
+However, modern RL algorithms often learn the parameterized policy $\pi_\theta(s,a)$ directly, which is more robust, more suitable for continuous action spaces, and easier to implement under deep learning frameworks.
+
+Some classic RL algorithms:
+- Dynamic Programming
+  - Requirement: known environment
+  - Learns: $v(s)$
+- Monte Carlo methods
+  - Requirement: known environment
+  - Learns: $q(s,a)$
+- Temporal-Difference (TD) methods
+  - Requirement: environment-free
+  - Learns: $q(s,a)$
+  - Methods: SARSA, Q-Learning ...
+- Policy Gradient methods
+  - Requirement: environment-free
+  - Learns: $\pi(a|s)$
+  - Methods: REINFORCE, Actor-Critic (*e.g.* PPO) ...
