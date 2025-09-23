@@ -1,7 +1,7 @@
 +++
 title = 'Research Idea'
 date = 2025-08-16T18:21:52+08:00
-draft = false
+draft = true
 math = true
 tags = ['note']
 categories = ['note', 'visualization', 'math']
