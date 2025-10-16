@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Fft on Zhiyang&#39;s Blog</title>
-    <link>http://localhost:1313/tags/fft/</link>
+    <link>https://shenzhiy21.github.io/tags/fft/</link>
     <description>Recent content in Fft on Zhiyang&#39;s Blog</description>
-    <generator>Hugo -- 0.150.0</generator>
+    <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
     <lastBuildDate>Sat, 20 Apr 2024 10:46:52 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/fft/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://shenzhiy21.github.io/tags/fft/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>FFT On the Road</title>
-      <link>http://localhost:1313/posts/fft/</link>
+      <link>https://shenzhiy21.github.io/posts/fft/</link>
       <pubDate>Sat, 20 Apr 2024 10:46:52 +0800</pubDate>
-      <guid>http://localhost:1313/posts/fft/</guid>
+      <guid>https://shenzhiy21.github.io/posts/fft/</guid>
       <description>Guide to implement FFT in C++ with parallelism</description>
     </item>
   </channel>
