@@ -2,32 +2,32 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Stats on Zhiyang&#39;s Blog</title>
-    <link>https://shenzhiy21.github.io/tags/stats/</link>
+    <link>http://localhost:1313/tags/stats/</link>
     <description>Recent content in Stats on Zhiyang&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
     <lastBuildDate>Sat, 15 Mar 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="https://shenzhiy21.github.io/tags/stats/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/stats/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Understanding Diffusion Models</title>
-      <link>https://shenzhiy21.github.io/posts/diffusion/</link>
+      <link>http://localhost:1313/posts/diffusion/</link>
       <pubDate>Sat, 15 Mar 2025 12:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/diffusion/</guid>
+      <guid>http://localhost:1313/posts/diffusion/</guid>
       <description>From differential equation to diffusion models</description>
     </item>
     <item>
       <title>Random Number Generator</title>
-      <link>https://shenzhiy21.github.io/posts/rng/</link>
+      <link>http://localhost:1313/posts/rng/</link>
       <pubDate>Sat, 20 Apr 2024 10:46:52 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/rng/</guid>
+      <guid>http://localhost:1313/posts/rng/</guid>
       <description>Lecture notes on RNG</description>
     </item>
     <item>
       <title>Alias Method for Sampling from Discrete Distribution</title>
-      <link>https://shenzhiy21.github.io/posts/alias-method/</link>
+      <link>http://localhost:1313/posts/alias-method/</link>
       <pubDate>Sat, 13 Apr 2024 13:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/alias-method/</guid>
+      <guid>http://localhost:1313/posts/alias-method/</guid>
       <description>An Introduction to Alias Method</description>
     </item>
   </channel>

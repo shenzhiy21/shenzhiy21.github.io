@@ -2,46 +2,46 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>System on Zhiyang&#39;s Blog</title>
-    <link>https://shenzhiy21.github.io/tags/system/</link>
+    <link>http://localhost:1313/tags/system/</link>
     <description>Recent content in System on Zhiyang&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
     <lastBuildDate>Sun, 23 Feb 2025 13:00:00 +0800</lastBuildDate>
-    <atom:link href="https://shenzhiy21.github.io/tags/system/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/system/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>LLM Quantization</title>
-      <link>https://shenzhiy21.github.io/posts/quant/</link>
+      <link>http://localhost:1313/posts/quant/</link>
       <pubDate>Sun, 23 Feb 2025 13:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/quant/</guid>
+      <guid>http://localhost:1313/posts/quant/</guid>
       <description>8bit-Quantization Implementation for LLama-2-7b Model</description>
     </item>
     <item>
       <title>Notes on Linear Attention</title>
-      <link>https://shenzhiy21.github.io/posts/linear-attn/</link>
+      <link>http://localhost:1313/posts/linear-attn/</link>
       <pubDate>Sat, 18 Jan 2025 09:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/linear-attn/</guid>
+      <guid>http://localhost:1313/posts/linear-attn/</guid>
       <description>Notes on topics related to linear attention.</description>
     </item>
     <item>
       <title>Machine Learning Compilation</title>
-      <link>https://shenzhiy21.github.io/posts/mlc/</link>
+      <link>http://localhost:1313/posts/mlc/</link>
       <pubDate>Wed, 15 Jan 2025 13:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/mlc/</guid>
+      <guid>http://localhost:1313/posts/mlc/</guid>
       <description>Lecture Notes on ML Compilation by Tianqi Chen</description>
     </item>
     <item>
       <title>Write a Memory Allocator for PyTorch</title>
-      <link>https://shenzhiy21.github.io/posts/memory-allocator/</link>
+      <link>http://localhost:1313/posts/memory-allocator/</link>
       <pubDate>Thu, 16 May 2024 15:21:52 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/memory-allocator/</guid>
+      <guid>http://localhost:1313/posts/memory-allocator/</guid>
       <description>Write a memory allocator from scratch.</description>
     </item>
     <item>
       <title>FFT On the Road</title>
-      <link>https://shenzhiy21.github.io/posts/fft/</link>
+      <link>http://localhost:1313/posts/fft/</link>
       <pubDate>Sat, 20 Apr 2024 10:46:52 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/fft/</guid>
+      <guid>http://localhost:1313/posts/fft/</guid>
       <description>Guide to implement FFT in C++ with parallelism</description>
     </item>
   </channel>

@@ -155,3 +155,19 @@ simply refering to some basic statistics (*e.g.*, proportion, or number).
 Things to do:
 - How to design useful interactions?
 - What kinds of visualizations to use?
+
+## Brick Blueprint Design
+
+This idea comes from my experience of building a LEGO toy brick.
+When I was reading the blueprint, I found it really hard to design a "good" blueprint
+that is easy to read and implement.
+It may take a lot of time for the toy maker to do this.
+So, a natural idea is, can we make it simpler for toy makers to design blueprints?
+
+The toy brick certainly has some "structure" or "constraints" that can be
+utilized to simplify the design process.
+For example, the building process of some blocks must be before the building of some others.
+
+(It's a basic idea though, not even investigated ...)
+
+Please refer to this paper: [BrickGPT (ICCV 2025 Oral)](https://avalovelace1.github.io/BrickGPT/).

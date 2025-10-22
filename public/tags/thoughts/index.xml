@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Thoughts on Zhiyang&#39;s Blog</title>
-    <link>https://shenzhiy21.github.io/tags/thoughts/</link>
+    <link>http://localhost:1313/tags/thoughts/</link>
     <description>Recent content in Thoughts on Zhiyang&#39;s Blog</description>
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
     <lastBuildDate>Thu, 16 Oct 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="https://shenzhiy21.github.io/tags/thoughts/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/thoughts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>10月16日，分享一篇文章</title>
-      <link>https://shenzhiy21.github.io/posts/article1/</link>
+      <link>http://localhost:1313/posts/article1/</link>
       <pubDate>Thu, 16 Oct 2025 12:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/article1/</guid>
+      <guid>http://localhost:1313/posts/article1/</guid>
       <description>木心的《同车人的啜泣》，摘自小说集《豹变》</description>
     </item>
   </channel>
