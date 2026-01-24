@@ -130,7 +130,7 @@ Compilation of CUDA C:
 
 ### Chapter 3. Multidimensional grids and data
 
-Multidimensional data organization: grid dimension, block dimension. *E.g.*
+Multidimensional data organization: grid dimension, block dimension. _E.g._
 
 ```c
 dim3 dimGrid(32, 1, 1);
@@ -152,4 +152,3 @@ This will take the parameters as $x$ dimensions, and set $y$ and $z$ dimensions 
 `gridDim.{x,y,z}` and `blockDim.{x,y,z}` are built-in variables.
 All threads in a block share the same `blockDim.{x,y,z}`.
 Among blocks, the `blockIdx.{x,y,z}` value ranges from `0` to `gridDim.{x,y,z}`.
-
