@@ -7,8 +7,15 @@
     <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
-    <lastBuildDate>Sat, 24 Jan 2026 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 24 Jan 2026 14:00:00 +0800</lastBuildDate>
     <atom:link href="https://shenzhiy21.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Perron-Frobenius Theorem and the Stationary Distribution for Markov Chains</title>
+      <link>https://shenzhiy21.github.io/posts/markov/</link>
+      <pubDate>Sat, 24 Jan 2026 14:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/posts/markov/</guid>
+      <description>Proof of the uniqueness of stationary distribution for finite irreducible Markov chains, using Perron-Frobenius Theorem</description>
+    </item>
     <item>
       <title>Understanding Diffusion Models</title>
       <link>https://shenzhiy21.github.io/posts/diffusion/</link>
