@@ -127,3 +127,29 @@ Compilation of CUDA C:
 - NVCC (Nvidia C compiler)
 - Host code: compiled with host's standard C/C++ compilers, run as traditional CPU process
 - Device code: marked with CUDA keywords, compiled by NVCC (device just-in-time compiler)
+
+### Chapter 3. Multidimensional grids and data
+
+Multidimensional data organization: grid dimension, block dimension. *E.g.*
+
+```c
+dim3 dimGrid(32, 1, 1);
+dim3 dimBlock(128, 1, 1);
+
+vecAddKernel<<<dimGrid, dimBlock>>>(...);
+```
+
+This means that the grid for the kernel has 32 blocks, and each block has 128 threads.
+
+For convenience, for one-dimensional grids and blocks, there's a shortcut:
+
+```c
+vecAddKernel<<<ceil(n/256.0), 256>>>(...);
+```
+
+This will take the parameters as $x$ dimensions, and set $y$ and $z$ dimensions to 1.
+
+`gridDim.{x,y,z}` and `blockDim.{x,y,z}` are built-in variables.
+All threads in a block share the same `blockDim.{x,y,z}`.
+Among blocks, the `blockIdx.{x,y,z}` value ranges from `0` to `gridDim.{x,y,z}`.
+

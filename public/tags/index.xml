@@ -4,9 +4,10 @@
     <title>Tags on Zhiyang&#39;s Blog</title>
     <link>https://shenzhiy21.github.io/tags/</link>
     <description>Recent content in Tags on Zhiyang&#39;s Blog</description>
-    <generator>Hugo -- 0.147.8</generator>
+    <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
+<<<<<<< HEAD
     <lastBuildDate>Sat, 24 Jan 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://shenzhiy21.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
@@ -14,25 +15,53 @@
       <link>https://shenzhiy21.github.io/tags/diffusion/</link>
       <pubDate>Sat, 24 Jan 2026 12:00:00 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/tags/diffusion/</guid>
-      <description></description>
-    </item>
+=======
+    <lastBuildDate>Thu, 16 Oct 2025 12:00:00 +0800</lastBuildDate>
+    <atom:link href="https://shenzhiy21.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Math</title>
-      <link>https://shenzhiy21.github.io/tags/math/</link>
-      <pubDate>Sat, 24 Jan 2026 12:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/tags/math/</guid>
+      <title>Thoughts</title>
+      <link>https://shenzhiy21.github.io/tags/thoughts/</link>
+      <pubDate>Thu, 16 Oct 2025 12:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/tags/thoughts/</guid>
       <description></description>
     </item>
     <item>
       <title>Note</title>
       <link>https://shenzhiy21.github.io/tags/note/</link>
+      <pubDate>Sat, 20 Sep 2025 18:21:52 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/tags/note/</guid>
+>>>>>>> 8439ee90f440354e684190181de16df6564c8753
+      <description></description>
+    </item>
+    <item>
+      <title>Math</title>
+      <link>https://shenzhiy21.github.io/tags/math/</link>
+<<<<<<< HEAD
+      <pubDate>Sat, 24 Jan 2026 12:00:00 +0800</pubDate>
+=======
+      <pubDate>Thu, 26 Jun 2025 13:00:00 +0800</pubDate>
+>>>>>>> 8439ee90f440354e684190181de16df6564c8753
+      <guid>https://shenzhiy21.github.io/tags/math/</guid>
+      <description></description>
+    </item>
+    <item>
+<<<<<<< HEAD
+      <title>Note</title>
+      <link>https://shenzhiy21.github.io/tags/note/</link>
       <pubDate>Sat, 24 Jan 2026 12:00:00 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/tags/note/</guid>
+=======
+      <title>Diffusion</title>
+      <link>https://shenzhiy21.github.io/tags/diffusion/</link>
+      <pubDate>Sat, 15 Mar 2025 12:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/tags/diffusion/</guid>
+>>>>>>> 8439ee90f440354e684190181de16df6564c8753
       <description></description>
     </item>
     <item>
       <title>Stats</title>
       <link>https://shenzhiy21.github.io/tags/stats/</link>
+<<<<<<< HEAD
       <pubDate>Sat, 24 Jan 2026 12:00:00 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/tags/stats/</guid>
       <description></description>
@@ -42,6 +71,10 @@
       <link>https://shenzhiy21.github.io/tags/thoughts/</link>
       <pubDate>Thu, 16 Oct 2025 12:00:00 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/tags/thoughts/</guid>
+=======
+      <pubDate>Sat, 15 Mar 2025 12:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/tags/stats/</guid>
+>>>>>>> 8439ee90f440354e684190181de16df6564c8753
       <description></description>
     </item>
     <item>
@@ -77,6 +110,16 @@
       <link>https://shenzhiy21.github.io/tags/idea/</link>
       <pubDate>Thu, 06 Feb 2025 13:00:00 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/tags/idea/</guid>
+<<<<<<< HEAD
+=======
+      <description></description>
+    </item>
+    <item>
+      <title>Machine Learning</title>
+      <link>https://shenzhiy21.github.io/tags/machine-learning/</link>
+      <pubDate>Sat, 18 Jan 2025 09:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/tags/machine-learning/</guid>
+>>>>>>> 8439ee90f440354e684190181de16df6564c8753
       <description></description>
     </item>
     <item>
@@ -84,6 +127,7 @@
       <link>https://shenzhiy21.github.io/tags/algorithm/</link>
       <pubDate>Thu, 16 May 2024 15:21:52 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/tags/algorithm/</guid>
+<<<<<<< HEAD
       <description></description>
     </item>
     <item>
@@ -91,6 +135,8 @@
       <link>https://shenzhiy21.github.io/tags/machine-learning/</link>
       <pubDate>Thu, 16 May 2024 15:21:52 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/tags/machine-learning/</guid>
+=======
+>>>>>>> 8439ee90f440354e684190181de16df6564c8753
       <description></description>
     </item>
     <item>
@@ -112,6 +158,23 @@
       <link>https://shenzhiy21.github.io/tags/parallel/</link>
       <pubDate>Sat, 20 Apr 2024 10:46:52 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/tags/parallel/</guid>
+<<<<<<< HEAD
+=======
+      <description></description>
+    </item>
+    <item>
+      <title>Network</title>
+      <link>https://shenzhiy21.github.io/tags/network/</link>
+      <pubDate>Mon, 15 Aug 2022 10:46:52 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/tags/network/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sftp</title>
+      <link>https://shenzhiy21.github.io/tags/sftp/</link>
+      <pubDate>Mon, 15 Aug 2022 10:46:52 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/tags/sftp/</guid>
+>>>>>>> 8439ee90f440354e684190181de16df6564c8753
       <description></description>
     </item>
   </channel>
