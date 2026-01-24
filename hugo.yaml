@@ -37,7 +37,7 @@ params:
   homeInfoParams:
     Title: "Hi There!👋 Welcome to my page!"
     Content: >
-      I am Zhiyang Shen (沈之洋), a first year PhD student at Tsinghua University. My current research interest lies in the intersection of visualization and AI. I love playing DOTA2 and reading novels (detective stories especially). I enjoy music of various genres, and my favorite artists are Zhao Lei (赵雷) and Anpu (安溥). Feel free to contact me :)
+      I am Zhiyang Shen, a first year Ph.D. student at Tsinghua University, supervised by Prof. [Shixia Liu](http://shixialiu.com). My current research interest lies in the intersection of visualization and AI. I am passionate about music and photography, and I enjoy exploring parks alone in my free time.
   socialIcons:
     - name: github
       title: View My Github Profile

@@ -151,6 +151,12 @@
     
     <h1 class="post-title entry-hint-parent">
       Random Number Generator
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
     </h1>
     <div class="post-meta"><span title='2024-04-20 10:46:52 +0800 CST'>April 20, 2024</span>&nbsp;·&nbsp;3 min&nbsp;·&nbsp;Zhiyang Shen
 
@@ -188,18 +194,18 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">NotImplementedError</span>(<span style="color:#e6db74">&#34;__init__() function is not implemented yet&#34;</span>)
-</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        Get the next random number from the generator
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">NotImplementedError</span>(<span style="color:#e6db74">&#34;next() function is not implemented yet&#34;</span>)
 </span></span></code></pre></div><h2 id="uniform-distribution">Uniform Distribution<a hidden class="anchor" aria-hidden="true" href="#uniform-distribution">#</a></h2>
-<p>最常见的 RNG 是线性同余生成器 (Linear Congruential): 为了生成 $0,1,\cdots,m-1$ 这些整数，可以考虑
-$$
+<p>最常见的 RNG 是线性同余生成器 (Linear Congruential): 为了生成 $0,1,\cdots,m-1$ 这些整数，可以考虑</p>
+<p>$$
 X_{i+1}=aX_i+c \pmod m
-$$
-这样生成的 ${X_i}$ 序列在 $a,c,m,X_0$ 处于特定条件下时，可以取遍 ${0,1,\cdots,m-1}$. 详见 Hull and Dobell, 1962. 一个常见的取法是：$a=16807,c=0,m=2^{31}-1$. (Lewis, Goodman and Miller, 1969)</p>
+$$</p>
+<p>这样生成的 ${X_i}$ 序列在 $a,c,m,X_0$ 处于特定条件下时，可以取遍 ${0,1,\cdots,m-1}$. 详见 Hull and Dobell, 1962. 一个常见的取法是：$a=16807,c=0,m=2^{31}-1$. (Lewis, Goodman and Miller, 1969)</p>
 <p>于是，当 $m$ 足够大时，${X_i/m}$ 可以视为 $[0,1)$ 上的均匀分布。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LinearCongruentialGenerator</span>(RandomNumberGenerator):
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
@@ -210,7 +216,7 @@ $$
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>a <span style="color:#f92672">=</span> a
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>c <span style="color:#f92672">=</span> c
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>m <span style="color:#f92672">=</span> m
-</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next</span>(self):
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>seed <span style="color:#f92672">=</span> (self<span style="color:#f92672">.</span>a <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>seed <span style="color:#f92672">+</span> self<span style="color:#f92672">.</span>c) <span style="color:#f92672">%</span> self<span style="color:#f92672">.</span>m
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>seed
@@ -223,7 +229,7 @@ $$
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, seed<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, a<span style="color:#f92672">=</span><span style="color:#ae81ff">16807</span>, c<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, mod<span style="color:#f92672">=</span><span style="color:#ae81ff">2147483647</span>):
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>mod <span style="color:#f92672">=</span> mod
 </span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>rng <span style="color:#f92672">=</span> LinearCongruentialGenerator(seed, a, c, self<span style="color:#f92672">.</span>mod)
-</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next</span>(self):
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> self<span style="color:#f92672">.</span>rng<span style="color:#f92672">.</span>next() <span style="color:#f92672">/</span> self<span style="color:#f92672">.</span>mod
 </span></span></code></pre></div><p>当然，生成均匀分布的方法有很多，这不是本文的重点。</p>
@@ -235,23 +241,23 @@ $$
 <p><strong>Lemma 2</strong>: Assume $A={a_i|i\in I}$ where either $I={1,2,\cdots,n}$ for some $n\in\mathbb N$ or $I=\mathbb N$, and where $a_i\neq a_j$ for $i\neq j$. Let $p_i\geq 0$ with $\sum_I p_i=1$. Finally let $U\sim\mathcal U[0,1]$ and define $K=\min{k\in I|\sum_{i=1}^k p_i\geq U }$. Then $X=a_K\in A$ satisfies $\mathbb P(X=a_K)=p_k$ for all $k\in I$.</p>
 <p><em>Proof</em>. $\mathbb P(X=a_K)=\mathbb P(\sum_{i=1}^{k-1}p_i&lt;U,\sum_{i=1}^k p_i\geq U)=p_k$.</p>
 <p>根据以上引理，假设我们已经有 $U\sim \mathcal U[0,1]$ 了，那么只需要构造特定的 ${a_i}$ 和 ${p_i}$ 即可得到想要的离散分布。</p>
-<p>例如对于几何分布而言，目标是
-$$
+<p>例如对于几何分布而言，目标是</p>
+<p>$$
 \mathbb P(X=i)=(1-p)^{i-1}p=p_i,i\in\mathbb N^+
-$$
-对照 <strong>Lemma 2</strong> 可知，应当令 $a_i=i$, $p_i=(1-p)^{i-1}p$. 则
-$$
+$$</p>
+<p>对照 <strong>Lemma 2</strong> 可知，应当令 $a_i=i$, $p_i=(1-p)^{i-1}p$. 则</p>
+<p>$$
 \sum_{i=1}^k p_i=\sum_{i=1}^k (1-p)^{i-1}p=1-(1-p)^k
 $$</p>
 <p>$$
 \sum_{i=1}^k p_i\geq U\Longleftrightarrow 1-(1-p)^k\geq U\Longleftrightarrow k\geq\frac{\log(1-U)}{\log (1-p)}
 $$</p>
-<p>所以，
-$$
+<p>所以，</p>
+<p>$$
 \left\lceil\frac{\log(1-U)}{\log(1-p)}\right\rceil\sim G(p)
 $$</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GeometricGenerator</span>(RandomNumberGenerator):
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34; 
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    Generate a random number from a geometric distribution with parameter p.
 </span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, uniform_generator: RandomNumberGenerator, p):
@@ -261,33 +267,33 @@ $$</p>
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;p must be a float&#34;</span>)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> p <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">or</span> p <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">1</span>:
 </span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">ValueError</span>(<span style="color:#e6db74">&#34;p must be in range (0, 1)&#34;</span>)
-</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">next</span>(self):
 </span></span><span style="display:flex;"><span>        U <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>rng<span style="color:#f92672">.</span>next()
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> math<span style="color:#f92672">.</span>ceil(math<span style="color:#f92672">.</span>log(U) <span style="color:#f92672">/</span> math<span style="color:#f92672">.</span>log(<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> self<span style="color:#f92672">.</span>p))
 </span></span></code></pre></div><h2 id="inverse-transform-method">Inverse Transform Method<a hidden class="anchor" aria-hidden="true" href="#inverse-transform-method">#</a></h2>
 <p>对于连续分布，有类似的处理方法。假设 $X$ 是连续型随机变量，它的 cumulative distribution 是 $F_X(x)$. 那么 <strong>Probability Integral Transformation</strong> 定理告诉我们，$Y=F_X(X)\sim \mathcal U(0,1)$.</p>
-<p><em>Proof</em>.
-$$
+<p><em>Proof</em>.</p>
+<p>$$
 F_Y(y)=\mathbb P(Y\leq y)=\mathbb P(F_X(X)\leq y)=\mathbb P(X\leq F_X^{-1}(y))=F_X(F_X^{-1}(y))=y
-$$
-例如，对于 Rayleigh distribution:
-$$
+$$</p>
+<p>例如，对于 Rayleigh distribution:</p>
+<p>$$
 f(x;\sigma^2)=\frac{x}{\sigma^2}\exp(-x^2/2\sigma^2),x\geq 0
-$$
-我们试图通过均匀分布得到该分布：
-$$
+$$</p>
+<p>我们试图通过均匀分布得到该分布：</p>
+<p>$$
 F(x)=\int_0^x f(t)\mathrm dt=1-\exp(-x^2/2\sigma^2)=y
-$$
-则
-$$
+$$</p>
+<p>则</p>
+<p>$$
 x=\sqrt{-2\sigma^2\log(1-y)}
-$$
-于是，
-$$
+$$</p>
+<p>于是，</p>
+<p>$$
 \sqrt{-2\sigma^2\log (1-U)}\sim f
-$$
-当然，这个方法仅适用于 cumulative distribution 容易计算的分布。对于 normal distribution 这样没有累积分布的解析表达式的分布，需要考虑其它方法。</p>
+$$</p>
+<p>当然，这个方法仅适用于 cumulative distribution 容易计算的分布。对于 normal distribution 这样没有累积分布的解析表达式的分布，需要考虑其它方法。</p>
 <h2 id="acceptance-rejection-method">Acceptance-Rejection Method<a hidden class="anchor" aria-hidden="true" href="#acceptance-rejection-method">#</a></h2>
 
 

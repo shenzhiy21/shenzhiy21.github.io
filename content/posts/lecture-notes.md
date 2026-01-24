@@ -64,8 +64,8 @@ By Steve Lin @ Microsoft.
 
 ### Clear Writing Comes From Clear Thinking
 
-- "Fortunately the act of composition, or creation, disciplines the mind; writing is one way to go about thinking ..." quote from book *The Elements of Style*.
-- "Don't worry if you don't understand this book completely on the first reading. We didn't understand it all on the first writing!" quote from book *Design Patterns*.
+- "Fortunately the act of composition, or creation, disciplines the mind; writing is one way to go about thinking ..." quote from book _The Elements of Style_.
+- "Don't worry if you don't understand this book completely on the first reading. We didn't understand it all on the first writing!" quote from book _Design Patterns_.
 - "If you can't explain it simply, you don't understand it well enough." by Albert Einstein.
 
 A good research process: writing during the whole stage of developing (coding).

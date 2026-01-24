@@ -10,12 +10,14 @@ summary = "碎碎念"
 +++
 
 这里将随机留下一些想法和碎碎念。写给自己看的。
+
 - 为什么要写下来呢？为了方便之后回看，以免忘记。
 - 为什么要公开呢？因为可以督促我写下来。如果可以给其他好事者一些启发就更好了。
 
 ## Abstraction: Tree or Graph?
 
 最近因为做 composite visualitazion, 所以经常会思考 tree 和 graph 之间的区别。例如，
+
 - 如果要刻画一个场景 (scene) 的结构, 到底是 scene tree 还是 scene graph?
 - 刻画 composite visualization 的结构，是 tree 还是 graph?
 - 对 network 的层层抽象 (app / transport / network / data link / physical layer), 看似是 tree structure, 但是是否实际上也是 graph?
@@ -31,6 +33,7 @@ summary = "碎碎念"
 换句话说，在这个抽象关系的依赖图中，**一个节点未必只能有一个父亲**。这就自然地推导出 graph structure 了。更准确地，是 DAG structure (因为显然这种 "abstraction-implementation" 的关系是属于包含关系，必然无环).
 
 我们也可以为 DAG 检查上述所说的 tree 具有的性质：
+
 - 根据拓扑排序，可以为每个节点定义“深度”，相同深度的节点代表相同层级的抽象；
 - 每个节点的孩子们代表对这层抽象的各种更底层实现。
 

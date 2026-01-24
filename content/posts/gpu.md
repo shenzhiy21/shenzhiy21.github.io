@@ -1,7 +1,7 @@
 +++
 title = 'CUDA Notes'
 date = 2025-09-16T00:41:54+08:00
-draft = false
+draft = true
 math = true
 tags = ['note']
 categories = ['note', 'system', 'parallel', 'memory']
@@ -31,7 +31,7 @@ Two types of bounds
 
 Structure of CUDA C program: a host (CPU) and one or more deviced (GPU).
 Device code is marked with special CUDA C keywords.
-Device code includes *kernels* whose code is executed in a data-parallel manner.
+Device code includes _kernels_ whose code is executed in a data-parallel manner.
 
 When a kernel function is called, a large number of **threads** are launched on a device.
 All the threads that are launched by a kernel can be collectively called a **grid**.
@@ -39,6 +39,7 @@ Each grid is organized as an array of thread blocks, simplified as **blocks**.
 All blocks are of the same size (up to 1024 threads).
 
 Allocating memories in CUDA C:
+
 - `cudaMalloc()`: allocates object in device global memory
   - Address of a pointer to the allocated object
   - Size of allocated object in terms of byte
@@ -76,8 +77,9 @@ void vecAdd(float* A_h, float* B_h, float* C_h, int n) {
 ```
 
 Built-in variables in CUDA kernel:
+
 - `blockDim`: the number of threads in a block. It is a struct with three unsigned integers (x, y, z) to organize the
-threads into a one-, two-, or three-dimensional array.
+  threads into a one-, two-, or three-dimensional array.
 - `threadIdx`: distinguish each thread in a block. Also (x, y, z).
 - `blockIdx`: distinguish each block.
 
@@ -103,11 +105,11 @@ void vecAddKernel(float* A, float* B, float* C, int n) {
 
 CUDA C keywords for function declaration:
 
-| Keyword               | Call From        | Executed On | Executed By               |
-|-----------------------|-----------------|-------------|---------------------------|
-| `__host__` (default)  | Host            | Host        | Caller host thread        |
-| `__global__`          | Host (or Device)| Device      | New grid of device threads|
-| `__device__`          | Device          | Device      | Caller device thread      |
+| Keyword              | Call From        | Executed On | Executed By                |
+| -------------------- | ---------------- | ----------- | -------------------------- |
+| `__host__` (default) | Host             | Host        | Caller host thread         |
+| `__global__`         | Host (or Device) | Device      | New grid of device threads |
+| `__device__`         | Device           | Device      | Caller device thread       |
 
 To call the kernel function:
 
@@ -116,11 +118,12 @@ vecAddKernel<<<ceil(n/256.0), 256>>>(A_d, B_d, C_d, n);
 ```
 
 The kernel function has two execution configuration parameters between `<<<` and `>>>`.
+
 - The first: number of blocks in the grid
 - The second: number of threads in each block
 
 Compilation of CUDA C:
+
 - NVCC (Nvidia C compiler)
 - Host code: compiled with host's standard C/C++ compilers, run as traditional CPU process
 - Device code: marked with CUDA keywords, compiled by NVCC (device just-in-time compiler)
-

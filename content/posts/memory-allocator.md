@@ -176,7 +176,7 @@ public:
     free_buffers[capacity].insert(0);
     printf("Memory Allocator initialized. Capacity = %lu\n", capacity);
   }
-  
+
   ~MemoryAllocator() {
     delete buffer;
   }
@@ -245,7 +245,7 @@ public:
     assert(buffer[id] == node_type::OCCUPIED);
     buffer[id] = node_type::FREE;
     free_buffers[byte_size].insert(id);
-    
+
     // after free memory, check if we can merge the buffer
     size_t parent_id = parent(id);
     while (true) {
@@ -401,4 +401,3 @@ void managed_free(void* ptr, ssize_t byte_size, int device, cudaStream_t stream)
 值得注意的是，内存树并不需要显式地用树的数据结构来实现，而是可以借鉴二叉堆的实现思路，用数组来模拟。
 
 然而，根据 Wikipedia 上的描述，这个算法仍然有碎片化的问题：例如，当我们申请 `66K` 的内存时，buddy algorithm 会直接分配 `128K` 的内存，这就导致了 `62K` 的浪费。可以使用 [Slab allocation](https://en.wikipedia.org/wiki/Slab_allocation) 来解决这个问题。许多操作系统，例如 FreeBSD 和 Linux 都使用了 Slab allocation.
-

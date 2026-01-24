@@ -1,6 +1,6 @@
 +++
 title = 'Understanding Diffusion Models'
-date = 2025-03-15T12:00:00+08:00
+date = 2026-01-24T12:00:00+08:00
 draft = false
 math = true
 tags = ['diffusion', 'math', 'note', 'stats']
@@ -9,11 +9,15 @@ summary = "From differential equation to diffusion models"
 
 +++
 
+> (01/24/2026) 更新：修正部分不严谨和欠思考的表述，引入一些 higher level 的视角
+>
+> (03/15/2025) 初稿
+
 ## Introduction
 
 最近在学习 diffusion 的数学原理和代码实现，目标是能自己手搓一个 image generation model. 之前对 diffusion 当然也有一些了解，主要是实习的时候做了一些系统层面的尝试，例如剪枝、量化、FFT. 然而对模型原理的认识并不是很充分（虽然也看了 ddpm, latent diffusion 这些文章）。当时主要是 follow 了这篇 tutorial: [Understanding Diffusion Models: A Unified Perspective](https://arxiv.org/abs/2208.11970) 来学习数学原理的，当然作者写得非常好，但是我并没有太 get 到从 ELBO 和 VAE 开始讲起的心路历程（虽然但是也可以料想到十年左右前的 researcher 就是很曲折的吧）、以及用 Markov chain 建模的动机。最近被安利了 MIT 的这门课程 [Introduction to Flow Matching and Diffusion Models](https://diffusion.csail.mit.edu/), 它是从 ODE/SDE 的角度入手和推导的，我觉得这样的心路历程更自然一些，学习之后大有醍醐灌顶之感。所以下面记录一下我学习这门课的一些 notes 和心得体会。
 
-我追求的是所谓“美”，也就是希望这套算法背后的数学推导是足够自然的。所以，接下来的内容将花大量篇幅“考察”每一步推导的“动机”是否足够自然。如果你不喜欢这种风格，那很抱歉，这里没有只给结论的 "TL;DR".
+这篇文章的主要动机在于：让整个推导的流程更加自然。因此，我会开展很多“类比”和“想象”。
 
 ## How to Generate Images
 
@@ -25,11 +29,11 @@ summary = "From differential equation to diffusion models"
 
 ## Probability Path
 
-针对上述问题，probability path 是一个还算自然的想法：我们引入时间变量 $t\in [0, 1]$, 并定义一个随时间变化的概率分布 $p_t$, 只要让它满足 $p_0 = p_{\text{init}}$, $p_1 = p_{\text{data}}$ 即可描述此变换。由于 $t$ 是连续的，所以可以想象成 $p_0$ 随着时间不断演化至 $p_1$. 这就是 probability path 名字的由来。这样的建模在数学里应该是挺常见的，例如微分几何中描述一段闭合曲线就常常用 $s_t (t\in [0, 1])$ 这样的形式。
+针对上述问题，考虑一个随机过程 $p_t$, 其中时间变量 $t\in [0, 1]$. 只需要满足 $p_0 = p_{\text{init}}$, $p_1 = p_{\text{data}}$, 即可描述这种变换。他们把这样的随机过程叫做 "probability path".
 
-然而，如何直接地形式化地“写出” $p_t$ 仍然是一件很麻烦的事情。什么是我们会做的呢？很自然地联想到：虽然我们不会描述概率分布之间的变换 (cuz it's stochastic), 但是我们会描述两个样本之间的变换呀 (cuz it's deterministic) ！给定两个点 $x_0, x_1\in \R^d$, 随便画一条曲线连接它们，并用 $t\in [0, 1]$ 来刻画曲线上的每一个点。太简单了！
+然而，如何直接地形式化地“写出” $p_t$ 仍然是一件很麻烦的事情。什么是我们会做的呢？很自然地联想到：虽然我们不会描述概率分布之间的变换 (because it is stochastic), 但是我们会描述两个样本之间的变换呀 (because it's deterministic) ！给定两个点 $x_0, x_1\in \R^d$, 随便画一条曲线连接它们，并用 $t\in [0, 1]$ 来刻画曲线上的每一个点。太简单了！
 
-与此同时，我们还有一整套成熟的工具来研究这个变换——常微分方程！
+与此同时，我们还有一整套成熟的工具来研究这个变换：常微分方程！
 
 ## ODE Background
 
@@ -79,8 +83,6 @@ X_{t+h} &= X_t + \frac{h}{2} \left(u_t(X_t) + u_{t+h}(X_{t+h}') \right)
 $$
 
 大概的解释是：先用 Euler method 给出每个时刻 $X_{t+h}$ 的一个 initial guess $X_{t+h}'$, 再对它进行修正。
-
-然而，在 diffusion model 中，使用简单的 Euler method 基本就够了。
 
 ## Conditional and Marginal Probability Path
 
@@ -150,7 +152,9 @@ So we are done!
 
 > TODO: 其实我也没想清楚为什么不采用思路 2. 一个可能的解释是，虽然 flow matching model 可以用 ODE 建模、可以定义 flow function, 但是 diffusion model 是用 SDE 来建模的、无法定义 flow function, 也就只能采用思路 1 了。这种解释有些牵强，毕竟现在 SOTA 的模型大多开始用 flow matching 来替换 diffusion 了，明明可以用思路 2. 此处有待进一步思考。
 
-对于思路 1, 意思就是我们训练的神经网络 $u^\theta$ 要尽可能逼近真实的 vector field $u^{\text{target}}$. 这谁都会。采取和刚才类似的心路历程，接下来还有两步：
+> Update: [MeanFlow](https://arxiv.org/pdf/2505.13447) 就是类似思路 2 的方法，学习的不再是**瞬时**速度场，而是**平均**速度场了。
+
+思路 1 的意思就是：我们训练的神经网络 $u^\theta$ 要尽可能逼近真实的 vector field $u^{\text{target}}$. 这谁都会。采取和刚才类似的心路历程，接下来还有两步：
 
 1. 假设 $X_0$ 不再是一个 deterministic value, 而是概率分布 $p_{\text{init}}$ 中的一个样本，那该如何定义这种带有随机性的 "stochastic conditional vector field"?
 2. 假设终点 $X_1$ 也不再是一个 deterministic value, 而是 $p_{\text{data}}$ 中的一个样本，又如何定义这种 "marginal vector field"?
@@ -228,7 +232,7 @@ $$
 
 为什么这么定义？因为我们希望 marginal vector field $u_t^{\text{target}}(x)$ 能对应到 marginal probability path, 正如 conditional vector field 能对应到 conditional probability path. 只有对应上了，我们才能以 $u_t^{\text{target}}$ 作为 neural net 的建模对象。于是，接下来的定理就揭示了这一点：
 
-*Theorem*: the marginal vector field follows the marginal probability path, i.e.
+_Theorem_: the marginal vector field follows the marginal probability path, i.e.
 
 $$
 X_0\sim p_{\text{init}}, \ \ \frac{\mathrm d}{\mathrm dt}X_t = u_t^{\text{target}}(X_t)\Rightarrow X_t\sim p_t,\forall t\in [0, 1]
@@ -236,7 +240,7 @@ $$
 
 如果该定理成立，那么特别地取 $t=1$ 就有 $X_1\sim p_1=p_{\text{data}}$ 了。该定理的证明如下。
 
-*Proof*.
+_Proof_.
 
 首先给一个引理 [continuity equation](https://en.wikipedia.org/wiki/Continuity_equation) or [divergence theorem](https://en.wikipedia.org/wiki/Divergence_theorem)（微分形式）：
 
@@ -309,7 +313,7 @@ $$
 
 where $C$ is independent of $\theta$.
 
-*Proof*.
+_Proof_.
 
 $$
 \begin{aligned}
@@ -408,7 +412,7 @@ $$
 
 接下来，类似上文的 $u_t^{\text{target}}$, 我们希望也能为 SDE 导出 training target. 回顾上文，为了验证 ODE 中 probability path $p_t$ 和 vector field $u_t$ 是否对应，我们利用了 divergence theorem:
 
-Given a vector field $u_t$ with $X_0\sim p_0$. Then $X_t\sim p_t$ for all $t\in[0,1]$ if and only if 
+Given a vector field $u_t$ with $X_0\sim p_0$. Then $X_t\sim p_t$ for all $t\in[0,1]$ if and only if
 
 $$
 \partial_t p_t(x) = -\text{div}(p_tu_t)(x),\ \ \forall t\in[0, 1]
@@ -451,7 +455,7 @@ $$
 
 ---
 
-*Proof*.
+_Proof_.
 
 $$
 \begin{aligned}
@@ -636,3 +640,5 @@ $$
 至此，这门课程关于 flow matching & diffusion 的原理就结束了。最后还稍微讲了一下 CLIP, VAE 等技术，以及 SD3, Movie Gen 等模型的 network architecture. 但是由于是工程上的实践、而非数学原理或技巧，所以此处就不赘述了。我学习下来感觉有很大的收获。说到底，如果只看 Stable Diffusion 等 paper 的算法原理，其实是非常简单的，实现起来也并不困难（这里指的是 loss function 和 update rule, 不是 network architecture），然而其背后的概率统计知识是非常深刻的。
 
 接下来我会自己尝试 implement SD3 from scratch. 期待下一篇 post!
+
+> Update: 终究还是变成了一个 flag 哈哈哈，2026 年了还是没有复现。一方面原因是太懒了，另一方面是最新的模型例如 z-image 等的架构会比早期的 Stable Diffusion 复杂一些，需要实现很多算子，有点瑟瑟发抖。主要还是我太懒了吧！

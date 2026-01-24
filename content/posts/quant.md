@@ -15,8 +15,6 @@ summary = "8bit-Quantization Implementation for LLama-2-7b Model"
 
 首先，为什么要研究大模型的量化？
 
-
-
 目前对于 LLM 的量化方案基本都是在 `matmul` 这一步进行的。在 Llama-2 系列模型中，一共有 6 处 `matmul` 运算，分别是（命名规范请参考 `transformers` library）：
 
 - `self_attn.vqk_proj.weight`
@@ -71,17 +69,17 @@ LLM 社区对 quantize 的研究和探索非常广泛，这里简单列举一些
 
 `Quant`:
 
-* Input: weights `w[N] (fp32)`, lookup table `a[0..255] (fp32)`
-* for each `w[i]`:
-  * if `w[i] >= 1`: let `id = 255`;
-  * else if `w[i] < -1`: let `id = 0`;
-  * else: find `id in [0, 255]` s.t. `a[id] <= w[i] < a[id+1]`.
-* Output: `id[N] (int8)`
+- Input: weights `w[N] (fp32)`, lookup table `a[0..255] (fp32)`
+- for each `w[i]`:
+  - if `w[i] >= 1`: let `id = 255`;
+  - else if `w[i] < -1`: let `id = 0`;
+  - else: find `id in [0, 255]` s.t. `a[id] <= w[i] < a[id+1]`.
+- Output: `id[N] (int8)`
 
 `Dequant`:
 
-* Input: quantized weights `id[N] (int8)`, lookup table `a[0..255] (fp32)`
-* Output: `_w[i] = a[id[i]] (fp32)`
+- Input: quantized weights `id[N] (int8)`, lookup table `a[0..255] (fp32)`
+- Output: `_w[i] = a[id[i]] (fp32)`
 
 其中由于 `id` 作为 int8 的 range 是 [-128, 127], 负数并不应该作为 tensor index. 所以实际上需要先转换成 uint8 (unsigned char) 来移动到正确的 [0, 255] 区间。算法过程中为了简洁没有写这步符号转换。下同。
 
@@ -95,19 +93,19 @@ LLM 社区对 quantize 的研究和探索非常广泛，这里简单列举一些
 
 `Quant`:
 
-* Input: weights `w[N] (fp32)`, lookup table `a[0..255] (fp32)`
-* slice `w[N]` into `K` blocks `wk[]`, each of size `32`
-* for each `wk[]`:
-  * let `scale = wk.abs().max()`
-  * `wk = wk / scale`
-  * for each `wk[i]`:
-    * cast `wk[i]` into `id` s.t. `a[id] <= wk[i] < a[id+1]`
-* Output: `id[N] (int8)` and `scales[N/32] (fp32)`
+- Input: weights `w[N] (fp32)`, lookup table `a[0..255] (fp32)`
+- slice `w[N]` into `K` blocks `wk[]`, each of size `32`
+- for each `wk[]`:
+  - let `scale = wk.abs().max()`
+  - `wk = wk / scale`
+  - for each `wk[i]`:
+    - cast `wk[i]` into `id` s.t. `a[id] <= wk[i] < a[id+1]`
+- Output: `id[N] (int8)` and `scales[N/32] (fp32)`
 
 `Dequant`:
 
-* Input: quantized weights `id[N] (int8)`, lookup table `a[0..255] (fp32)` and `scales[N/32] (fp32)`
-* Output: `_w[i] = a[id[i]] * scales[i/32]`
+- Input: quantized weights `id[N] (int8)`, lookup table `a[0..255] (fp32)` and `scales[N/32] (fp32)`
+- Output: `_w[i] = a[id[i]] * scales[i/32]`
 
 这种方法，其实对应了 llama.cpp 中的 `q8_0`. 此时压缩率不再是正正好好的 2.0 (假设原本是 `fp16`, 现在是 `int8`). 这是因为我们需要额外存储辅助数组 `scale`. 然而，每 32 个 weights 才对应一个 scale, 其实也是比较小的规模。
 
@@ -167,7 +165,7 @@ def weight_preprocess(w: torch.Tensor, name: str):
   w_low = torch.bucketize(w, value_map[:-1]).to(torch.int8).view(n0, n1, stride, stride).permute(0, 2, 1, 3).reshape(*original_shape)
   sm_table[f"{name}.scale"] = scale.view(n0, n1).to(torch.float32)
   sm_table[f"{name}.min"] = w_min.view(n0, n1).to(torch.float32)
-  
+
   return w_low
 
 my_custom_fn = autort.export(ir=f"""
@@ -181,10 +179,10 @@ def matmul_dequat(x, w, name, layer, memory_out=None):
   name = f"model.layers.{layer}.{name}" if layer >= 0 else name
   scale = sm_table[f"{name}.scale"].to(device)
   min_val = sm_table[f"{name}.min"].to(device)
-  
+
   x = x.view(-1)
   memory_out = memory_out if memory_out is not None else torch.empty([w.size(0)], dtype=x.dtype, device=x.device)
-  
+
   return my_custom_fn(x, w, min_val, scale, value_map_gpu, memory_out.view(-1), out=5)
 
 def forward(token, pos):
@@ -249,13 +247,14 @@ The Atlantic Ocean is bounded by several major ocean currents, including the Gul
 The Atlantic Ocean is home to a diverse range of marine life, including many species of fish, whales, dolphins, and other marine mammals. The ocean's waters are also home to a variety of coral reefs, kelp forests, and other marine ecosystems that provide important habitats for many species of fish and other marine organisms.
 The Atlantic Ocean has a long history of human exploration and settlement, with many ancient civilizations establishing trade routes and colonies along its shores. Today, the Atlantic Ocean is an important source of food, transportation, and recreation for millions of people around the world.
 Some of the key features of the Atlantic Ocean include:
-* The Gulf Stream, a warm ocean current that flows northward along the eastern coast of the United States and Canada
-* The North Atlantic Current, a cold ocean current that flows southward along the western coast of Europe
-* The Mid-Atlantic Ridge, a mountain range that runs along the center of the Atlantic Ocean, where new ocean crust is being created as the tectonic plates move apart
-* The Canary Current, a warm ocean current that flows eastward across the Atlantic Ocean from the Gulf of Mexico
-* The Brazil Current, a warm ocean current that flows southward along the eastern coast of South America
-* The South Atlantic Gyre, a large-scale circulation of ocean water that flows clockwise in the southern hemisphere
-* The North Atlantic Gyre, a large
+
+- The Gulf Stream, a warm ocean current that flows northward along the eastern coast of the United States and Canada
+- The North Atlantic Current, a cold ocean current that flows southward along the western coast of Europe
+- The Mid-Atlantic Ridge, a mountain range that runs along the center of the Atlantic Ocean, where new ocean crust is being created as the tectonic plates move apart
+- The Canary Current, a warm ocean current that flows eastward across the Atlantic Ocean from the Gulf of Mexico
+- The Brazil Current, a warm ocean current that flows southward along the eastern coast of South America
+- The South Atlantic Gyre, a large-scale circulation of ocean water that flows clockwise in the southern hemisphere
+- The North Atlantic Gyre, a large
 
 ---
 
@@ -264,17 +263,17 @@ Some of the key features of the Atlantic Ocean include:
 The Atlantic Ocean is the second largest ocean in the world, covering approximately 20% of the Earth's surface. The Atlantic Ocean is located between the Americas and Europe and Africa, and it connects with the Indian and Arctic Oceans to the east and the Pacific Ocean to the west. The Atlantic Ocean is a major component of the Earth's climate system and plays a significant role in the global ocean circulation.
 The Atlantic Ocean is divided into several sections, including the:
 
-* North Atlantic Ocean: This section extends from the Arctic Ocean to the equator and includes the waters off the coasts of North America, Europe, and Africa.
-* South Atlantic Ocean: This section extends from the equator to the Antarctic Ocean and includes the waters off the coasts of South America, Africa, and Australia.
-* Caribbean Sea: This is a smaller section of the Atlantic Ocean located between the Gulf of Mexico and the Virgin Islands.
-* Gulf of Mexico: This is a smaller section of the Atlantic Ocean located between the Yucatan Peninsula and the Florida Panhandle.
+- North Atlantic Ocean: This section extends from the Arctic Ocean to the equator and includes the waters off the coasts of North America, Europe, and Africa.
+- South Atlantic Ocean: This section extends from the equator to the Antarctic Ocean and includes the waters off the coasts of South America, Africa, and Australia.
+- Caribbean Sea: This is a smaller section of the Atlantic Ocean located between the Gulf of Mexico and the Virgin Islands.
+- Gulf of Mexico: This is a smaller section of the Atlantic Ocean located between the Yucatan Peninsula and the Florida Panhandle.
 
 The Atlantic Ocean is home to a diverse range of marine life, including:
 
-* Whales: Several species of whales, including humpback, blue, and fin whales, can be found in the Atlantic Ocean.
-* Dolphins: Bottlenose dolphins, orcas, and other species can be found in the Atlantic Ocean.
-* Fish: The Atlantic Ocean is home to a wide variety of fish, including tuna, mackerel, and herring.
-* Sharks: Several species of sharks, including great whites, tiger sharks, and hammerheads, can be found in the Atlantic Ocean.
+- Whales: Several species of whales, including humpback, blue, and fin whales, can be found in the Atlantic Ocean.
+- Dolphins: Bottlenose dolphins, orcas, and other species can be found in the Atlantic Ocean.
+- Fish: The Atlantic Ocean is home to a wide variety of fish, including tuna, mackerel, and herring.
+- Sharks: Several species of sharks, including great whites, tiger sharks, and hammerheads, can be found in the Atlantic Ocean.
 
 The Atlantic Ocean has a significant impact on the climate and weather patterns of the surrounding land masses. The Gulf Stream, a warm ocean current, plays a major role in the climate of Western Europe, while the North Atlantic Ocean is known for its harsh winters and storms.
 
@@ -286,14 +285,15 @@ The Atlantic Ocean has a significant impact on the climate and weather patterns 
 
 The Atlantic Ocean is the second largest ocean in the world, covering approximately 20% of the Earth's surface. The Atlantic Ocean is located between the Americas and Europe and Africa, and it connects with the Indian and Arctic Oceans to the east and the Pacific Ocean to the west. The Atlantic Ocean is a vital component of the Earth's climate system, and it plays a significant role in regulating the planet's weather patterns, ocean currents, and marine ecosystems.
 The Atlantic Ocean is divided into several sections, including the:
+
 1. North Atlantic Ocean: This section extends from the Arctic Ocean to the equator and includes the waters off the coasts of Europe, Africa, and North America.
 2. South Atlantic Ocean: This section extends from the equator to the Antarctic Ocean and includes the waters off the coasts of South America, Africa, and Australia.
 3. Caribbean Sea: This is a smaller section of the Atlantic Ocean located between the Gulf of Mexico and the coast of South America.
 4. Gulf of Mexico: This is a smaller section of the Atlantic Ocean located off the coast of North America.
-The Atlantic Ocean is home to a diverse range of marine life, including whales, dolphins, sharks, and many species of fish. The ocean's currents and tides play a crucial role in shaping the coastlines of the surrounding landmasses, and they also help to distribute heat and nutrients throughout the ocean.
-The Atlantic Ocean has a long history of human exploration and settlement, with many ancient civilizations establishing trade routes and colonies along its shores. Today, the Atlantic Ocean is an important source of food, transportation, and recreation for millions of people around the world.
-The Atlantic Ocean is also a vital component of the Earth's climate system, and it plays a significant role in regulating the planet's weather patterns and climate. The ocean's currents help to distribute heat and nutrients throughout the ocean, and they also play a role in the formation of hurricanes and other severe weather events.
-Overall, the Atlantic Ocean is a vast and complex body of water that plays a vital role in the Earth's climate system and ecosystem. Its diverse marine life, rich history, and ongoing importance to human society make it a fascinating and important feature
+   The Atlantic Ocean is home to a diverse range of marine life, including whales, dolphins, sharks, and many species of fish. The ocean's currents and tides play a crucial role in shaping the coastlines of the surrounding landmasses, and they also help to distribute heat and nutrients throughout the ocean.
+   The Atlantic Ocean has a long history of human exploration and settlement, with many ancient civilizations establishing trade routes and colonies along its shores. Today, the Atlantic Ocean is an important source of food, transportation, and recreation for millions of people around the world.
+   The Atlantic Ocean is also a vital component of the Earth's climate system, and it plays a significant role in regulating the planet's weather patterns and climate. The ocean's currents help to distribute heat and nutrients throughout the ocean, and they also play a role in the formation of hurricanes and other severe weather events.
+   Overall, the Atlantic Ocean is a vast and complex body of water that plays a vital role in the Earth's climate system and ecosystem. Its diverse marine life, rich history, and ongoing importance to human society make it a fascinating and important feature
 
 ---
 
@@ -312,7 +312,7 @@ Overall, the Atlantic Ocean is a vast and complex body of water that plays a cri
 
 The Atlantic Ocean is the second-larg Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py Py
 
-----
+---
 
 **Baseline: Quantize-Free Inference**: 47.60 tokens/s
 
@@ -365,10 +365,10 @@ Despite its importance, the Atlantic Ocean is facing a range of environmental ch
 
 给生成速度打个表（单位 token/s）
 
-| | stride=16 | stride=32 | stride=64 |
-| ---- | ---- | ---- | ---- |
-| `q8_0` | 11.75 | 13.40 | - |
-| `q8_1` | 7.69 | 10.63 | 11.93 |
+|        | stride=16 | stride=32 | stride=64 |
+| ------ | --------- | --------- | --------- |
+| `q8_0` | 11.75     | 13.40     | -         |
+| `q8_1` | 7.69      | 10.63     | 11.93     |
 
 明显可见 `q8_0` 比 `q8_1` 推理速度更快，但是 `q8_0` 在 `stride=64` 时就寄了，反观 `q8_1` 还能打。
 

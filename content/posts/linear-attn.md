@@ -1,7 +1,7 @@
 +++
 title = 'Notes on Linear Attention'
 date = 2025-01-18T09:00:00+08:00
-draft = false
+draft = true
 math = true
 tags = ['note', 'machine learning', 'system']
 categories = ['note']
@@ -93,6 +93,7 @@ o_t &= S_t q_t \in \R^d
 $$
 
 他们各自的 pros and cons 在于：
+
 - Parallel form
   - pro: 矩阵乘法的形式，GPU 友好，方便用 tensorcore 加速
   - con: 时间复杂度为 $O(n^2)$, 没有解决长文本的高复杂度问题
@@ -103,9 +104,10 @@ $$
 所以一个自然的想法是能不能把它们的优势结合起来，也就是 "chunkwise".
 
 > 我记得当时在做 ANS 的加速的时候也遇到了这个问题。甚至可能所有 sequential form 的计算逻辑都会在试图并行加速时遇到这个问题。但是 ANS 的一个不同之处是，只有 recurrent form, 至少我没推出 parallel form. 但当时我们的并行方案包括：
+>
 > 1. 对整个 sequence 分块 (block) 并行；
 > 2. 每个 block 内部，以 32bit (而非原本针对 ASCII 的 8bit) 为读写单元，也就是把 4 个 ASCII 字符看成一个 chunk.
-> 
+>
 > 其实是和 linear attention 有异曲同工之处的。
 
 在 notation 上为了和原文保持一致，我们下面把 sequence length 记为 $L$ 而非 $n$.
@@ -145,7 +147,7 @@ $$
 
 在实际应用 (RetNet, Lightning Attention) 中，加上 decay term 之后效果就会提升不少。
 
-更一般地，$\gamma$ 未必需要是定值。我们可以为它加上 "selectivity" (data-dependent decay, *e.g.* Mamba2, mLSTM, Gated Retention):
+更一般地，$\gamma$ 未必需要是定值。我们可以为它加上 "selectivity" (data-dependent decay, _e.g._ Mamba2, mLSTM, Gated Retention):
 
 $$
 S_t = \gamma_t S_{t-1} + v_t k_t^T
@@ -233,4 +235,3 @@ S_t &= S_{t-1}\left(I - \beta_t k_t k_t^T\right) + \beta_t v_t k_t^T\\\
 $$
 
 如何找到一个关于 $d$ 是平方复杂度的算法？
-

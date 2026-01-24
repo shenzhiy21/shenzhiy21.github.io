@@ -151,6 +151,12 @@
     
     <h1 class="post-title entry-hint-parent">
       Alias Method for Sampling from Discrete Distribution
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
     </h1>
     <div class="post-meta"><span title='2024-04-13 13:00:00 +0800 CST'>April 13, 2024</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;Zhiyang Shen
 
@@ -182,20 +188,20 @@
 <blockquote>
 <p>注意：可以假设我们已经实现了一个离散均匀分布上的 (pseudo) random number generator, 例如使用线性同余生成器 (Linear Congruential Generator).</p></blockquote>
 <p>假设抽到的数是 $a$. 它的横纵坐标分别是 $x,y$. 也就是 $a=kx+y$. 神奇的事情发生了：我们可以轻而易举地由这个均匀分布过渡到我们关心的分布！做法如下：考虑 $y$ 和 $f_x$ 的关系。若 $y\leq f_x$, 就 accept 此次抽样，并返回 $x$. 若 $y&gt;f_x$, 就 reject 此次抽样。这也算是 accept &amp; reject (舍选法) 的典型应用了。</p>
-<p>这个算法的正确性非常 straightforward: $a$ 的横坐标 $x$ 取值为 $0,1,\cdots,n-1$ 是等概率事件，而对每个 $i$, 我们有
-$$
+<p>这个算法的正确性非常 straightforward: $a$ 的横坐标 $x$ 取值为 $0,1,\cdots,n-1$ 是等概率事件，而对每个 $i$, 我们有</p>
+<p>$$
 \mathbb P(\text{accept }i)=\mathbb P(x=i\wedge y&lt;f_i)=\frac{f_i}{nk}\propto p_i
-$$
-所以 accept 的概率是
-$$
+$$</p>
+<p>所以 accept 的概率是</p>
+<p>$$
 \mathbb P(\text{accept})=\sum_i \mathbb P(\text{accept }i)=\frac{\sum_i f_i}{nk}=\frac{M}{nk}
-$$
-所以有 $1-\dfrac{M}{nk}$ 的概率 reject. 换句话说，必须采样 $(1-\dfrac{M}{nk})^{-1}$ 次才能 accept 一次。</p>
-<p>在某些情况下，这个结果是不能令人满意的。例如当 $f_0=k,f_1=f_2=\cdots=f_{n-1}=1$ 时，
-$$
+$$</p>
+<p>所以有 $1-\dfrac{M}{nk}$ 的概率 reject. 换句话说，必须采样 $(1-\dfrac{M}{nk})^{-1}$ 次才能 accept 一次。</p>
+<p>在某些情况下，这个结果是不能令人满意的。例如当 $f_0=k,f_1=f_2=\cdots=f_{n-1}=1$ 时，</p>
+<p>$$
 \mathbb P(\text{reject})=1-\frac{k+n-1}{nk}=\frac{(n-1)(k-1)}{nk}\approx 1
-$$
-也就是几乎不能命中。</p>
+$$</p>
+<p>也就是几乎不能命中。</p>
 <p>从几何直观上看，直方图中的“空白”越多，拒绝的概率越高。所以一个自然的想法是：是否可以把直方图中的某一些柱子“拼起来”，尽量减少空白？</p>
 <h2 id="alias-method">Alias Method<a hidden class="anchor" aria-hidden="true" href="#alias-method">#</a></h2>
 <p>正在施工……</p>
