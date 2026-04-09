@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Visualization on Zhiyang&#39;s Blog</title>
+    <link>https://shenzhiy21.github.io/tags/visualization/</link>
+    <description>Recent content in Visualization on Zhiyang&#39;s Blog</description>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <copyright>@ 2025 Zhiyang Shen</copyright>
+    <lastBuildDate>Thu, 09 Apr 2026 08:00:00 +0800</lastBuildDate>
+    <atom:link href="https://shenzhiy21.github.io/tags/visualization/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A Twenty-Month Retrospective: Lessons and Reflections</title>
+      <link>https://shenzhiy21.github.io/posts/retrospective/</link>
+      <pubDate>Thu, 09 Apr 2026 08:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/posts/retrospective/</guid>
+      <description>A personal reflection on the (first) research project that I’ve worked on over the past 20 months, focusing on what I learned, where I struggled, and how my thinking evolved along the way.</description>
+    </item>
+  </channel>
+</rss>

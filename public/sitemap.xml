@@ -2,8 +2,29 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://shenzhiy21.github.io/posts/retrospective/</loc>
+    <lastmod>2026-04-09T08:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://shenzhiy21.github.io/categories/</loc>
-    <lastmod>2026-01-24T14:00:00+08:00</lastmod>
+    <lastmod>2026-04-09T08:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://shenzhiy21.github.io/categories/note/</loc>
+    <lastmod>2026-04-09T08:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://shenzhiy21.github.io/tags/note/</loc>
+    <lastmod>2026-04-09T08:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://shenzhiy21.github.io/posts/</loc>
+    <lastmod>2026-04-09T08:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://shenzhiy21.github.io/tags/</loc>
+    <lastmod>2026-04-09T08:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://shenzhiy21.github.io/tags/visualization/</loc>
+    <lastmod>2026-04-09T08:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://shenzhiy21.github.io/</loc>
+    <lastmod>2026-04-09T08:00:00+08:00</lastmod>
   </url><url>
     <loc>https://shenzhiy21.github.io/tags/diffusion/</loc>
     <lastmod>2026-01-24T14:00:00+08:00</lastmod>
@@ -11,25 +32,10 @@
     <loc>https://shenzhiy21.github.io/tags/math/</loc>
     <lastmod>2026-01-24T14:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/categories/note/</loc>
-    <lastmod>2026-01-24T14:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://shenzhiy21.github.io/tags/note/</loc>
-    <lastmod>2026-01-24T14:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://shenzhiy21.github.io/posts/markov/</loc>
     <lastmod>2026-01-24T14:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://shenzhiy21.github.io/posts/</loc>
-    <lastmod>2026-01-24T14:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://shenzhiy21.github.io/tags/stats/</loc>
-    <lastmod>2026-01-24T14:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://shenzhiy21.github.io/tags/</loc>
-    <lastmod>2026-01-24T14:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://shenzhiy21.github.io/</loc>
     <lastmod>2026-01-24T14:00:00+08:00</lastmod>
   </url><url>
     <loc>https://shenzhiy21.github.io/posts/diffusion/</loc>
@@ -76,9 +82,6 @@
   </url><url>
     <loc>https://shenzhiy21.github.io/posts/random_thoughts/</loc>
     <lastmod>2025-02-06T13:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://shenzhiy21.github.io/posts/her/</loc>
-    <lastmod>2025-01-24T09:00:00+08:00</lastmod>
   </url><url>
     <loc>https://shenzhiy21.github.io/tags/algorithm/</loc>
     <lastmod>2024-05-16T15:21:52+08:00</lastmod>
