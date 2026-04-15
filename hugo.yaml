@@ -37,7 +37,7 @@ params:
   homeInfoParams:
     Title: "Hi There!👋 Welcome to my page!"
     Content: >
-      I am Zhiyang Shen, a first year Ph.D. student at Tsinghua University, supervised by Prof. [Shixia Liu](http://shixialiu.com). My current research interest lies in the intersection of visualization and AI. I am passionate about music and photography, and I enjoy exploring parks alone in my free time.
+      I am Zhiyang Shen, a first year Ph.D. student at Tsinghua University, supervised by Prof. [Shixia Liu](http://shixialiu.com). My current research interest lies in the intersection of visualization and AI. I am passionate about music and photography, and I enjoy exploring parks in my free time.
   socialIcons:
     - name: github
       title: View My Github Profile
