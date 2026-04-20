@@ -4,7 +4,7 @@
     <title>Zhiyang&#39;s Blog</title>
     <link>https://shenzhiy21.github.io/</link>
     <description>Recent content on Zhiyang&#39;s Blog</description>
-    <generator>Hugo -- 0.147.8</generator>
+    <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
     <lastBuildDate>Wed, 15 Apr 2026 10:00:00 +0800</lastBuildDate>
@@ -71,13 +71,6 @@
       <pubDate>Thu, 06 Feb 2025 13:00:00 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/posts/random_thoughts/</guid>
       <description>碎碎念</description>
-    </item>
-    <item>
-      <title>About Her</title>
-      <link>https://shenzhiy21.github.io/posts/her/</link>
-      <pubDate>Fri, 24 Jan 2025 09:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/posts/her/</guid>
-      <description>关于一个叫 zxr 的女孩子的一切</description>
     </item>
     <item>
       <title>Write a Memory Allocator for PyTorch</title>

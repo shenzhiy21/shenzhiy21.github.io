@@ -10,7 +10,7 @@
 <meta name="description" content="Sampling methods, from rejection sampling to Markov Chain Monte Carlo.">
 <meta name="author" content="Zhiyang Shen">
 <link rel="canonical" href="https://shenzhiy21.github.io/posts/sample/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.d63079815d18f277504cf66aa2f64064cea74ac90c714e35aa4680da8d8b05c4.css" integrity="sha256-1jB5gV0Y8ndQTPZqovZAZM6nSskMcU41qkaA2o2LBcQ=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.d650382e2960ee05a60f62667fbcc70be6c57ec165b4481bda9908e9dab78694.css" integrity="sha256-1lA4Lilg7gWmD2Jmf7zHC&#43;bFfsFltEgb2pkI6dq3hpQ=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://shenzhiy21.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://shenzhiy21.github.io/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://shenzhiy21.github.io/favicon-32x32.png">
@@ -119,8 +119,8 @@
   "keywords": [
     "math", "note", "stats"
   ],
-  "articleBody": "It’s an interesting topic to sample from a “weird” distribution, e.g., high dimensional, with an unknown normalization term, or even lack of a well-formed expression.\n",
-  "wordCount" : "25",
+  "articleBody": "It’s an interesting topic to sample from a “weird” distribution, e.g., high dimensional, with an unknown normalization term, or even lack of a well-formed math expression. This is widely used in deep learning, such as the inference-time sampling of LLMs, or the denoising process of diffusion models.\nTo study this problem, let’s first consider some easy cases and then move on to more difficult scenarios.\nSimple Distributions Suppose we already know how to sample from the uniform distribution $z \\sim U(0, 1)$. Now consider sampling from the exponential distribution $y \\sim \\mathcal E(\\lambda)$, e.g., $f_y(y) = \\lambda \\exp(-\\lambda y)$ where $y \\geq 0$. To sample from $y$, a strategy is to first sample from $z$ and then transform the result to follow the distribution of $y$. That is, we want to find a function $g: [0, 1] \\mapsto [0, +\\infty)$ s.t. $g(z) \\sim \\mathcal E(\\lambda)$. Let’s do some basic calculation:\n$$ \\begin{aligned} \u0026 f_y(y) = f_z(z) \\left|\\frac{\\mathrm dz}{\\mathrm dy} \\right| = \\left|\\frac{\\mathrm dz}{\\mathrm dy} \\right|\\\\ \\Rightarrow{} \u0026 z = \\int_{-\\infty}^y f_y(\\hat y)\\mathrm d\\hat y = 1 - \\exp(-\\lambda y) \\\\ \\Rightarrow{} \u0026 y = -\\lambda^{-1} \\ln (1-z) = g(z) \\end{aligned} $$\nThen $y$ will have the desired exponential distribution.\nThis strategy can be easily generalized to multivariate cases. An example is the Box-Muller method to generate Gaussian distributions. First, we sample a pair of two numbers $z_1, z_2 \\sim U(-1, 1)$, and discard the pair if $z_1^2 + z_2^2 \u003e 1$. This leads to a uniform distribution of 2D points inside the unit circle with distribution $f_{z_1,z_2}(z_1, z_2) = 1/\\pi$. Then, we compute\n$$ y_1 = z_1 \\sqrt{\\frac{-2 \\ln(s)}{s}}, \\quad y_2 = z_2 \\sqrt{\\frac{-2 \\ln(s)}{s}} $$\nwhere $s = z_1^2 + z_2^2$. We have\n$$ f_{y_1, y_2}(y_1, y_2) = f_{z_1, z_2}(z_1, z_2) \\left|\\frac{\\partial(z_1, z_2)}{\\partial(y_1, y_2)} \\right| =\\left[\\frac{1}{\\sqrt{2\\pi}}\\exp(-y_1^2/2) \\right] \\left[\\frac{1}{\\sqrt{2\\pi}}\\exp(-y_2^2/2) \\right] $$\nThis means that $y_1$ and $y_2$ follow the Gaussian distribution $\\mathcal N(0, 1)$ and are independent.\n",
+  "wordCount" : "317",
   "inLanguage": "en",
   "datePublished": "2026-04-15T10:00:00+08:00",
   "dateModified": "2026-04-15T10:00:00+08:00",
@@ -216,13 +216,57 @@
     <h1 class="post-title entry-hint-parent">
       Sampling, sampling, and sampling!
     </h1>
-    <div class="post-meta"><span title='2026-04-15 10:00:00 +0800 CST'>April 15, 2026</span>&nbsp;·&nbsp;1 min&nbsp;·&nbsp;Zhiyang Shen
+    <div class="post-meta"><span title='2026-04-15 10:00:00 +0800 CST'>April 15, 2026</span>&nbsp;·&nbsp;2 min&nbsp;·&nbsp;Zhiyang Shen
 
 </div>
-  </header> 
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#simple-distributions" aria-label="Simple Distributions">Simple Distributions</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
 
   <div class="post-content"><p>It&rsquo;s an interesting topic to sample from a &ldquo;weird&rdquo; distribution,
-<em>e.g.</em>, high dimensional, with an unknown normalization term, or even lack of a well-formed expression.</p>
+<em>e.g.</em>, high dimensional, with an unknown normalization term, or even lack of a well-formed math expression.
+This is widely used in deep learning, such as the inference-time sampling of LLMs, or the denoising process of diffusion models.</p>
+<p>To study this problem, let&rsquo;s first consider some easy cases and then move on to more difficult scenarios.</p>
+<h2 id="simple-distributions">Simple Distributions<a hidden class="anchor" aria-hidden="true" href="#simple-distributions">#</a></h2>
+<p>Suppose we already know how to sample from the uniform distribution $z \sim U(0, 1)$.
+Now consider sampling from the exponential distribution $y \sim \mathcal E(\lambda)$, <em>e.g.</em>, $f_y(y) = \lambda \exp(-\lambda y)$ where $y \geq 0$.
+To sample from $y$, a strategy is to first sample from $z$ and then transform the result to follow the distribution of $y$.
+That is, we want to find a function $g: [0, 1] \mapsto [0, +\infty)$ s.t. $g(z) \sim \mathcal E(\lambda)$.
+Let&rsquo;s do some basic calculation:</p>
+<p>$$
+\begin{aligned}
+&amp; f_y(y) = f_z(z) \left|\frac{\mathrm dz}{\mathrm dy} \right| = \left|\frac{\mathrm dz}{\mathrm dy} \right|\\
+\Rightarrow{} &amp; z = \int_{-\infty}^y f_y(\hat y)\mathrm d\hat y = 1 - \exp(-\lambda y) \\
+\Rightarrow{} &amp; y = -\lambda^{-1} \ln (1-z) = g(z)
+\end{aligned}
+$$</p>
+<p>Then $y$ will have the desired exponential distribution.</p>
+<hr>
+<p>This strategy can be easily generalized to multivariate cases.
+An example is the <strong>Box-Muller method</strong> to generate Gaussian distributions.
+First, we sample a pair of two numbers $z_1, z_2 \sim U(-1, 1)$, and discard the pair if $z_1^2 + z_2^2 &gt; 1$.
+This leads to a uniform distribution of 2D points inside the unit circle with distribution $f_{z_1,z_2}(z_1, z_2) = 1/\pi$.
+Then, we compute</p>
+<p>$$
+y_1 = z_1 \sqrt{\frac{-2 \ln(s)}{s}}, \quad y_2 = z_2 \sqrt{\frac{-2 \ln(s)}{s}}
+$$</p>
+<p>where $s = z_1^2 + z_2^2$. We have</p>
+<p>$$
+f_{y_1, y_2}(y_1, y_2) = f_{z_1, z_2}(z_1, z_2) \left|\frac{\partial(z_1, z_2)}{\partial(y_1, y_2)} \right|
+=\left[\frac{1}{\sqrt{2\pi}}\exp(-y_1^2/2) \right] \left[\frac{1}{\sqrt{2\pi}}\exp(-y_2^2/2) \right]
+$$</p>
+<p>This means that $y_1$ and $y_2$ follow the Gaussian distribution $\mathcal N(0, 1)$ and are independent.</p>
 
 
   </div>
