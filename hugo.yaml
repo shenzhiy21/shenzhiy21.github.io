@@ -54,3 +54,14 @@ params:
     - name: bilibili
       title: View My Bilibili Profile
       url: "https://space.bilibili.com/513060462"
+markup:
+  goldmark:
+    extensions:
+      passthrough:
+        enable: true
+        delimiters:
+          block:
+            - ['\[', '\]']
+            - ['$$', '$$']
+          inline:
+            - ['\(', '\)']

@@ -18,7 +18,7 @@ Let $\\{X_n\\}_{n\geq 0}$ be a discrete-time Markov chain defined on a finite st
 首先证明存在性。定义 $\Delta$ 为该空间上所有可能的概率分布的集合：
 
 $$
-\Delta = \\{ x\in \R^N\mid x_i \geq 0\text{ for all }i,\text{and }\sum_i x_i=1 \\}
+\Delta = \{ x\in \R^N\mid x_i \geq 0\text{ for all }i,\text{and }\sum_i x_i=1 \}
 $$
 
 定义映射 $T$ 为 $T(x) = xP$. 下面证明 $T$ 是闭映射。令 $y = T(x)$. 则显然 $y_{i}\geq 0$. 并且

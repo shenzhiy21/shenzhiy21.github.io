@@ -611,7 +611,7 @@ $$
 \begin{aligned}
 \tilde u_t(x|y) &= u_t^{\text{target}}(x) + wb_t\nabla \log p_t(y|x)\\\
 &= u_t^{\text{target}}(x) + wb_t(\nabla\log p_t(x|y) - \nabla\log p_t(x))\\\
-&= u_t^{\text{target}}(x) - (wa_tx+wb_tnabla\log p_t(x)) + (wa_tx+wb_t\nabla\log p_t(x|y))\\\
+&= u_t^{\text{target}}(x) - (wa_tx+wb_t\nabla\log p_t(x)) + (wa_tx+wb_t\nabla\log p_t(x|y))\\\
 &= (1-w)u_t^{\text{target}}(x) + wu_t^{\text{target}}(x|y)
 \end{aligned}
 $$
