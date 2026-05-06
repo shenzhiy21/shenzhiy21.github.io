@@ -9,7 +9,7 @@ summary = "A personal reflection on the (first) research project that I’ve wor
 
 +++
 
-## 关于这个项目 ...
+## 关于这个项目
 
 这个题目是从 2024 年暑假开始的, 我还记得当时是大三的暑期实习, 我在微软的小会议室里和刘老师 online meeting, 她给我看了那个图, 我们想着能不能把它实现出来, 所以就有了最开始的 idea.
 回头看, 我到现在仍然觉得这是一个挺 cool 的 idea, 虽然最终做得还有不少不满意的地方, 但至少也有一点点信心说我们的工作是 "fill the gap" 了.
@@ -46,7 +46,7 @@ summary = "A personal reflection on the (first) research project that I’ve wor
 平常心就好.
 毕竟都选了这条路了, 只要自己开心就好.
 
-## 渲染引擎, 软件工程, 以及 AI 编程 ...
+## 渲染引擎, 软件工程, 以及 AI 编程
 
 老实说, 我本科期间没有太多维护大项目的经验.
 大一 OOP 的大作业写了几千行, 就觉得是非常大的 LOC 数字了.

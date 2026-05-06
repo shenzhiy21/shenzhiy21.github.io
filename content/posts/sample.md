@@ -189,7 +189,7 @@ The resulting $L$ samples are approximately distributed according to $p(z)$ when
 
 $$
 \begin{aligned}
-p(z\leq a) &= \sum_{l} I(z_l \leq a) w_l \\\
+\mathbb P(z\leq a) &= \sum_{l} I(z_l \leq a) w_l \\\
 &= \frac{\sum_{l} I(z_l \leq a) \tilde p(z_l) / \tilde q(z_l)}{\sum_{l} \tilde p(z_l) / \tilde q(z_l)} \\\
 (L\to\infty) &= \frac{\int I(z\leq a) (\tilde p(z) / \tilde q(z)) q(z)\mathrm dz}{\int (\tilde p(z) / \tilde q(z)) q(z)\mathrm dz} \\\
 &= \frac{\int I(z\leq a) \tilde p(z)\mathrm dz}{\int \tilde p(z)\mathrm dz}\\\
@@ -198,3 +198,61 @@ p(z\leq a) &= \sum_{l} I(z_l \leq a) w_l \\\
 $$
 
 which is exactly the cumulative distribution function of $p(z)$.
+
+## Markov Chain Monte Carlo
+
+Both rejection sampling and importance sampling suffer from the curse of dimensionality.
+We next introduce a very general and powerful sampling strategy called Markov Chain Monte Carlo (MCMC).
+
+### Markov Chains
+
+Before detailing the MCMC algorithm, we first review the basics of Markov chains.
+
+Remember that our goal is to sample from a distribution $p(z)$.
+Taking advantage of the properties of Markov chains, we can construct a specific Markov chain whose invariant (stationary) distribution is $p(z)$.
+In such cases, no matter what the initial distribution is, the final distribution will converge to the invariant distribution $p(z)$.
+
+Let $T(z, z^\prime) = p(z^\prime\mid z)$ be the transition probability from $z$ to $z^\prime$.
+A sufficient (not necessary) condition for ensuring that the required distribution $p(z)$ is invariant is the _detailed balance_ defined by
+
+$$
+p(z) T(z, z^\prime) = p(z^\prime) T(z^\prime, z)
+$$
+
+In practice, we often construct the transition probabilities from a set of base transitions $B_1, B_2, \cdots, B_K$:
+
+$$
+T(z, z^\prime) = \sum_k \alpha_k B_k(z, z^\prime), \quad\text{where }\sum_k \alpha_k = 1
+$$
+
+Alternatively, the base transitions may be combined through successive application:
+
+$$
+T(z, z^\prime) = \sum_{z_1} \cdots \sum_{z_{K-1}} B_1(z, z_1)\cdots B_{K-1}(z_{K-2}, z_{K-1}) B_K(z_{K-1}, z^\prime)
+$$
+
+If a distribution is invariant with respect to each base transition, then it will be invariant with respect to either of the $T(z, z^\prime)$ given by the above two equations.
+
+### The Metropolis-Hastings Algorithm
+
+Similar to rejection sampling, we also need a proposal function $q(z)$ for MCMC.
+We now introduce the Metropolis-Hastings algorithm.
+At time step $\tau$, we keep the current state $z_{\tau}$, draw a sample $z^\star$ from the distribution $q(z\mid z_{\tau})$, and accept it with probability $A(z^*, z_{\tau})$ where
+
+$$
+A(z^\star, z_{\tau}) = \min\left(1, \frac{\tilde p(z^\star)q(z_{\tau}\mid z^\star)}{\tilde p(z_{\tau}) q(z^\star\mid z_{\tau})} \right)
+$$
+
+If the candidate sample is accepted, then $z_{\tau+1} = z^\star$.
+Otherwise, $z_{\tau+1}$ is set to $z_{\tau}$ and another sample is drawn from $q(z\mid z_{\tau+1})$.
+Again, this criterion doesn't require knowing the normalizing constant $Z_p$ for $p(z)$.
+We show that $p(z)$ is an invariant distribution of the Markov chain defined by the Metropolis-Hastings algorithm, by showing that detailed balance is satisfied:
+
+$$
+\begin{aligned}
+p(z) q(z^\prime\mid z) A(z^\prime, z) &= \min\left(p(z)q(z^\prime\mid z), p(z^\prime)q(z\mid z^\prime) \right)\\\
+&= p(z^\prime) q(z\mid z^\prime) A(z, z^\prime)
+\end{aligned}
+$$
+
+Therefore, as $\tau\to\infty$, the distribution of $z_{\tau}$ tends to $p(z)$.

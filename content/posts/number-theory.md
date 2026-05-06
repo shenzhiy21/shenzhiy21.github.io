@@ -38,13 +38,13 @@ $$
 此外，可以对 $F_A$ 求导：
 
 $$
-F_A'(x) = \sum_{i=1}^n \frac{\alpha_i}{x - p_i} F_A(x)
+F_A^\prime(x) = \sum_{i=1}^n \frac{\alpha_i}{x - p_i} F_A(x)
 $$
 
 对某个 $i$, 若 $\alpha_i > 1$，那么上述和式的每一项都具有一次多项式因子 $x - p_i$. 因此有
 
 $$
-F_A'(p_i) = \begin{cases}
+F_A^\prime(p_i) = \begin{cases}
 0, &\alpha_i > 1\\\
 F_{\frac{A}{p_i^{\alpha_i}}}(p_i), &\alpha_i = 1
 \end{cases}

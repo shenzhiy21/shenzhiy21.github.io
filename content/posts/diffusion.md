@@ -151,7 +151,7 @@ So we are done!
 这里我们尝试思路 1.
 
 > TODO: 其实我也没想清楚为什么不采用思路 2. 一个可能的解释是，虽然 flow matching model 可以用 ODE 建模、可以定义 flow function, 但是 diffusion model 是用 SDE 来建模的、无法定义 flow function, 也就只能采用思路 1 了。这种解释有些牵强，毕竟现在 SOTA 的模型大多开始用 flow matching 来替换 diffusion 了，明明可以用思路 2. 此处有待进一步思考。
-
+>
 > Update: [MeanFlow](https://arxiv.org/pdf/2505.13447) 就是类似思路 2 的方法，学习的不再是**瞬时**速度场，而是**平均**速度场了。
 
 思路 1 的意思就是：我们训练的神经网络 $u^\theta$ 要尽可能逼近真实的 vector field $u^{\text{target}}$. 这谁都会。采取和刚才类似的心路历程，接下来还有两步：

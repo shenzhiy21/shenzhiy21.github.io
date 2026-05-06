@@ -374,7 +374,7 @@ Despite its importance, the Atlantic Ocean is facing a range of environmental ch
 
 ## Conclusion
 
-这篇文章主要在靠最后的实验输出凑字数（笑）。实验结论也并不太出乎意料，当然速度上没有进行任何优化，所以距离 `transformers` 的版本仍然有 10x 的差距。但是有趣的地方大概在于自己实现这些个算法的成就感吧！GPTQ int4 量化的版本在这里 [link](https://github.com/microsoft/antares/blob/latest/samples/05_llama2_7b_int4.py). 最后强推一下 [AutoRT](https://github.com/microsoft/antares) ！如果有手搓 customized kernel 的需求，又觉得 Triton/CUDA 太麻烦，不如试试它 :)
+这篇文章主要在靠最后的实验输出凑字数（笑）。实验结论也并不太出乎意料，当然速度上没有进行任何优化，所以距离 `transformers` 的版本仍然有 10x 的差距。但是有趣的地方大概在于自己实现这些个算法的成就感吧！GPTQ int4 量化的版本在[这里](https://github.com/microsoft/antares/blob/latest/samples/05_llama2_7b_int4.py). 最后强推一下 [AutoRT](https://github.com/microsoft/antares) ！如果有手搓 customized kernel 的需求，又觉得 Triton/CUDA 太麻烦，不如试试它 :)
 
 此外，最近其实和不少人探讨了这个问题，也就是算法和系统上的 trade-off. 搞算法的人设计出好多妙妙算法，但是未必能在系统上高效实现，从而也就未必能很好地落地。像最近的一些我觉得比较 impressive 的工作 ([GLA](https://arxiv.org/abs/2312.06635), [MLA](https://arxiv.org/abs/2412.19437), [NSA](https://arxiv.org/abs/2502.11089) 等等) 都感觉像是 algorithm 在 system/hardware 戴的镣铐下跳舞，或者说 algorithm 是在 "align" 到 hardware efficient design. 这样的算法设计一定是最优的吗？不一定，甚至可能一定不。事实上现在所有这些名声在外的 network design (Convolution, Residual, Attention, ...) 哪个是 "Optimal" 的呢？一个都不是呀！（打个比方，难道人脑会自动算 `matmul` 吗？）
 

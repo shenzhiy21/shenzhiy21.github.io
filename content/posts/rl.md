@@ -14,7 +14,7 @@ summary = "Notes on everything related with RL."
 
 Problem Formulation: "an _agent_ learns from interaction (with _environment_) to achieve a goal".
 
-![](/images/rl/pipeline.png)
+![Reinforcement learning](/images/rl/pipeline.png)
 
 At each time step $t$:
 

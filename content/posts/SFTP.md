@@ -16,29 +16,29 @@ summary = "Simple guide to use SFTP in terminal"
 
 SFTP 默认使用 SSH 协议来建立远程连接。SSH 的连接命令为：
 
-```
-$ ssh user_name@ip
+```bash
+ssh user_name@ip
 ```
 
 退出命令为：
 
-```
-$ exit
+```bash
+exit
 ```
 
 同样地，SFTP 的命令为：
 
-```
-$ sftp user_name@ip
+```bash
+sftp user_name@ip
 ```
 
 默认连接到 port 22，当然也可以调整端口，通过`-oPort`命令。请自行搜索。
 
 ## Navigate with SFTP
 
-连接之后，终端会出现`sftp> `标识。我们可以使用熟悉的 Linux 指令来进行操作。例如
+连接之后，终端会出现 `sftp>` 标识。我们可以使用熟悉的 Linux 指令来进行操作。例如
 
-```
+```txt
 sftp> pwd
 sftp> ls
 sftp> cd ..
@@ -48,18 +48,18 @@ sftp> cd ..
 
 如果想在本地文件系统操作，需要在这些指令的前面加上一个 `l`。
 
-```
+```txt
 sftp> lpwd
 
 Output
 Local working directory: /Users/...
 ```
 
-```
+```txt
 sftp> lls
 ```
 
-```
+```txt
 sftp> lcd Desktop
 ```
 
@@ -69,25 +69,25 @@ sftp> lcd Desktop
 
 如果想要从服务器上下载文件，可以使用`get`命令。
 
-```
+```txt
 sftp> get <filename>
 ```
 
 这个指令把该文件下载到本地系统中，并给它相同的命名。如果想要改名，方法为：
 
-```
+```txt
 sftp> get <remoteFilename> <localFilename>
 ```
 
 如果想要下载整个文件夹，可以加上`-r`：
 
-```
+```txt
 sftp> get -r <directoryName>
 ```
 
 如果需要将本地文件上传至服务器，可以使用`put`指令。
 
-```
+```txt
 sftp> put <filename>
 ```
 
@@ -95,20 +95,20 @@ sftp> put <filename>
 
 可以使用`!`来切回到本地的终端，例如 Git Bash。
 
-```
+```txt
 sftp> !
 ```
 
 此后就能使用本地终端上的指令啦。如果想要回到 SFTP，可以使用`exit`指令：
 
-```
-$ exit
+```bash
+exit
 ```
 
 ## Else
 
 SFTP 还有其它强大的功能，例如修改文件的权限、用户的分组等。`chmod`、`rmdir` 等指令都是可以使用的——当然，如果直接输入这些指令，操作都是在服务器上进行的；如果想要在本地文件系统操作，需要在所有指令前面加上`!`。例如：
 
-```
+```txt
 sftp> !chmod 644 <filename>
 ```

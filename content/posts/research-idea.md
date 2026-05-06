@@ -142,7 +142,7 @@ and reduce the time requried for thinking.
 
 This image shows the multi-stage data filtering pipeline for [Qwen-Image](https://arxiv.org/abs/2508.02324).
 
-![](/images/research-idea/qwen-image-data-filter-pipeline.png)
+![Qwen image data filter pipeline](/images/research-idea/qwen-image-data-filter-pipeline.png)
 
 During the data filtering process, it's important to visualize:
 

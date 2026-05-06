@@ -136,7 +136,7 @@ $$
 
 ```cpp
 void change(std::vector<std::complex<float>>& x) {
-	size_t len = x.size();
+    size_t len = x.size();
     std::vector<int> rev(len);
     for (size_t i = 0; i < len; ++i) {
         rev[i] = rev[i >> 1] >> 1;
