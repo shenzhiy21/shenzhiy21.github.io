@@ -98,7 +98,7 @@ The optimal scaling constant is $k = (\sigma_q / \sigma_p)^n$, resulting in an a
 
 ## Importance Sampling
 
-A primary objective of statistical sampling is to estimate the **expectation** of a function $f(x)$ under a target distribution $p(x)$.
+A primary objective of statistical sampling is to estimate the **expectation** of a function $f(x)$ (no need to be a probability distribution) under a target distribution $p(x)$.
 For a set of $n$ independent and identically distributed samples $\\{x_i\\}_{i=1}^n$ drawn from $p(x)$, the standard Monte Carlo estimate is given by:
 
 $$
@@ -175,3 +175,26 @@ $$
 
 This implies that the optimal unnormalized proposal distribution should be $q(x) \propto |f(x)|\cdot p(x)$.
 In practice, the probability density of $q(x)$ should be highly concentrated in regions where $|f(x)|\cdot p(x)$ is large.
+
+## Sampling-Importance-Resampling
+
+The efficiency of the rejection sampling strategy is depended on the constant $M$, which is often impractical to determine for some pairs of target distributions $p(z)$ and proposal distributions $q(z)$.
+To avoid determining the constant, the sampling-importance-resampling (SIR) strategy is proposed.
+
+It has two stages.
+In the first stage, $L$ samples $z_1, z_2, \cdots, z_L$ are drawn from $q(z)$.
+Then, in the second stage, the weights $w_1, w_2, \cdots, w_L$ are calculated according to the importance sampling strategy.
+Finally, a second set of $L$ samples is drawn from the discrete distribution $(z_1, z_2, \cdots, z_L)$ with probabilities given by $w_1, w_2, \cdots, w_L$.
+The resulting $L$ samples are approximately distributed according to $p(z)$ when $L$ is large:
+
+$$
+\begin{aligned}
+p(z\leq a) &= \sum_{l} I(z_l \leq a) w_l \\\
+&= \frac{\sum_{l} I(z_l \leq a) \tilde p(z_l) / \tilde q(z_l)}{\sum_{l} \tilde p(z_l) / \tilde q(z_l)} \\\
+(L\to\infty) &= \frac{\int I(z\leq a) (\tilde p(z) / \tilde q(z)) q(z)\mathrm dz}{\int (\tilde p(z) / \tilde q(z)) q(z)\mathrm dz} \\\
+&= \frac{\int I(z\leq a) \tilde p(z)\mathrm dz}{\int \tilde p(z)\mathrm dz}\\\
+&= \int I(z\leq a) p(z) \mathrm dz
+\end{aligned}
+$$
+
+which is exactly the cumulative distribution function of $p(z)$.
