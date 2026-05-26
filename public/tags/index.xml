@@ -7,8 +7,22 @@
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
     <copyright>@ 2025 Zhiyang Shen</copyright>
-    <lastBuildDate>Wed, 15 Apr 2026 10:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 26 May 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://shenzhiy21.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Note</title>
+      <link>https://shenzhiy21.github.io/tags/note/</link>
+      <pubDate>Tue, 26 May 2026 08:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/tags/note/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Visualization</title>
+      <link>https://shenzhiy21.github.io/tags/visualization/</link>
+      <pubDate>Tue, 26 May 2026 08:00:00 +0800</pubDate>
+      <guid>https://shenzhiy21.github.io/tags/visualization/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Math</title>
       <link>https://shenzhiy21.github.io/tags/math/</link>
@@ -17,24 +31,10 @@
       <description></description>
     </item>
     <item>
-      <title>Note</title>
-      <link>https://shenzhiy21.github.io/tags/note/</link>
-      <pubDate>Wed, 15 Apr 2026 10:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/tags/note/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Stats</title>
       <link>https://shenzhiy21.github.io/tags/stats/</link>
       <pubDate>Wed, 15 Apr 2026 10:00:00 +0800</pubDate>
       <guid>https://shenzhiy21.github.io/tags/stats/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Visualization</title>
-      <link>https://shenzhiy21.github.io/tags/visualization/</link>
-      <pubDate>Thu, 09 Apr 2026 08:00:00 +0800</pubDate>
-      <guid>https://shenzhiy21.github.io/tags/visualization/</guid>
       <description></description>
     </item>
     <item>
