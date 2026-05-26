@@ -256,3 +256,27 @@ p(z) q(z^\prime\mid z) A(z^\prime, z) &= \min\left(p(z)q(z^\prime\mid z), p(z^\p
 $$
 
 Therefore, as $\tau\to\infty$, the distribution of $z_{\tau}$ tends to $p(z)$.
+
+### Gibbs Sampling
+
+Gibbs sampling is a special case of the Metropolis-Hastings algorithm.
+Consider we want to sample from the distribution $p(z_1,\cdots,z_M)$, and it's easy to sample from each conditional distribution $p(z_i\mid z_{-i})$.
+Then, Gibbs sampling says that we can repeatedly sample from $p(z_i\mid z_{-i})$ and update $z_i$, where the order of the variables ($z_i$) is chosen either in some particular order or randomly from some distribution.
+The algorithm can be written as:
+
+1. Initialize $\\{z_i:i=1,2,\cdots,M \\}$
+2. For $\tau = 1, 2, \cdots, T$:
+   - Sample $z_1^{(\tau+1)} \sim p(z_1\mid z_2^{(\tau)}, z_3^{(\tau)},\cdots,z_M^{(\tau)})$
+   - Sample $z_2^{(\tau+1)} \sim p(z_2\mid z_1^{(\tau+1)}, z_3^{(\tau)},\cdots, z_M^{(\tau)})$
+   - ...
+   - Sample $z_M^{(\tau+1)} \sim p(z_M\mid z_1^{(\tau+1)}, z_2^{(\tau+1)}, \cdots, z_{M-1}^{(\tau+1)})$
+
+For a given step that updates the $k$-th variable $z_k$, and the transition probability from $z$ to $z^{\star}$ is given by $q_k(z^{\star}\mid z) = p(z_k^{\star}\mid z_{-k})$.
+Since the variables $z_{-k}$ are kept unchanged, we have $z_{-k} = z_{-k}^{\star}$.
+Then, the acceptance probability in the Metropolis-Hastings algorithm is given by:
+
+$$
+A(z^*, z) = \frac{p(z^{\star})q_k(z\mid z^{\star})}{p(z)q_k(z^{\star}\mid z)} = \frac{p(z_k^{\star}\mid z_{-k}^{\star})p(z_{-k}^{\star})p(z_k\mid z_{-k}^{\star})}{p(z_k\mid z_{-k})p(z_{-k})p(z_k^{\star}\mid z_{-k})} = 1
+$$
+
+This shows that Gibbs sampling is a special case of the Metropolis-Hastings algorithm with acceptance probability always equal to $1$.
