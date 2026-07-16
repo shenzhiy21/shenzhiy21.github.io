@@ -119,3 +119,11 @@ summary = "A personal reflection on the (first) research project that I’ve wor
 到底有多少东西需要总结, 有多少东西是总结了也无用, 走一步是一步.
 再过一周左右, VIS 的结果就出来了.
 希望一切顺利吧.
+
+> 20260716 Update
+
+VIS 结果出来了, 终于 accept 了.
+然而看到邮件并没有太多兴奋感, 可能因为一方面之前已经 conditional accept 了, 另一方面还得接着做下一个工作.
+马上就要放假了, 以及过两天要去参加 ChinaVis, 时间过得真快, 只觉得还远没建立好生活的秩序.
+
+弃捐勿复道, 努力加餐饭.
